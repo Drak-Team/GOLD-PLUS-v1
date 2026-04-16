@@ -1,34 +1,34 @@
-let index = 0;
-
-setInterval(() => {
-  const slides = document.querySelector(".slides");
-  index++;
-  if (index > 2) index = 0;
-  slides.style.transform = `translateX(-${index * 100}%)`;
-}, 2500);
-
-function copyNumber() {
-  navigator.clipboard.writeText("03025736141");
-  alert("Number Copied!");
-}
-function signup() {
+function login() {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
 
   if(email && password){
-    localStorage.setItem("user", email);
-    alert("Signup Successful!");
+    alert("Login Successful!");
+    document.querySelector(".login-container").style.display = "none";
+    showPlans();
   } else {
-    alert("Fill all fields!");
+    alert("Enter details");
   }
 }
 
-function login() {
-  let email = document.getElementById("email").value;
+function signup() {
+  alert("Account Created!");
+}
 
-  if(localStorage.getItem("user") === email){
-    alert("Login Successful!");
-  } else {
-    alert("User not found!");
-  }
+function showPlans() {
+  document.body.innerHTML += `
+    <div class="plan-card">
+      <div class="plan-title">Starter</div>
+      <div class="plan-price">Rs 600</div>
+      <div>Daily Rs 50</div>
+      <div class="plan-btn">Activate Plan</div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-title">Growth</div>
+      <div class="plan-price">Rs 1000</div>
+      <div>Daily Rs 100</div>
+      <div class="plan-btn">Activate Plan</div>
+    </div>
+  `;
 }
