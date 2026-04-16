@@ -1,7 +1,11 @@
-const SUPABASE_URL = "YOUR_URL";
-const SUPABASE_KEY = "YOUR_KEY";
+// 🔥 اپنی Supabase details یہاں ڈالنی ہیں
+const SUPABASE_URL = "PASTE_YOUR_URL_HERE";
+const SUPABASE_KEY = "PASTE_YOUR_KEY_HERE";
 
 const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+
+// LOGIN
 function login() {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
@@ -14,70 +18,23 @@ function login() {
   }
 }
 
-function signup() {
-  alert("Account Created!");
-}
-function submitDeposit() {
-  let file = document.getElementById("screenshot").files[0];
 
-  if(file){
-    let reader = new FileReader();
+// SIGNUP (یہ Supabase میں save کرے گا)
+async function signup() {
+  let email = document.getElementById("email").value;
 
-    reader.onload = function(){
-      let data = reader.result;
-
-      // save in localStorage (temporary)
-      localStorage.setItem("depositProof", data);
-
-      document.getElementById("msg").innerText = "Deposit Submitted!";
-    }
-
-    reader.readAsDataURL(file);
-
-  } else {
-    alert("Upload screenshot first!");
+  if(!email){
+    alert("Enter Email First!");
+    return;
   }
-}
-function showAdminLogin() {
-  document.getElementById("loginPage").style.display = "none";
-  document.getElementById("adminLogin").style.display = "flex";
-}
 
-function adminLogin() {
-  let email = document.getElementById("adminEmail").value;
-  let pass = document.getElementById("adminPass").value;
+  let { error } = await supabase.from("users").insert([
+    { email: email, balance: 0 }
+  ]);
 
-  // ⚠️ اپنا gmail یہاں ڈالنا
-  if(email === "yourgmail@gmail.com" && pass === "1234"){
-    document.getElementById("adminLogin").style.display = "none";
-
-    showAdminPanel();
+  if(error){
+    alert("Error: " + error.message);
   } else {
-    alert("Wrong Admin Details!");
+    alert("Account Created!");
   }
-}
-
-function showAdminPanel() {
-  document.body.innerHTML = `
-    <h2 style="text-align:center;">👑 Admin Panel</h2>
-
-    <div style="padding:20px;">
-      <h3>Deposit Requests</h3>
-
-      <img src="${localStorage.getItem("depositProof")}" width="200"/>
-
-      <br><br>
-
-      <button onclick="approve()">Approve</button>
-      <button onclick="reject()">Reject</button>
-    </div>
-  `;
-}
-
-function approve(){
-  alert("Deposit Approved!");
-}
-
-function reject(){
-  alert("Rejected!");
 }
