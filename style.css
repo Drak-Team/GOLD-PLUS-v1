@@ -1,0 +1,62 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0D0D0D;
+  color: white;
+}
+
+.header {
+  background: black;
+  padding: 15px;
+  text-align: center;
+  position: relative;
+}
+
+.notif-dot {
+  width: 10px;
+  height: 10px;
+  background: red;
+  border-radius: 50%;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.slider img {
+  width: 100%;
+}
+
+.packages {
+  padding: 20px;
+}
+
+.card {
+  background: linear-gradient(45deg, #FFD700, #FFAE00);
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 10px;
+  color: black;
+  font-weight: bold;
+}
+
+.deposit {
+  padding: 20px;
+  text-align: center;
+}
+
+button {
+  background: gold;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  background: black;
+  padding: 10px;
+}
