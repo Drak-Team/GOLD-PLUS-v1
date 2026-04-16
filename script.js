@@ -34,3 +34,46 @@ function submitDeposit() {
     alert("Upload screenshot first!");
   }
 }
+function showAdminLogin() {
+  document.getElementById("loginPage").style.display = "none";
+  document.getElementById("adminLogin").style.display = "flex";
+}
+
+function adminLogin() {
+  let email = document.getElementById("adminEmail").value;
+  let pass = document.getElementById("adminPass").value;
+
+  // ⚠️ اپنا gmail یہاں ڈالنا
+  if(email === "yourgmail@gmail.com" && pass === "1234"){
+    document.getElementById("adminLogin").style.display = "none";
+
+    showAdminPanel();
+  } else {
+    alert("Wrong Admin Details!");
+  }
+}
+
+function showAdminPanel() {
+  document.body.innerHTML = `
+    <h2 style="text-align:center;">👑 Admin Panel</h2>
+
+    <div style="padding:20px;">
+      <h3>Deposit Requests</h3>
+
+      <img src="${localStorage.getItem("depositProof")}" width="200"/>
+
+      <br><br>
+
+      <button onclick="approve()">Approve</button>
+      <button onclick="reject()">Reject</button>
+    </div>
+  `;
+}
+
+function approve(){
+  alert("Deposit Approved!");
+}
+
+function reject(){
+  alert("Rejected!");
+}
