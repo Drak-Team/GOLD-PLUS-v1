@@ -3,9 +3,11 @@ function login() {
   let password = document.getElementById("password").value;
 
   if(email && password){
-    alert("Login Successful!");
-    document.querySelector(".login-container").style.display = "none";
-    showPlans();
+    // login hide
+    document.getElementById("loginPage").style.display = "none";
+
+    // main site show
+    document.getElementById("mainSite").style.display = "block";
   } else {
     alert("Enter details");
   }
@@ -13,22 +15,4 @@ function login() {
 
 function signup() {
   alert("Account Created!");
-}
-
-function showPlans() {
-  document.body.innerHTML += `
-    <div class="plan-card">
-      <div class="plan-title">Starter</div>
-      <div class="plan-price">Rs 600</div>
-      <div>Daily Rs 50</div>
-      <div class="plan-btn">Activate Plan</div>
-    </div>
-
-    <div class="plan-card">
-      <div class="plan-title">Growth</div>
-      <div class="plan-price">Rs 1000</div>
-      <div>Daily Rs 100</div>
-      <div class="plan-btn">Activate Plan</div>
-    </div>
-  `;
 }
