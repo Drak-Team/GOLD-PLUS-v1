@@ -1,10 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gold Plus</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gold Plus</title>
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 
 <body>
@@ -14,22 +18,19 @@
   <div class="login-box">
     <div class="logo">GP</div>
     <h1>Gold Plus</h1>
-    <p>Welcome back</p>
 
-    <input type="email" id="email" placeholder="Email address">
-    <input type="password" id="password" placeholder="Password">
+    <input type="email" id="email" placeholder="Enter Email">
+    <input type="password" id="password" placeholder="Enter Password">
 
-    <button onclick="login()">Sign In</button>
-    <p class="signup-text">New user? <span onclick="signup()">Create account</span></p>
+    <button onclick="login()">Login</button>
+    <button onclick="signup()">Signup</button>
   </div>
 </div>
 
-<!-- MAIN WEBSITE -->
+<!-- MAIN SITE -->
 <div id="mainSite" style="display:none;">
 
-<header class="header">
-  💰 Gold Plus
-</header>
+<header class="header">💰 Gold Plus</header>
 
 <section class="packages">
   <div class="card">Free Plan → Daily 10 Rs</div>
@@ -50,26 +51,3 @@
 <script src="script.js"></script>
 </body>
 </html>
-<h3>Upload Payment Proof</h3>
-
-<input type="file" id="screenshot">
-<br><br>
-
-<button onclick="submitDeposit()">Submit Deposit</button>
-
-<p id="msg"></p>
-<p style="margin-top:10px;">
-  <span onclick="showAdminLogin()" style="color:gold; cursor:pointer;">
-    Admin Login
-  </span>
-</p>
-<div id="adminLogin" style="display:none;" class="login-container">
-  <div class="login-box">
-    <h2>Admin Login</h2>
-
-    <input type="email" id="adminEmail" placeholder="Admin Email">
-    <input type="password" id="adminPass" placeholder="Password">
-
-    <button onclick="adminLogin()">Login</button>
-  </div>
-</div>
