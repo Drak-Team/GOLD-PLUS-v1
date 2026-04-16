@@ -1,15 +1,52 @@
-<!-- LOGIN (اوپر رہے گا) -->
-<div id="loginPage">
-  <!-- آپ والا login code -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Plus</title>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<!-- LOGIN PAGE -->
+<div id="loginPage" class="login-container">
+  <div class="login-box">
+    <div class="logo">GP</div>
+    <h1>Gold Plus</h1>
+    <p>Welcome back</p>
+
+    <input type="email" id="email" placeholder="Email address">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="login()">Sign In</button>
+    <p class="signup-text">New user? <span onclick="signup()">Create account</span></p>
+  </div>
 </div>
 
 <!-- MAIN WEBSITE -->
 <div id="mainSite" style="display:none;">
-  
-  <!-- یہاں آپ کا سارا previous code -->
-  <!-- slider -->
-  <!-- plans -->
-  <!-- deposit -->
-  <!-- footer -->
+
+<header class="header">
+  💰 Gold Plus
+</header>
+
+<section class="packages">
+  <div class="card">Free Plan → Daily 10 Rs</div>
+  <div class="card">600 Rs → Daily 50 Rs</div>
+  <div class="card">1000 Rs → Daily 100 Rs</div>
+  <div class="card">2500 Rs → Daily 250 Rs</div>
+  <div class="card">5000 Rs → Daily 500 Rs</div>
+</section>
+
+<section class="deposit">
+  <h2>Deposit</h2>
+  <p>JazzCash: 03025736141</p>
+  <p>Binance ID: 319230893</p>
+</section>
 
 </div>
+
+<script src="script.js"></script>
+</body>
+</html>
