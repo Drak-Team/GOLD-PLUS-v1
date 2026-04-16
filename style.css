@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  font-family: 'Poppins', sans-serif;
-  background: radial-gradient(circle, #1a0033, #0d001a);
+  font-family: Arial;
+  background: #0D0D0D;
   color: white;
 }
 
@@ -14,79 +14,44 @@ body {
 }
 
 .login-box {
-  width: 90%;
-  max-width: 350px;
-  padding: 25px;
-  border-radius: 20px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(15px);
-  text-align: center;
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
-}
-
-.logo {
-  background: gold;
-  color: black;
-  padding: 15px;
+  background: #111;
+  padding: 20px;
   border-radius: 15px;
-  display: inline-block;
-  font-weight: bold;
-}
-
-.login-box h1 {
-  margin: 10px 0;
+  text-align: center;
+  width: 300px;
 }
 
 .login-box input {
-  width: 100%;
+  width: 90%;
   margin: 10px 0;
-  padding: 12px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
+  padding: 10px;
 }
 
 .login-box button {
-  width: 100%;
-  padding: 12px;
-  border-radius: 25px;
+  width: 95%;
+  padding: 10px;
+  margin: 5px 0;
+  background: gold;
   border: none;
-  background: linear-gradient(45deg, #FFD700, #FFAE00);
-  font-weight: bold;
-  margin-top: 10px;
 }
 
-.signup-text span {
-  color: gold;
-  cursor: pointer;
-}
-
-/* PLANS */
-.plan-card {
-  background: rgba(255,255,255,0.05);
-  border-radius: 20px;
-  padding: 20px;
-  margin: 15px;
-  box-shadow: 0 0 20px rgba(255,215,0,0.2);
-}
-
-.plan-title {
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.plan-price {
-  font-size: 28px;
-  color: gold;
-}
-
-.plan-btn {
-  background: linear-gradient(45deg, #FFD700, #FFAE00);
-  padding: 12px;
-  border-radius: 20px;
+/* SITE */
+.header {
   text-align: center;
-  margin-top: 15px;
+  padding: 15px;
+  background: black;
+  color: gold;
+}
+
+.card {
+  background: gold;
   color: black;
-  font-weight: bold;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+.deposit {
+  padding: 20px;
+  text-align: center;
 }
