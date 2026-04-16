@@ -11,3 +11,24 @@ function copyNumber() {
   navigator.clipboard.writeText("03025736141");
   alert("Number Copied!");
 }
+function signup() {
+  let email = document.getElementById("email").value;
+  let password = document.getElementById("password").value;
+
+  if(email && password){
+    localStorage.setItem("user", email);
+    alert("Signup Successful!");
+  } else {
+    alert("Fill all fields!");
+  }
+}
+
+function login() {
+  let email = document.getElementById("email").value;
+
+  if(localStorage.getItem("user") === email){
+    alert("Login Successful!");
+  } else {
+    alert("User not found!");
+  }
+}
