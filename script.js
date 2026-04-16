@@ -1,3 +1,7 @@
+const SUPABASE_URL = "YOUR_URL";
+const SUPABASE_KEY = "YOUR_KEY";
+
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 function login() {
   let email = document.getElementById("email").value;
   let password = document.getElementById("password").value;
