@@ -3,61 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Deposit</title>
+    <title>Gold Plus - Recharge</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; }
-        body { background: var(--dark); color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #1a1a1a; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); max-width: 400px; margin: auto; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
-        .method-box { background: #222; padding: 15px; border-radius: 10px; margin: 10px 0; cursor: pointer; border: 1px solid transparent; transition: 0.3s; }
-        .method-box:hover { border-color: var(--gold); background: #2a2a2a; }
-        .details { display: none; margin-top: 15px; padding: 15px; background: #000; border-radius: 10px; border: 1px dashed var(--gold); }
-        input { width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; }
-        .btn { background: var(--gold); border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 10px; margin-top: 10px; }
-        .copy-btn { font-size: 12px; color: var(--gold); cursor: pointer; text-decoration: underline; }
+        :root { --gold: #f1c40f; --purple-dark: #1a0b2e; --purple-light: #25163d; --text-muted: #aaa; }
+        body { background: #0f051d; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 30px; }
+
+        .header { background: var(--purple-dark); padding: 15px 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .header h3 { margin: 0; font-size: 18px; font-weight: 500; }
+
+        .container { padding: 20px; }
+
+        /* 📋 اکاؤنٹ ڈیٹیل کارڈ */
+        .account-details { 
+            background: var(--purple-light); border-radius: 25px; padding: 20px; 
+            margin-bottom: 25px; border: 1px solid var(--gold);
+            text-align: center;
+        }
+        .account-details h4 { color: var(--gold); margin: 0 0 10px 0; font-size: 14px; text-transform: uppercase; }
+        .acc-number { font-size: 24px; font-weight: bold; letter-spacing: 2px; margin: 10px 0; color: #fff; }
+        .acc-name { color: var(--text-muted); font-size: 14px; margin-bottom: 15px; }
+        .copy-acc { background: rgba(241, 196, 15, 0.1); color: var(--gold); border: none; padding: 8px 20px; border-radius: 10px; font-size: 12px; cursor: pointer; }
+
+        /* ✍️ ان پٹ فیلڈز */
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; margin-left: 5px; }
+        .input-group input { 
+            width: 100%; padding: 15px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; 
+            color: #fff; box-sizing: border-box; font-size: 15px;
+        }
+        .input-group input:focus { border-color: var(--gold); outline: none; }
+
+        /* 📸 اسکرین شاٹ اپ لوڈر */
+        .upload-box {
+            border: 2px dashed rgba(255,255,255,0.1); padding: 30px; border-radius: 20px;
+            text-align: center; color: var(--text-muted); cursor: pointer; transition: 0.3s;
+        }
+        .upload-box:active { background: rgba(255,255,255,0.05); }
+        .upload-box i { font-size: 30px; color: var(--gold); margin-bottom: 10px; }
+
+        /* سبمٹ بٹن */
+        .submit-btn { 
+            width: 100%; padding: 18px; background: var(--gold); 
+            border: none; border-radius: 20px; font-weight: bold; 
+            font-size: 16px; color: #000; cursor: pointer; margin-top: 30px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 style="color:var(--gold)">Deposit Gold</h2>
-    <p>Select Payment Method:</p>
-
-    <div class="method-box" onclick="showDetails('jazzcash')">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/JazzCash_logo.png" width="80" style="vertical-align:middle">
-        <span>JazzCash</span>
+    <div class="header">
+        <a href="deposit.html" style="color:inherit;"><i class="fa-solid fa-arrow-left"></i></a>
+        <h3>Recharge Funds</h3>
     </div>
 
-    <div class="method-box" onclick="showDetails('crypto')">
-        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="30" style="vertical-align:middle">
-        <span>USDT (TRC-20)</span>
+    <div class="container">
+        
+        <div class="account-details">
+            <h4>Transfer Money To</h4>
+            <div class="acc-number" id="accNum">03123456789</div>
+            <div class="acc-name">Account Title: Muhammad Anjum</div>
+            <button class="copy-acc" onclick="copyNum()">Copy Number</button>
+        </div>
+
+        <form id="rechargeForm">
+            <div class="input-group">
+                <label>Amount (PKR)</label>
+                <input type="number" placeholder="Enter Amount (Min. 600)" required>
+            </div>
+
+            <div class="input-group">
+                <label>Transaction ID (TID)</label>
+                <input type="text" placeholder="Enter 11-digit TID" required>
+            </div>
+
+            <label style="font-size: 12px; color: var(--text-muted); display: block; margin-bottom: 8px; margin-left: 5px;">Upload Screenshot</label>
+            <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <p style="margin:0; font-size:13px;">Click to upload proof</p>
+                <input type="file" id="fileInput" hidden required>
+            </div>
+
+            <button type="submit" class="submit-btn">SUBMIT RECHARGE</button>
+        </form>
+
     </div>
 
-    <div id="jazzcash-details" class="details">
-        <p>Name: <b>Ahmad Nafees Anjum</b></p>
-        <p>Number: <b id="jcNum">03037264598</b> <span class="copy-btn" onclick="copyText('jcNum')">Copy</span></p>
-    </div>
-
-    <div id="crypto-details" class="details">
-        <p>Network: <b>TRC-20</b></p>
-        <p style="font-size: 10px;">Address: <b id="trcAdd">YOUR_TRC20_ADDRESS_HERE</b> <br> <span class="copy-btn" onclick="copyText('trcAdd')">Copy</span></p>
-    </div>
-
-    <input type="number" id="amount" placeholder="Enter Amount (PKR)">
-    <input type="file" id="screenshot" accept="image/*">
-    <button class="btn" id="submitBtn">Submit Proof</button>
-</div>
-
-<script>
-    function showDetails(method) {
-        document.getElementById('jazzcash-details').style.display = method === 'jazzcash' ? 'block' : 'none';
-        document.getElementById('crypto-details').style.display = method === 'crypto' ? 'block' : 'none';
-    }
-
-    function copyText(id) {
-        const text = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(text);
-        alert("Copied: " + text);
-    }
-</script>
+    <script>
+        function copyNum() {
+            const num = document.getElementById('accNum').innerText;
+            navigator.clipboard.writeText(num);
+            alert("Account Number Copied!");
+        }
+        
+        document.getElementById('rechargeForm').onsubmit = function(e) {
+            e.preventDefault();
+            alert("Request Submitted! Our team will verify and add balance soon.");
+            window.location.href = "dashboard.html";
+        }
+    </script>
 </body>
 </html>
