@@ -5,192 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Plus - Login</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        body {
-            background: radial-gradient(circle, #2c3e50 0%, #000000 100%);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .phone-frame {
-            background-color: white;
-            width: 360px;
-            height: 720px;
-            border-radius: 30px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            border: 8px solid #333; /* Simulate phone border */
-        }
-
-        .screen-content {
-            padding: 40px 25px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            height: 100%;
-        }
-
-        /* SVG Gold Plus Logo */
-        .logo-container {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .brand-name {
-            color: #d4af37; /* Gold color */
-            font-size: 28px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            margin-top: -10px;
-        }
-
-        h2 {
-            margin-bottom: 30px;
-            color: #333;
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .form-group {
-            width: 100%;
-            margin-bottom: 15px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            width: 100%;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 18px;
-            opacity: 0.5;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 15px 15px 15px 45px;
-            border: 1px solid #e0e0e0;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-            font-size: 15px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: #d4af37;
-            background-color: #fff;
-        }
-
-        .btn-login {
-            width: 100%;
-            padding: 15px;
-            background: linear-gradient(45deg, #d4af37, #f1c40f);
-            border: none;
-            color: #000;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .btn-login:hover {
-            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5);
-        }
-
-        .btn-login:active {
-            transform: translateY(1px);
-        }
-
-        .google-play {
-            margin-top: auto; /* Push to bottom */
-            margin-bottom: 20px;
-            width: 150px;
-            cursor: pointer;
-        }
-
-        .signup-text {
-            font-size: 14px;
-            color: #666;
-            margin-bottom: 10px;
-        }
-
-        .signup-text a {
-            color: #d4af37;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
+        body { background: #000; color: #d4af37; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .box { background: #fff; padding: 30px; border-radius: 20px; width: 320px; color: #333; text-align: center; box-shadow: 0 0 20px #d4af37; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #d4af37; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+        a { color: #d4af37; text-decoration: none; font-weight: bold; }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-
-    <div class="phone-frame">
-        <div class="screen-content">
-            
-            <div class="logo-container">
-                <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="50" cy="50" r="48" stroke="#d4af37" stroke-width="4"/>
-                    <path d="M35 30H55C63.2843 30 70 36.7157 70 45C70 53.2843 63.2843 60 55 60H35V30Z" stroke="#d4af37" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M35 60V75" stroke="#d4af37" stroke-width="5" stroke-linecap="round"/>
-                    <path d="M45 45H60" stroke="#d4af37" stroke-width="3" stroke-linecap="round"/>
-                    <defs>
-                        <linearGradient id="paint0_linear" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
-                            <stop stop-color="#F1C40F"/>
-                            <stop offset="1" stop-color="#D4AF37"/>
-                        </linearGradient>
-                    </defs>
-                </svg>
-                <div class="brand-name">Gold Plus</div>
-            </div>
-
-            <h2>Login</h2>
-
-            <form action="#" method="post" style="width: 100%;">
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        <input type="tel" placeholder="Mobile phone number" required>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="input-wrapper">
-                        <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-                        <input type="password" placeholder="Password" required>
-                    </div>
-                </div>
-
-                <button type="submit" class="btn-login">Login</button>
-            </form>
-
-            <div class="signup-text">
-                New to Gold Plus? <a href="signup.html">SIGN UP</a>
-            </div>
-
-            <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" alt="Get it on Google Play" class="google-play">
-
-        </div>
+    <div class="box">
+        <h2 style="color:#d4af37">GOLD PLUS</h2>
+        <input type="email" id="email" placeholder="Email Address">
+        <input type="password" id="pass" placeholder="Password">
+        <button id="loginBtn">LOGIN</button>
+        <p style="font-size: 13px; margin-top: 15px;">New User? <a href="signup.html">SIGN UP</a></p>
     </div>
 
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+            authDomain: "gold-plus-v1.firebaseapp.com",
+            projectId: "gold-plus-v1",
+            storageBucket: "gold-plus-v1.firebasestorage.app",
+            messagingSenderId: "474592887487",
+            appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        document.getElementById('loginBtn').onclick = async () => {
+            const email = document.getElementById('email').value;
+            const pass = document.getElementById('pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+                alert("Login Success!");
+                window.location.href = "recharge.html"; 
+            } catch (e) { alert("Login Error: " + e.message); }
+        };
+    </script>
 </body>
 </html>
