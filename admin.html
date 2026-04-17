@@ -3,64 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Admin Panel</title>
+    <title>Gold Plus - Master Admin</title>
     <style>
-        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: #d4af37; color: white; }
-        .proof-img { width: 80px; cursor: pointer; border-radius: 5px; }
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background: var(--dark); color: #fff; font-family: sans-serif; margin: 0; padding: 20px; }
+        .tab-container { display: flex; justify-content: center; margin-bottom: 20px; }
+        .tab-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 10px 20px; cursor: pointer; transition: 0.3s; }
+        .tab-btn.active { background: var(--gold); color: #000; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: #111; border-radius: 10px; overflow: hidden; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #222; }
+        th { background: var(--gold); color: #000; }
+        .proof-img { width: 60px; height: 60px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid var(--gold); }
+        .action-btn { padding: 8px 15px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin: 2px; }
+        .approve { background: #28a745; color: white; }
+        .reject { background: #dc3545; color: white; }
     </style>
 </head>
 <body>
-<div class="container">
-    <h2>Pending Deposits</h2>
-    <table>
-        <thead>
-            <tr><th>Amount</th><th>Screenshot</th><th>Action</th></tr>
-        </thead>
-        <tbody id="tableBody"></tbody>
-    </table>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    <h2 style="text-align:center; color: var(--gold);">MASTER ADMIN PANEL</h2>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-        authDomain: "gold-plus-v1.firebaseapp.com",
-        projectId: "gold-plus-v1",
-        storageBucket: "gold-plus-v1.firebasestorage.app",
-        messagingSenderId: "474592887487",
-        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
-    };
+    <div class="tab-container">
+        <button class="tab-btn active" onclick="showTab('deposits')">Deposits</button>
+        <button class="tab-btn" onclick="showTab('withdraws')">Withdrawals</button>
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+    <div id="deposits-section">
+        <h3>Pending Deposits</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Screenshot</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="depositTable"></tbody>
+        </table>
+    </div>
 
-    onSnapshot(collection(db, "deposits"), (snapshot) => {
-        const tableBody = document.getElementById('tableBody');
-        tableBody.innerHTML = "";
-        snapshot.forEach((docData) => {
-            const data = docData.data();
-            if(data.status === "pending") {
-                const row = `<tr>
-                    <td>${data.amount}</td>
-                    <td><a href="${data.screenshotUrl}" target="_blank"><img src="${data.screenshotUrl}" class="proof-img"></a></td>
-                    <td>
-                        <button onclick="approve('${docData.id}')" style="background:green; color:white;">Approve</button>
-                        <button onclick="reject('${docData.id}')" style="background:red; color:white;">Reject</button>
-                    </td>
-                </tr>`;
-                tableBody.innerHTML += row;
-            }
+    <div id="withdraws-section" style="display:none;">
+        <h3>Withdraw Requests</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Method</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="withdrawTable"></tbody>
+        </table>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+            authDomain: "gold-plus-v1.firebaseapp.com",
+            projectId: "gold-plus-v1",
+            storageBucket: "gold-plus-v1.firebasestorage.app",
+            messagingSenderId: "474592887487",
+            appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Tabs Logic
+        window.showTab = (tab) => {
+            document.getElementById('deposits-section').style.display = tab === 'deposits' ? 'block' : 'none';
+            document.getElementById('withdraws-section').style.display = tab === 'withdraws' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        // Listen for Deposits
+        onSnapshot(collection(db, "deposits"), (snapshot) => {
+            const tbody = document.getElementById('depositTable');
+            tbody.innerHTML = "";
+            snapshot.forEach((docData) => {
+                const data = docData.data();
+                if(data.status === "pending") {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>Rs. ${data.amount}</td>
+                            <td><a href="${data.screenshotUrl}" target="_blank"><img src="${data.screenshotUrl}" class="proof-img"></a></td>
+                            <td>
+                                <button class="action-btn approve" onclick="approveDep('${docData.id}', '${data.userId}', ${data.amount})">Approve</button>
+                                <button class="action-btn reject" onclick="rejectDep('${docData.id}')">Reject</button>
+                            </td>
+                        </tr>`;
+                }
+            });
         });
-    });
 
-    window.approve = async (id) => { await updateDoc(doc(db, "deposits", id), { status: "approved" }); alert("Approved!"); };
-    window.reject = async (id) => { await deleteDoc(doc(db, "deposits", id)); alert("Rejected!"); };
-</script>
+        // Approve Deposit Logic
+        window.approveDep = async (id, userId, amount) => {
+            try {
+                // یوزر کا بیلنس اپ ڈیٹ کرنا (اگر userId موجود ہو)
+                if(userId) {
+                    const userRef = doc(db, "users", userId);
+                    const userSnap = await getDoc(userRef);
+                    if(userSnap.exists()){
+                        const newBalance = (userSnap.data().balance || 0) + parseInt(amount);
+                        await updateDoc(userRef, { balance: newBalance });
+                    }
+                }
+                await updateDoc(doc(db, "deposits", id), { status: "approved" });
+                alert("Deposit Approved & Balance Added!");
+            } catch (e) { alert(e.message); }
+        };
+
+        window.rejectDep = async (id) => {
+            await deleteDoc(doc(db, "deposits", id));
+            alert("Deposit Rejected!");
+        };
+
+    </script>
 </body>
 </html>
