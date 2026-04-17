@@ -1,179 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Dashboard</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* 🎨 تھیم کلرز اور فونٹس بالکل اسکرین شاٹ جیسے */
-        :root { --dark-purple: #0f051d; --card-bg: #1a0b2e; --gold: #f1c40f; --accent-purple: #9b59b6; }
-        body { background: var(--dark-purple); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 90px; -webkit-font-smoothing: antialiased; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gold Plus Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f051d, #1a0b2e);
+    color: white;
+    padding-bottom: 80px;
+  }
 
-        /* 🏆 ہیڈر (Gold Plus Dashboard) */
-        .header { padding: 20px; display: flex; justify-content: space-between; align-items: start; background: rgba(15, 5, 29, 0.9); }
-        .logo-box h2 { margin: 0; color: var(--gold); font-weight: 900; font-size: 20px; }
-        .logo-box span { font-size: 11px; opacity: 0.6; }
-        .stats-box { text-align: right; font-size: 11px; color: #aaa; }
-        .stats-box b { color: #fff; }
+  /* HEADER */
+  .header { padding: 20px; }
+  .header h1 { color: #f1c40f; margin: 0; font-size: 24px; }
+  .top-info { display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; opacity: 0.8; }
 
-        .container { padding: 0 15px; }
+  /* CARD */
+  .card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 10px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  }
 
-        /* ⛏️ مائنر کارڈز (گولڈ کوائنز) */
-        .miners-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .miner-card { 
-            background: var(--card-bg); border-radius: 20px; padding: 20px; 
-            border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;
-        }
-        .miner-img { width: 70px; margin-bottom: 10px; }
-        .miner-card h4 { margin: 0; font-size: 16px; color: #fff; }
-        .miner-card p { margin: 5px 0; font-size: 11px; color: #aaa; }
-        .earn-rate { font-size: 10px; color: #fff; background: rgba(255,255,255,0.05); padding: 2px 10px; border-radius: 10px; }
+  /* MINERS */
+  .miners { display: flex; gap: 10px; padding: 5px; }
+  .miner { flex: 1; text-align: center; }
+  .miner img { width: 70px; margin-bottom: 10px; filter: drop-shadow(0 0 10px gold); }
+  .miner h3 { margin: 5px 0; font-size: 16px; }
+  .miner p { font-size: 12px; color: #aaa; margin: 5px 0; }
+  .timer { margin: 10px 0; font-size: 16px; font-weight: bold; color: #ff4e00; font-family: monospace; }
+  .btn {
+    background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+    color: black;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .btn:active { transform: scale(0.95); }
 
-        /* 🕒 کلیم ٹائمر اور بٹن */
-        .timer-box { font-size: 13px; color: #aaa; margin: 10px 0; font-family: monospace; display: flex; align-items: center; justify-content: center; gap: 5px; }
-        .timer-box i { color: #ff4e00; }
-        .collect-btn { 
-            width: 100%; padding: 12px; background: linear-gradient(135deg, var(--gold), #f39c12); 
-            border: none; border-radius: 12px; color: #000; font-weight: bold; font-size: 13px; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(241, 196, 15, 0.2); transition: 0.3s;
-        }
-        .collect-btn:active { transform: scale(0.97); }
+  /* BALANCE */
+  .balance { text-align: center; }
+  .balance h2 { font-size: 40px; margin: 10px 0; letter-spacing: 1px; }
+  .bal-sub { display: flex; justify-content: space-around; font-size: 12px; }
 
-        /* 💰 مین بیلنس کارڈ */
-        .balance-card { 
-            background: linear-gradient(135deg, #2a1b4d, #1a0b2e); 
-            border-radius: 20px; padding: 25px; margin-bottom: 25px;
-            border: 1px solid rgba(255, 255, 255, 0.05); text-align: center;
-        }
-        .bal-val { font-size: 38px; font-weight: 800; color: #fff; margin: 10px 0; }
-        .bal-sub { display: flex; justify-content: space-around; font-size: 12px; }
+  /* ACTION BUTTONS */
+  .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
+  .action { 
+    background: rgba(255,255,255,0.05); 
+    padding: 15px 5px; 
+    border-radius: 15px; 
+    text-align: center; 
+    font-size: 11px;
+    color: #fff;
+    text-decoration: none;
+  }
+  .action i { display: block; font-size: 24px; margin-bottom: 8px; }
+  .icon-dep { color: #f1c40f; }
+  .icon-wit { color: #2ecc71; }
+  .icon-pro { color: #9b59b6; }
+  .icon-sup { color: #25d366; }
 
-        /* 🔳 کوئیک بٹنز گرڈ ( Deposit، Withdraw...) */
-        .action-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; text-align: center; }
-        .a-item { text-decoration: none; color: #fff; }
-        .a-icon { width: 55px; height: 55px; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 22px; transition: 0.3s; }
-        .a-item span { font-size: 11px; color: #888; font-weight: 500; }
-        
-        /* کوئیک بٹن کلرز بالکل اسکرین شاٹ جیسے */
-        .bg-gold { background: rgba(241, 196, 15, 0.1); color: var(--gold); }
-        .bg-green { background: rgba(46, 204, 113, 0.1); color: #2ecc71; }
-        .bg-purple { background: rgba(155, 89, 182, 0.1); color: var(--accent-purple); }
-        .bg-wa { background: rgba(37, 211, 102, 0.1); color: #25d366; }
-
-        /* 底部 مینیو (Bottom Nav) */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--card-bg); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000; }
-        .nav-link { color: #555; text-decoration: none; text-align: center; font-size: 10px; transition: 0.3s; }
-        .nav-link.active { color: var(--gold); }
-        .nav-link i { font-size: 20px; margin-bottom: 5px; display: block; }
-    </style>
+  /* NAVBAR */
+  .navbar {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #1a0b2e;
+    display: flex;
+    justify-content: space-around;
+    padding: 15px 0;
+    border-top: 1px solid rgba(255,255,255,0.05);
+  }
+  .nav-item { text-align: center; font-size: 10px; color: #666; text-decoration: none; }
+  .nav-item.active { color: #f1c40f; }
+  .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
+</style>
 </head>
+
 <body>
 
-    <div class="header">
-        <div class="logo-box">
-            <h2>Gold Plus <span>Dashboard</span></h2>
-            <span>Welcome, Mranjum</span>
-        </div>
-        <div class="stats-box">
-            Total Balance: $0<br>
-            Active Miners: <b>2</b>
-        </div>
-    </div>
+<div class="header">
+  <h1>Gold Plus <span style="font-weight: 300; font-size: 16px; color: white;">Dashboard</span></h1>
+  <div class="top-info">
+    <div>Welcome, User</div>
+    <div style="text-align: right;">Active Miners: <b style="color: #f1c40f;">2</b></div>
+  </div>
+</div>
 
-    <div class="container">
-        
-        <div class="miners-grid">
-            <div class="miner-card">
-                <img src="https://via.placeholder.com/100/f1c40f/ffffff?text=COIN" alt="Gold 1" class="miner-img">
-                <h4>Gold 1</h4>
-                <div class="timer-box"><i class="fa-solid fa-hourglass-start fa-spin"></i> <span id="time1">02:15:30</span></div>
-                <button class="collect-btn" id="btn1" onclick="collect('btn1', 'time1')">COLLECT</button>
-            </div>
-            <div class="miner-card">
-                <img src="https://via.placeholder.com/100/f1c40f/ffffff?text=COIN" alt="Gold 2" class="miner-img">
-                <h4>Gold 2</h4>
-                <div class="timer-box"><i class="fa-solid fa-hourglass-start fa-spin"></i> <span id="time2">01:30:45</span></div>
-                <button class="collect-btn" id="btn2" onclick="collect('btn2', 'time2')">COLLECT</button>
-            </div>
-        </div>
+<div class="miners">
+  <div class="card miner">
+    <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
+    <h3>Gold 1</h3>
+    <p>Earning: $2/day</p>
+    <div class="timer" id="time1">02:15:30</div>
+    <button class="btn" onclick="collect('time1')">Collect</button>
+  </div>
 
-        <div class="balance-card">
-            <div style="font-size: 12px; opacity: 0.6;">Total Balance</div>
-            <div class="bal-val">$0.00</div>
-            <div class="bal-sub">
-                <span style="color:#00ff64;">DAILY: +$0.00</span>
-                <span>TOTAL EARNED: $0.00</span>
-            </div>
-        </div>
+  <div class="card miner">
+    <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
+    <h3>Gold 2</h3>
+    <p>Earning: $1/day</p>
+    <div class="timer" id="time2">01:30:45</div>
+    <button class="btn" onclick="collect('time2')">Collect</button>
+  </div>
+</div>
 
-        <div class="action-grid">
-            <a href="deposit.html" class="a-item">
-                <div class="a-icon bg-gold"><i class="fa-solid fa-wallet"></i></div>
-                <span>Deposit</span>
-            </a>
-            <a href="withdraw.html" class="a-item">
-                <div class="a-icon bg-green"><i class="fa-solid fa-money-bill-transfer"></i></div>
-                <span>Withdraw</span>
-            </a>
-            <a href="promo.html" class="a-item">
-                <div class="a-icon bg-purple"><i class="fa-solid fa-gift"></i></div>
-                <span>Promo</span>
-            </a>
-            <a href="https://wa.me/yournumber" class="a-item">
-                <div class="a-icon bg-wa"><i class="fa-brands fa-whatsapp"></i></div>
-                <span>Support</span>
-            </a>
-        </div>
-    </div>
+<div class="card balance">
+  <p style="font-size: 12px; opacity: 0.6; margin: 0;">Total Balance</p>
+  <h2>$0.00</h2>
+  <div class="bal-sub">
+    <span style="color: #2ecc71;">Daily: +$0.00</span>
+    <span>Total Earned: $0.00</span>
+  </div>
+</div>
 
-    <nav class="bottom-nav">
-        <a href="index.html" class="nav-link active"><i class="fa-solid fa-table-cells-large"></i>HOME</a>
-        <a href="invest.html" class="nav-link"><i class="fa-solid fa-sparkles"></i>INVEST</a>
-        <a href="mining.html" class="nav-link"><i class="fa-solid fa-wallet"></i>EARN</a>
-        <a href="invite.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i>INVITE</a>
-        <a href="profile.html" class="nav-link"><i class="fa-solid fa-circle-user"></i>PROFILE</a>
-    </nav>
+<div class="actions">
+  <a href="deposit.html" class="action"><i class="fas fa-wallet icon-dep"></i>Deposit</a>
+  <a href="withdraw.html" class="action"><i class="fas fa-money-bill-transfer icon-wit"></i>Withdraw</a>
+  <a href="promo.html" class="action"><i class="fas fa-gift icon-pro"></i>Promo</a>
+  <a href="https://wa.me/923000000000" class="action"><i class="fab fa-whatsapp icon-sup"></i>Support</a>
+</div>
 
-    <script>
-        // ٹائمرز کو لائیو چلانے کا فنکشن
-        function startTimer(duration, display, button) {
-            let timer = duration;
-            setInterval(function () {
-                let hours = parseInt(timer / 3600, 10);
-                let minutes = parseInt((timer % 3600) / 60, 10);
-                let seconds = parseInt(timer % 60, 10);
+<div class="navbar">
+  <a href="#" class="nav-item active"><i class="fas fa-th-large"></i>Home</a>
+  <a href="#" class="nav-item"><i class="fas fa-chart-line"></i>Invest</a>
+  <a href="#" class="nav-item"><i class="fas fa-coins"></i>Earn</a>
+  <a href="#" class="nav-item"><i class="fas fa-paper-plane"></i>Invite</a>
+  <a href="#" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
+</div>
 
-                display.textContent = (hours < 10 ? "0" : "") + hours + ":" + (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
+<script>
+  // لائیو ٹائمر فنکشن
+  function startCountDown(id, seconds) {
+    let timer = seconds;
+    const element = document.getElementById(id);
+    setInterval(function () {
+      let h = Math.floor(timer / 3600);
+      let m = Math.floor((timer % 3600) / 60);
+      let s = Math.floor(timer % 60);
+      element.innerText = 
+        (h < 10 ? "0" + h : h) + ":" + 
+        (m < 10 ? "0" + m : m) + ":" + 
+        (s < 10 ? "0" + s : s);
+      if (--timer < 0) timer = 0;
+    }, 1000);
+  }
 
-                if (--timer < 0) {
-                    timer = 0;
-                    button.textContent = "READY TO COLLECT!";
-                    button.style.background = "#00ff64"; // بٹن ہرا ہو جائے گا
-                }
-            }, 1000);
-        }
+  window.onload = function () {
+    startCountDown('time1', 8130); // 2:15:30
+    startCountDown('time2', 5445); // 1:30:45
+  };
 
-        // جب پیج لوڈ ہو تو ٹائمرز شروع ہو جائیں
-        window.onload = function () {
-            // ٹائمر 1 (2 گھنٹے 15 منٹ 30 سیکنڈ)
-            startTimer(8130, document.getElementById('time1'), document.getElementById('btn1'));
-            // ٹائمر 2 (1 گھنٹہ 30 منٹ 45 سیکنڈ)
-            startTimer(5445, document.getElementById('time2'), document.getElementById('btn2'));
-        };
-
-        // کلیم بٹن کا فنکشن
-        function collect(btnId, timeId) {
-            const button = document.getElementById(btnId);
-            const timerText = document.getElementById(timeId);
-            if(button.textContent === "READY TO COLLECT!") {
-                alert("Profit Collected Successfully!");
-                location.reload(); // دوبارہ ٹائمر شروع کرنے کے لیے پیج ریفریش
-            } else {
-                alert("Please wait for the timer to finish.");
-            }
-        }
-    </script>
+  function collect(id) {
+    alert("Profit collected from " + id + "!");
+  }
+</script>
 
 </body>
 </html>
