@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Gold Plus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --gold: #d4af37; --dark: #050505; }
+        body { background: var(--dark); color: #fff; font-family: sans-serif; margin: 0; padding-bottom: 100px; }
+        
+        .profile-card { background: linear-gradient(180deg, #d4af37, #b8860b); padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; color: #000; }
+        .avatar { width: 80px; height: 80px; background: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; font-size: 40px; border: 4px solid #000; }
+        
+        .menu-container { padding: 20px; }
+        .menu-item { background: #111; padding: 18px; border-radius: 12px; margin-bottom: 12px; display: flex; align-items: center; border: 1px solid #222; cursor: pointer; transition: 0.3s; }
+        .menu-item:hover { border-color: var(--gold); }
+        .menu-item i { width: 30px; color: var(--gold); font-size: 18px; }
+        .menu-item span { flex: 1; font-size: 14px; }
+        .menu-item .arrow { color: #444; }
+
+        .logout-btn { color: #ff4d4d !important; border-color: #ff4d4d33 !important; }
+
+        /* Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        .nav-link { color: #666; text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-link i { font-size: 20px; display: block; margin-bottom: 5px; }
+        .nav-link.active { color: var(--gold); }
+    </style>
+</head>
+<body>
+
+    <div class="profile-card">
+        <div class="avatar"><i class="fa-solid fa-user-tie"></i></div>
+        <h2 id="uName" style="margin:5px 0">Ahmad Nafees</h2>
+        <p id="uEmail" style="margin:0; opacity:0.8">ahmad@example.com</p>
+    </div>
+
+    <div class="menu-container">
+        <div class="menu-item" onclick="location.href='recharge.html'">
+            <i class="fa-solid fa-wallet"></i>
+            <span>Deposit History</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item" onclick="location.href='withdraw.html'">
+            <i class="fa-solid fa-money-bill-transfer"></i>
+            <span>Withdrawal Records</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item">
+            <i class="fa-solid fa-headset"></i>
+            <span>Customer Support</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Privacy Policy</span>
+            <i class="fa-solid fa-chevron-right arrow"></i>
+        </div>
+        <div class="menu-item logout-btn" onclick="alert('Logging out...')">
+            <i class="fa-solid fa-right-from-bracket"></i>
+            <span>Logout Account</span>
+        </div>
+    </div>
+
+    <div class="nav-bar">
+        <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i>Home</a>
+        <a href="plans.html" class="nav-link"><i class="fa-solid fa-gem"></i>Plans</a>
+        <a href="refer.html" class="nav-link"><i class="fa-solid fa-users"></i>Team</a>
+        <a href="profile.html" class="nav-link active"><i class="fa-solid fa-user"></i>Profile</a>
+    </div>
+
+</body>
+</html>
