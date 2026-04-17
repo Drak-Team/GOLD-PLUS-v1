@@ -3,129 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Investment Plans - Gold Plus</title>
+    <title>Gold Plus - Mining Plans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.05); }
-        body { background: var(--dark); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding: 20px 15px 100px 15px; }
+        :root { --gold: #d4af37; --bg: #050505; --glass: rgba(255, 255, 255, 0.05); }
+        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 120px; }
         
-        .header { text-align: center; margin-bottom: 30px; }
-        .header h2 { color: var(--gold); margin: 0; text-transform: uppercase; letter-spacing: 2px; }
-        .balance-badge { background: var(--gold); color: #000; padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-top: 10px; }
+        .header { padding: 25px; text-align: center; background: #111; border-bottom: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
 
-        /* Plans Styling */
-        .plan-card { background: var(--glass); border: 1px solid #222; border-radius: 20px; padding: 20px; margin-bottom: 20px; position: relative; overflow: hidden; transition: 0.3s; border-left: 4px solid var(--gold); }
-        .plan-card:hover { border-color: var(--gold); transform: translateY(-5px); }
+        /* 🚀 الگ مائننگ سیکشن */
+        .mining-section {
+            background: linear-gradient(145deg, #1a1a1a, #000);
+            margin: 20px 15px; padding: 25px; border-radius: 30px;
+            border: 1px dashed var(--gold); text-align: center;
+        }
+        .mining-gif { width: 80px; filter: drop-shadow(0 0 10px var(--gold)); animation: rotate 5s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
         
-        .plan-info h3 { margin: 0; color: var(--gold); font-size: 20px; }
-        .plan-info p { margin: 5px 0; color: #aaa; font-size: 13px; }
-        .price-tag { font-size: 24px; font-weight: bold; margin: 15px 0; color: #fff; }
+        /* 📦 پلان کارڈ ڈیزائن */
+        .plan-card {
+            background: var(--glass); margin: 20px 15px; padding: 0;
+            border-radius: 25px; border: 1px solid rgba(212, 175, 55, 0.2);
+            overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .plan-img { width: 100%; height: 160px; object-fit: cover; border-bottom: 2px solid var(--gold); }
+        .plan-content { padding: 20px; }
+        .plan-title { color: var(--gold); font-size: 22px; font-weight: bold; margin-bottom: 10px; }
         
-        .benefit-list { list-style: none; padding: 0; margin: 15px 0; }
-        .benefit-list li { font-size: 13px; margin-bottom: 8px; color: #eee; }
-        .benefit-list i { color: var(--gold); margin-right: 8px; }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
+        .info-item { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .info-item span { display: block; font-size: 10px; color: #888; text-transform: uppercase; }
+        .info-item b { font-size: 14px; color: #fff; }
 
-        .buy-btn { width: 100%; background: linear-gradient(45deg, #d4af37, #f9e29c); color: #000; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .buy-btn {
+            width: 100%; padding: 15px; margin-top: 20px;
+            background: linear-gradient(45deg, var(--gold), #f9e29c);
+            border: none; border-radius: 15px; font-weight: bold;
+            color: #000; cursor: pointer; transition: 0.3s;
+        }
         .buy-btn:active { transform: scale(0.95); }
 
-        /* Coming Soon */
-        .coming-soon { opacity: 0.5; text-align: center; border-left: 4px solid #555; }
-
-        /* Navigation Bar */
-        .nav-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-link { color: #666; text-decoration: none; font-size: 10px; text-align: center; }
-        .nav-link i { font-size: 20px; display: block; margin-bottom: 5px; }
-        .nav-link.active { color: var(--gold); }
+        /* 📱 نیویگیشن */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
+        .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 11px; }
+        .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h2>Investment Plans</h2>
-        <div class="balance-badge">Balance: Rs. <span id="currentBalance">0.00</span></div>
+        <h2 style="margin:0; letter-spacing:2px;">GOLD <span style="color:var(--gold)">MINING</span></h2>
+    </div>
+
+    <div class="mining-section">
+        <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" class="mining-gif">
+        <h3 style="margin:10px 0; color:var(--gold);">Engine Status: Active</h3>
+        <p style="font-size:12px; color:#888;">Your machine is mining gold in real-time</p>
     </div>
 
     <div class="plan-card">
-        <div class="plan-info">
-            <h3>FREE STARTER</h3>
-            <p>Perfect for beginners</p>
+        <img src="https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?q=80&w=1000&auto=format&fit=crop" class="plan-img">
+        <div class="plan-content">
+            <div class="plan-title">V1 - Free Miner</div>
+            <div class="info-grid">
+                <div class="info-item"><span>Price</span><b>Rs. 0</b></div>
+                <div class="info-item"><span>Daily</span><b>Rs. 30</b></div>
+                <div class="info-item"><span>Validity</span><b>30 Days</b></div>
+                <div class="info-item"><span>Profit</span><b>Rs. 900</b></div>
+            </div>
+            <button class="buy-btn" onclick="buyPlan('FREE', 0, 30)">Activate Free</button>
         </div>
-        <div class="price-tag">Rs. 0</div>
-        <ul class="benefit-list">
-            <li><i class="fa-solid fa-circle-check"></i> Daily Income: Rs. 10</li>
-            <li><i class="fa-solid fa-circle-check"></i> Validity: 30 Days</li>
-            <li><i class="fa-solid fa-circle-check"></i> Referral: 5%</li>
-        </ul>
-        <button class="buy-btn" onclick="buyPlan(0, 'FREE')">ACTIVATE NOW</button>
     </div>
 
     <div class="plan-card">
-        <div class="plan-info">
-            <h3>BRONZE MACHINE</h3>
-            <p>Popular choice</p>
+        <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?q=80&w=1000&auto=format&fit=crop" class="plan-img">
+        <div class="plan-content">
+            <div class="plan-title">V2 - Starter Gold</div>
+            <div class="info-grid">
+                <div class="info-item"><span>Price</span><b>Rs. 1500</b></div>
+                <div class="info-item"><span>Daily</span><b>Rs. 150</b></div>
+                <div class="info-item"><span>Validity</span><b>30 Days</b></div>
+                <div class="info-item"><span>Profit</span><b>Rs. 4500</b></div>
+            </div>
+            <button class="buy-btn" onclick="buyPlan('STARTER', 1500, 150)">Buy Now</button>
         </div>
-        <div class="price-tag">Rs. 1,000</div>
-        <ul class="benefit-list">
-            <li><i class="fa-solid fa-circle-check"></i> Daily Income: Rs. 100</li>
-            <li><i class="fa-solid fa-circle-check"></i> Total Return: Rs. 3,000</li>
-            <li><i class="fa-solid fa-circle-check"></i> Validity: 30 Days</li>
-        </ul>
-        <button class="buy-btn" onclick="buyPlan(1000, 'BRONZE')">BUY PLAN</button>
     </div>
 
     <div class="plan-card">
-        <div class="plan-info">
-            <h3>SILVER MACHINE</h3>
-            <p>Higher returns</p>
+        <img src="https://images.unsplash.com/photo-1589156206699-bc21e38c8a7d?q=80&w=1000&auto=format&fit=crop" class="plan-img">
+        <div class="plan-content">
+            <div class="plan-title">V3 - Premium Gold</div>
+            <div class="info-grid">
+                <div class="info-item"><span>Price</span><b>Rs. 5000</b></div>
+                <div class="info-item"><span>Daily</span><b>Rs. 600</b></div>
+                <div class="info-item"><span>Validity</span><b>30 Days</b></div>
+                <div class="info-item"><span>Profit</span><b>Rs. 18,000</b></div>
+            </div>
+            <button class="buy-btn" onclick="buyPlan('PREMIUM', 5000, 600)">Buy Now</button>
         </div>
-        <div class="price-tag">Rs. 2,500</div>
-        <ul class="benefit-list">
-            <li><i class="fa-solid fa-circle-check"></i> Daily Income: Rs. 260</li>
-            <li><i class="fa-solid fa-circle-check"></i> Total Return: Rs. 7,800</li>
-            <li><i class="fa-solid fa-circle-check"></i> Validity: 30 Days</li>
-        </ul>
-        <button class="buy-btn" onclick="buyPlan(2500, 'SILVER')">BUY PLAN</button>
     </div>
 
-    <div class="plan-card">
-        <div class="plan-info">
-            <h3>GOLD MASTER</h3>
-            <p>Maximum profit</p>
-        </div>
-        <div class="price-tag">Rs. 5,000</div>
-        <ul class="benefit-list">
-            <li><i class="fa-solid fa-circle-check"></i> Daily Income: Rs. 550</li>
-            <li><i class="fa-solid fa-circle-check"></i> Total Return: Rs. 16,500</li>
-            <li><i class="fa-solid fa-circle-check"></i> Validity: 30 Days</li>
-        </ul>
-        <button class="buy-btn" onclick="buyPlan(5000, 'GOLD')">BUY PLAN</button>
-    </div>
+    <nav class="bottom-nav">
+        <a href="dashboard.html" class="nav-item"><i class="fa-solid fa-house fa-xl"></i><br>HOME</a>
+        <a href="plans.html" class="nav-item active"><i class="fa-solid fa-microchip fa-xl"></i><br>MINING</a>
+        <a href="refer.html" class="nav-item"><i class="fa-solid fa-share-nodes fa-xl"></i><br>INVITE</a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user fa-xl"></i><br>ME</a>
+    </nav>
 
-    <div class="plan-card coming-soon">
-        <h3>DIAMOND PLAN</h3>
-        <p>Launching Soon...</p>
-    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-    <div class="nav-bar">
-        <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i>Home</a>
-        <a href="plans.html" class="nav-link active"><i class="fa-solid fa-gem"></i>Plans</a>
-        <a href="refer.html" class="nav-link"><i class="fa-solid fa-users"></i>Team</a>
-        <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i>Profile</a>
-    </div>
+        // Firebase Config (وہی استعمال کریں جو پہلے تھی)
+        const firebaseConfig = { 
+            apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+            authDomain: "gold-plus-v1.firebaseapp.com",
+            projectId: "gold-plus-v1",
+            storageBucket: "gold-plus-v1.firebasestorage.app",
+            messagingSenderId: "474592887487",
+            appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
 
-    <script>
-        // یہاں بیلنس چیک کرنے اور خریدنے کی لاجک
-        let userBalance = 500; // یہ ڈیٹا فائر بیس سے آئے گا
-        document.getElementById('currentBalance').innerText = userBalance;
+        window.buyPlan = async (name, price, daily) => {
+            const user = auth.currentUser;
+            if(!user) return alert("Please Login!");
 
-        function buyPlan(price, name) {
-            if (userBalance < price) {
-                alert("Insufficient Balance! Please Recharge First.");
-            } else {
-                alert("Success! " + name + " Plan has been activated.");
-                // یہاں فائر بیس میں بیلنس کم کرنے کا کوڈ لگے گا
+            const userRef = doc(db, "users", user.uid);
+            const userSnap = await getDoc(userRef);
+            const userData = userSnap.data();
+
+            if(name === 'FREE' && userData.freePlanTaken) {
+                return alert("You already used the Free Plan!");
             }
-        }
+            if(userData.balance < price) {
+                return alert("Insufficient Balance!");
+            }
+
+            try {
+                let updates = {
+                    balance: userData.balance - price,
+                    activePlan: name,
+                    dailyIncome: daily,
+                    planDate: new Date()
+                };
+                if(name === 'FREE') updates.freePlanTaken = true;
+
+                await updateDoc(userRef, updates);
+                alert("Plan Activated!");
+                window.location.href = "dashboard.html";
+            } catch (e) { alert(e.message); }
+        };
     </script>
 </body>
 </html>
