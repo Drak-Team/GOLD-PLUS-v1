@@ -6,20 +6,20 @@
     <title>Gold Plus - Signup</title>
     <style>
         body { background: #000; color: #d4af37; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #fff; padding: 30px; border-radius: 20px; width: 320px; color: #333; text-align: center; }
+        .box { background: #fff; padding: 30px; border-radius: 20px; width: 320px; color: #333; text-align: center; box-shadow: 0 0 20px #d4af37; }
         input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
         button { width: 100%; padding: 12px; background: #d4af37; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2 style="color:#d4af37">Create Account</h2>
+        <h2 style="color:#d4af37">CREATE ACCOUNT</h2>
         <input type="text" id="name" placeholder="Full Name">
         <input type="email" id="email" placeholder="Email Address">
-        <input type="tel" id="phone" placeholder="Mobile Number">
+        <input type="tel" id="phone" placeholder="Phone Number">
         <input type="password" id="pass" placeholder="Password">
         <button id="signupBtn">SIGN UP</button>
-        <p style="font-size: 12px; margin-top: 10px;">Already have an account? <a href="index.html">Login</a></p>
+        <p style="font-size: 13px; margin-top: 15px;">Already have an account? <a href="index.html" style="color:#d4af37; font-weight:bold; text-decoration:none;">Login</a></p>
     </div>
 
     <script type="module">
@@ -49,7 +49,7 @@
             try {
                 const res = await createUserWithEmailAndPassword(auth, email, pass);
                 await setDoc(doc(db, "users", res.user.uid), {
-                    name, email, phone, balance: 0, role: "user"
+                    name, email, phone, balance: 0, createdAt: new Date()
                 });
                 alert("Account Created!");
                 window.location.href = "index.html";
