@@ -3,146 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Mining Hub</title>
+    <title>Gold Plus - Investment Plans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #d4af37; --bg: #050505; --card: rgba(255, 255, 255, 0.05); }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 120px; }
-        
-        .header { padding: 20px; text-align: center; background: #111; border-bottom: 2px solid var(--gold); }
+        :root { --gold: #f1c40f; --purple-dark: #1a0b2e; --purple-light: #25163d; --text-muted: #aaa; }
+        body { background: #0f051d; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 100px; }
 
-        /* 🔥 لائیو مائننگ سیکشن (Active Machines) */
-        .active-mining-area { padding: 15px; background: #000; margin-bottom: 20px; }
-        .mining-card { 
-            background: linear-gradient(135deg, #1a1a1a, #000); 
-            border: 1px solid var(--gold); padding: 15px; border-radius: 20px; 
-            margin-bottom: 15px; display: flex; align-items: center; justify-content: space-between;
-        }
-        .mining-info h4 { margin: 0; color: var(--gold); font-size: 14px; }
-        .mining-info p { margin: 5px 0 0 0; font-size: 12px; color: #00ff64; }
-        .timer { font-family: monospace; color: #ff3e3e; font-weight: bold; font-size: 14px; }
+        /* Header بالکل ویسا ہی جیسا اسکرین شاٹ میں ہے */
+        .header { background: var(--purple-dark); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .brand-name { color: var(--gold); font-weight: bold; font-size: 18px; }
+        .user-circle { background: var(--gold); color: #000; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        /* 📦 انویسٹمنٹ کارڈز */
+        .container { padding: 15px; }
+        .page-title { font-size: 16px; color: #ccc; margin-bottom: 20px; }
+
+        /* پریمیم انویسٹمنٹ کارڈ */
         .plan-card { 
-            background: var(--card); margin: 15px; border-radius: 25px; 
-            border: 1px solid rgba(255,255,255,0.05); overflow: hidden; backdrop-filter: blur(10px);
+            background: var(--purple-light); border-radius: 25px; padding: 20px; 
+            margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3); position: relative;
         }
-        .plan-img { width: 100%; height: 150px; object-fit: cover; }
-        .plan-details { padding: 15px; }
-        .plan-details h3 { color: var(--gold); margin: 0 0 10px 0; }
-        
-        .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .stat { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 10px; font-size: 11px; }
-        .stat span { color: #888; display: block; }
-        .stat b { color: #fff; }
-
-        .buy-btn { 
-            width: 100%; padding: 12px; background: linear-gradient(45deg, var(--gold), #f9e29c); 
-            border: none; border-radius: 12px; font-weight: bold; margin-top: 15px; cursor: pointer;
+        .most-popular { 
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%);
+            background: var(--gold); color: #000; padding: 4px 15px; 
+            border-radius: 10px; font-size: 10px; font-weight: bold; text-transform: uppercase;
         }
 
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid #222; }
-        .nav-link { color: #555; text-decoration: none; font-size: 11px; text-align: center; }
+        .plan-header { display: flex; align-items: center; margin-bottom: 20px; }
+        .plan-icon { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 15px; margin-right: 15px; border: 1px solid rgba(212,175,55,0.2); }
+        .plan-icon i { color: var(--gold); font-size: 20px; }
+        .plan-info h3 { margin: 0; font-size: 18px; }
+        .plan-info span { color: var(--gold); font-size: 20px; font-weight: bold; }
+        .plan-info .pkr { color: var(--text-muted); font-size: 12px; font-weight: normal; }
+
+        /* گریڈ سسٹم برائے تفصیلات */
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .detail-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 15px; text-align: center; border: 1px solid rgba(255,255,255,0.03); }
+        .detail-box span { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; }
+        .detail-box b { font-size: 13px; color: #00ff64; } /* Daily profit in green */
+        .detail-box b.white { color: #fff; }
+
+        .check-list { list-style: none; padding: 0; margin: 0 0 20px 0; }
+        .check-list li { font-size: 12px; color: #ccc; margin-bottom: 8px; }
+        .check-list li i { color: #00ff64; margin-right: 8px; }
+
+        /* سنہرا بٹن */
+        .activate-btn { 
+            width: 100%; padding: 15px; background: var(--gold); 
+            border: none; border-radius: 18px; font-weight: bold; 
+            font-size: 16px; color: #000; cursor: pointer; transition: 0.3s;
+        }
+        .activate-btn:active { transform: scale(0.97); }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--purple-dark); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { color: #666; text-decoration: none; font-size: 10px; text-align: center; }
         .nav-link.active { color: var(--gold); }
+        .nav-link i { font-size: 20px; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h3 style="margin:0;">ACTIVE <span style="color:var(--gold)">MINERS</span></h3>
+        <div class="brand-name">Gold Plus</div>
+        <div class="user-circle">U</div>
     </div>
 
-    <div class="active-mining-area" id="activeMiners">
-        <p style="text-align:center; color:#555; font-size:12px;">No active machine found. Buy a plan to start mining!</p>
-        </div>
+    <div class="container">
+        <p class="page-title">Investment Plans</p>
 
-    <h3 style="padding-left:20px;">Available Machines</h3>
-
-    <div class="plan-card">
-        <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=500" class="plan-img">
-        <div class="plan-details">
-            <h3>Gold Miner V1</h3>
-            <div class="stats-row">
-                <div class="stat"><span>Price</span><b>Rs. 600</b></div>
-                <div class="stat"><span>Daily</span><b>Rs. 50</b></div>
-                <div class="stat"><span>Period</span><b>30 Days</b></div>
-                <div class="stat"><span>Total</span><b>Rs. 1500</b></div>
+        <div class="plan-card">
+            <div class="plan-header">
+                <div class="plan-icon"><i class="fa-solid fa-star"></i></div>
+                <div class="plan-info">
+                    <h3>Starter</h3>
+                    <span>Rs. 600</span>
+                </div>
             </div>
-            <button class="buy-btn" onclick="buyPlan('V1', 600, 50)">ACTIVATE MACHINE</button>
-        </div>
-    </div>
-
-    <div class="plan-card">
-        <img src="https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?auto=format&fit=crop&q=80&w=500" class="plan-img">
-        <div class="plan-details">
-            <h3>Gold Miner V2</h3>
-            <div class="stats-row">
-                <div class="stat"><span>Price</span><b>Rs. 1600</b></div>
-                <div class="stat"><span>Daily</span><b>Rs. 140</b></div>
-                <div class="stat"><span>Period</span><b>30 Days</b></div>
-                <div class="stat"><span>Total</span><b>Rs. 4200</b></div>
+            <div class="details-grid">
+                <div class="detail-box"><span>Daily</span><b>Rs. 50</b></div>
+                <div class="detail-box"><span>Total</span><b class="white">Rs. 1500</b></div>
+                <div class="detail-box"><span>Duration</span><b class="white">30 Days</b></div>
             </div>
-            <button class="buy-btn" onclick="buyPlan('V2', 1600, 140)">ACTIVATE MACHINE</button>
+            <ul class="check-list">
+                <li><i class="fa-solid fa-check"></i> Daily profit payout</li>
+                <li><i class="fa-solid fa-check"></i> 24/7 withdrawal</li>
+                <li><i class="fa-solid fa-check"></i> Referral bonus</li>
+            </ul>
+            <button class="activate-btn" onclick="buy('V1', 600, 50)">Activate Plan</button>
         </div>
-    </div>
 
-    <div class="plan-card">
-        <img src="https://images.unsplash.com/photo-1610375461246-83df859d849d?auto=format&fit=crop&q=80&w=500" class="plan-img">
-        <div class="plan-details">
-            <h3>Gold Miner V3</h3>
-            <div class="stats-row">
-                <div class="stat"><span>Price</span><b>Rs. 3500</b></div>
-                <div class="stat"><span>Daily</span><b>Rs. 320</b></div>
-                <div class="stat"><span>Period</span><b>30 Days</b></div>
-                <div class="stat"><span>Total</span><b>Rs. 9600</b></div>
+        <div class="plan-card">
+            <div class="most-popular">Most Popular</div>
+            <div class="plan-header">
+                <div class="plan-icon"><i class="fa-solid fa-bolt"></i></div>
+                <div class="plan-info">
+                    <h3>Growth</h3>
+                    <span>Rs. 1600</span>
+                </div>
             </div>
-            <button class="buy-btn" onclick="buyPlan('V3', 3500, 320)">ACTIVATE MACHINE</button>
+            <div class="details-grid">
+                <div class="detail-box"><span>Daily</span><b>Rs. 140</b></div>
+                <div class="detail-box"><span>Total</span><b class="white">Rs. 4200</b></div>
+                <div class="detail-box"><span>Duration</span><b class="white">30 Days</b></div>
+            </div>
+            <ul class="check-list">
+                <li><i class="fa-solid fa-check"></i> Daily profit payout</li>
+                <li><i class="fa-solid fa-check"></i> 24/7 withdrawal</li>
+                <li><i class="fa-solid fa-check"></i> Referral bonus</li>
+            </ul>
+            <button class="activate-btn" onclick="buy('V2', 1600, 140)">Activate Plan</button>
         </div>
+
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-house"></i><br>Home</a>
-        <a href="plans.html" class="nav-link active"><i class="fa-solid fa-microchip"></i><br>Mining</a>
-        <a href="refer.html" class="nav-link"><i class="fa-solid fa-users"></i><br>Team</a>
-        <a href="profile.html" class="nav-link"><i class="fa-solid fa-user"></i><br>Me</a>
+        <a href="dashboard.html" class="nav-link"><i class="fa-solid fa-grip"></i><br>HOME</a>
+        <a href="plans.html" class="nav-link active"><i class="fa-solid fa-wand-magic-sparkles"></i><br>INVEST</a>
+        <a href="refer.html" class="nav-link"><i class="fa-solid fa-paper-plane"></i><br>INVITE</a>
+        <a href="profile.html" class="nav-link"><i class="fa-solid fa-circle-user"></i><br>PROFILE</a>
     </nav>
 
-    <script type="module">
-        // یہاں آپ کا Firebase کا لاجک آئے گا جو چیک کرے گا کہ کونسا پلان ایکٹو ہے
-        // اور 24 گھنٹے کا الٹا ٹائمر چلائے گا۔
-        function startTimer(duration, display) {
-            var timer = duration, hours, minutes, seconds;
-            setInterval(function () {
-                hours = parseInt(timer / 3600, 10);
-                minutes = parseInt((timer % 3600) / 60, 10);
-                seconds = parseInt(timer % 60, 10);
-
-                display.textContent = hours + "h " + minutes + "m " + seconds + "s";
-
-                if (--timer < 0) {
-                    timer = 0;
-                    display.textContent = "COLLECT PROFIT!";
-                }
-            }, 1000);
+    <script>
+        function buy(id, price, daily) {
+            alert(`Plan ${id} Selected. Price: Rs ${price}`);
+            // یہاں آپ اپنا Firebase کا پرانا فنکشن لگا سکتے ہیں
         }
-
-        // اگر 2 پلان ایکٹو ہوں تو یہاں شو ہوں گے (یہ مثال ہے)
-        window.onload = function () {
-            // فرض کریں یوزر نے 2 پلان لیے ہوئے ہیں
-            const container = document.getElementById('activeMiners');
-            container.innerHTML = `
-                <div class="mining-card">
-                    <div class="mining-info"><h4>V1 - Active Miner</h4><p>Mining in progress...</p></div>
-                    <div class="timer" id="timer1">23h 59m 59s</div>
-                </div>
-                <div class="mining-card">
-                    <div class="mining-info"><h4>V2 - Active Miner</h4><p>Mining in progress...</p></div>
-                    <div class="timer" id="timer2">18h 30m 10s</div>
-                </div>
-            `;
-            startTimer(86400, document.getElementById('timer1'));
-            startTimer(66610, document.getElementById('timer2'));
-        };
     </script>
 </body>
 </html>
