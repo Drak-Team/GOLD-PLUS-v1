@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Withdraw</title>
+    <style>
+        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
+        .card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #d4af37; max-width: 400px; margin: auto; }
+        select, input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; background: #000; color: #fff; border: 1px solid #d4af37; box-sizing: border-box; }
+        .btn { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; animation: glow 2s infinite; }
+        @keyframes glow { 0% { box-shadow: 0 0 5px #d4af37; } 50% { box-shadow: 0 0 20px #d4af37; } 100% { box-shadow: 0 0 5px #d4af37; } }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2 style="color:#d4af37">Withdraw Funds</h2>
+    <p style="font-size: 12px; color: #aaa;">Minimum Withdraw: Rs. 500</p>
+    
+    <select id="method">
+        <option value="JazzCash">JazzCash</option>
+        <option value="USDT">USDT (TRC-20)</option>
+    </select>
+    
+    <input type="text" id="accName" placeholder="Account Holder Name">
+    <input type="text" id="accNum" placeholder="Account Number / Wallet Address">
+    <input type="number" id="wAmount" placeholder="Withdraw Amount">
+    
+    <button class="btn" onclick="requestWithdraw()">Request Withdrawal</button>
+</div>
+
+<script>
+    function requestWithdraw() {
+        const amount = document.getElementById('wAmount').value;
+        if(amount < 500) return alert("Minimum withdrawal is 500 PKR");
+        alert("Withdrawal request sent! It will be processed in 24 hours.");
+    }
+</script>
+</body>
+</html>
