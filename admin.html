@@ -3,104 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus Admin Panel</title>
+    <title>Gold Plus - Admin Panel</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; display: flex; }
-        
-        /* Sidebar */
-        .sidebar { width: 250px; height: 100vh; background: #000; color: #d4af37; padding: 20px; position: fixed; }
-        .sidebar h2 { border-bottom: 2px solid #d4af37; padding-bottom: 10px; }
-        .sidebar ul { list-style: none; padding: 0; margin-top: 30px; }
-        .sidebar ul li { padding: 15px; cursor: pointer; border-radius: 5px; transition: 0.3s; }
-        .sidebar ul li:hover { background: #d4af37; color: black; }
-
-        /* Main Content */
-        .main-content { margin-left: 250px; padding: 30px; width: 100%; }
-        .stats-cards { display: flex; gap: 20px; margin-bottom: 30px; }
-        .card { background: white; padding: 20px; border-radius: 10px; flex: 1; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-top: 4px solid #d4af37; }
-
-        table { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-        th { background: #d4af37; color: black; }
-
-        .btn-approve { background: #28a745; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        .btn-reject { background: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
-        
-        .screenshot-thumb { width: 80px; height: 50px; object-fit: cover; border-radius: 5px; cursor: pointer; border: 1px solid #ddd; }
-        
-        /* Modal for Screenshot */
-        .modal { display: none; position: fixed; z-index: 1000; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); }
-        .modal-img { display: block; margin: 5% auto; max-width: 80%; }
+        body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h2 { color: #d4af37; text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #d4af37; color: white; }
+        .proof-img { width: 100px; cursor: pointer; border-radius: 5px; }
+        .btn-approve { background: green; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; }
+        .btn-reject { background: red; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <h2>Gold Plus Admin</h2>
-        <ul>
-            <li>Dashboard</li>
-            <li>Deposit Requests</li>
-            <li>Withdrawals</li>
-            <li>Users List</li>
-            <li>Settings</li>
-        </ul>
-    </div>
-
-    <div class="main-content">
-        <h1>Dashboard Overview</h1>
-        
-        <div class="stats-cards">
-            <div class="card"><h3>Total Users</h3><p>1,245</p></div>
-            <div class="card"><h3>Pending Deposits</h3><p>12</p></div>
-            <div class="card"><h3>Pending Withdrawals</h3><p>5</p></div>
-        </div>
-
-        <h2>Pending Deposit Requests</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Amount (PKR)</th>
-                    <th>Screenshot</th>
-                    <th>Time</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>#GP9921</td>
-                    <td>5,000</td>
-                    <td><img src="https://via.placeholder.com/150" class="screenshot-thumb" onclick="viewImage(this.src)"></td>
-                    <td>2 mins ago</td>
-                    <td>
-                        <button class="btn-approve">Approve</button>
-                        <button class="btn-reject">Reject</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>#GP8832</td>
-                    <td>10,000</td>
-                    <td><img src="https://via.placeholder.com/150" class="screenshot-thumb" onclick="viewImage(this.src)"></td>
-                    <td>15 mins ago</td>
-                    <td>
-                        <button class="btn-approve">Approve</button>
-                        <button class="btn-reject">Reject</button>
-                    </td>
-                </tr>
+<div class="container">
+    <h2>Pending Deposits</h2>
+    <table id="depositTable">
+        <thead>
+            <tr>
+                | Amount (PKR) | Screenshot | Action |
+            </tr>
+        </thead>
+        <tbody id="tableBody">
             </tbody>
-        </table>
-    </div>
+    </table>
+</div>
 
-    <div id="myModal" class="modal" onclick="this.style.display='none'">
-        <img class="modal-img" id="img01">
-    </div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
-        function viewImage(src) {
-            document.getElementById('img01').src = src;
-            document.getElementById('myModal').style.display = 'block';
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // ڈیٹا بیس سے ڈپازٹ کی درخواستیں نکالنا
+    onSnapshot(collection(db, "deposits"), (snapshot) => {
+        const tableBody = document.getElementById('tableBody');
+        tableBody.innerHTML = "";
+        
+        snapshot.forEach((docData) => {
+            const data = docData.data();
+            if(data.status === "pending") {
+                const row = `<tr>
+                    <td>${data.amount}</td>
+                    <td><a href="${data.url}" target="_blank"><img src="${data.url}" class="proof-img"></a></td>
+                    <td>
+                        <button class="btn-approve" onclick="approveDeposit('${docData.id}')">Approve</button>
+                        <button class="btn-reject" onclick="rejectDeposit('${docData.id}')">Reject</button>
+                    </td>
+                </tr>`;
+                tableBody.innerHTML += row;
+            }
+        });
+    });
+
+    // اپروو کرنے کا فنکشن
+    window.approveDeposit = async (id) => {
+        if(confirm("Are you sure you want to approve this?")) {
+            await updateDoc(doc(db, "deposits", id), { status: "approved" });
+            alert("Payment Approved!");
         }
-    </script>
+    };
+
+    // ریجیکٹ کرنے کا فنکشن
+    window.rejectDeposit = async (id) => {
+        if(confirm("Reject this payment?")) {
+            await deleteDoc(doc(db, "deposits", id));
+            alert("Payment Rejected!");
+        }
+    };
+</script>
 
 </body>
 </html>
