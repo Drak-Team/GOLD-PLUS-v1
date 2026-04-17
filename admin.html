@@ -6,28 +6,21 @@
     <title>Gold Plus - Admin Panel</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h2 { color: #d4af37; text-align: center; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 20px; border-radius: 10px; }
         table { width: 100%; border-collapse: collapse; margin-top: 20px; }
         th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
         th { background: #d4af37; color: white; }
-        .proof-img { width: 100px; cursor: pointer; border-radius: 5px; }
-        .btn-approve { background: green; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; }
-        .btn-reject { background: red; color: white; border: none; padding: 8px; cursor: pointer; border-radius: 5px; }
+        .proof-img { width: 80px; cursor: pointer; border-radius: 5px; }
     </style>
 </head>
 <body>
-
 <div class="container">
     <h2>Pending Deposits</h2>
-    <table id="depositTable">
+    <table>
         <thead>
-            <tr>
-                | Amount (PKR) | Screenshot | Action |
-            </tr>
+            <tr><th>Amount</th><th>Screenshot</th><th>Action</th></tr>
         </thead>
-        <tbody id="tableBody">
-            </tbody>
+        <tbody id="tableBody"></tbody>
     </table>
 </div>
 
@@ -47,20 +40,18 @@
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
 
-    // ڈیٹا بیس سے ڈپازٹ کی درخواستیں نکالنا
     onSnapshot(collection(db, "deposits"), (snapshot) => {
         const tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = "";
-        
         snapshot.forEach((docData) => {
             const data = docData.data();
             if(data.status === "pending") {
                 const row = `<tr>
                     <td>${data.amount}</td>
-                    <td><a href="${data.url}" target="_blank"><img src="${data.url}" class="proof-img"></a></td>
+                    <td><a href="${data.screenshotUrl}" target="_blank"><img src="${data.screenshotUrl}" class="proof-img"></a></td>
                     <td>
-                        <button class="btn-approve" onclick="approveDeposit('${docData.id}')">Approve</button>
-                        <button class="btn-reject" onclick="rejectDeposit('${docData.id}')">Reject</button>
+                        <button onclick="approve('${docData.id}')" style="background:green; color:white;">Approve</button>
+                        <button onclick="reject('${docData.id}')" style="background:red; color:white;">Reject</button>
                     </td>
                 </tr>`;
                 tableBody.innerHTML += row;
@@ -68,22 +59,8 @@
         });
     });
 
-    // اپروو کرنے کا فنکشن
-    window.approveDeposit = async (id) => {
-        if(confirm("Are you sure you want to approve this?")) {
-            await updateDoc(doc(db, "deposits", id), { status: "approved" });
-            alert("Payment Approved!");
-        }
-    };
-
-    // ریجیکٹ کرنے کا فنکشن
-    window.rejectDeposit = async (id) => {
-        if(confirm("Reject this payment?")) {
-            await deleteDoc(doc(db, "deposits", id));
-            alert("Payment Rejected!");
-        }
-    };
+    window.approve = async (id) => { await updateDoc(doc(db, "deposits", id), { status: "approved" }); alert("Approved!"); };
+    window.reject = async (id) => { await deleteDoc(doc(db, "deposits", id)); alert("Rejected!"); };
 </script>
-
 </body>
 </html>
