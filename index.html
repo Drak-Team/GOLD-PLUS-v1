@@ -3,21 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Login</title>
+    <title>Gold Plus - Welcome Back</title>
     <style>
-        body { background: #000; color: #d4af37; font-family: sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .box { background: #fff; padding: 30px; border-radius: 20px; width: 320px; color: #333; text-align: center; box-shadow: 0 0 20px #d4af37; }
-        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; background: #d4af37; border: none; color: #000; font-weight: bold; border-radius: 8px; cursor: pointer; }
+        :root { --gold: #d4af37; --dark: #050505; }
+        body { 
+            background: var(--dark); 
+            color: #fff; 
+            font-family: 'Poppins', sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0;
+            background-image: radial-gradient(circle at center, #1a1a1a 0%, #050505 100%);
+        }
+        .box { 
+            background: rgba(255, 255, 255, 0.05); 
+            padding: 40px 30px; 
+            border-radius: 25px; 
+            width: 340px; 
+            text-align: center; 
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+        }
+        .logo-area { font-size: 40px; color: var(--gold); margin-bottom: 20px; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        h2 { margin-bottom: 30px; font-weight: 300; letter-spacing: 2px; }
+        input { 
+            width: 100%; 
+            padding: 14px; 
+            margin: 12px 0; 
+            border: 1px solid #333; 
+            border-radius: 12px; 
+            background: rgba(0,0,0,0.5); 
+            color: #fff; 
+            box-sizing: border-box;
+            outline: none;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 8px rgba(212, 175, 55, 0.2); }
+        button { 
+            width: 100%; 
+            padding: 14px; 
+            background: linear-gradient(45deg, #d4af37, #f9e29c); 
+            border: none; 
+            color: #000; 
+            font-weight: bold; 
+            border-radius: 12px; 
+            cursor: pointer; 
+            margin-top: 20px;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4); }
+        p { font-size: 14px; color: #888; margin-top: 25px; }
+        a { color: var(--gold); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="box">
-        <h2 style="color:#d4af37">GOLD PLUS</h2>
+        <div class="logo-area">🏆</div>
+        <h2>GOLD PLUS</h2>
         <input type="email" id="email" placeholder="Email Address">
         <input type="password" id="pass" placeholder="Password">
-        <button id="loginBtn">LOGIN</button>
-        <p style="font-size: 13px; margin-top: 15px;">New User? <a href="signup.html" style="color:#d4af37; font-weight:bold; text-decoration:none;">SIGN UP</a></p>
+        <button id="loginBtn">LOGIN NOW</button>
+        <p>Don't have an account? <a href="signup.html">CREATE ONE</a></p>
     </div>
 
     <script type="module">
@@ -39,11 +89,22 @@
         document.getElementById('loginBtn').onclick = async () => {
             const email = document.getElementById('email').value;
             const pass = document.getElementById('pass').value;
+            
+            if(!email || !pass) return alert("Please fill all fields!");
+
+            const btn = document.getElementById('loginBtn');
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
-                alert("Login Success!");
-                window.location.href = "recharge.html"; 
-            } catch (e) { alert("Login Error: " + e.message); }
+                // اب یہ سیدھا ڈیش بورڈ پر جائے گا!
+                window.location.href = "dashboard.html"; 
+            } catch (e) { 
+                alert("Login Error: " + e.message); 
+                btn.innerText = "LOGIN NOW";
+                btn.disabled = false;
+            }
         };
     </script>
 </body>
