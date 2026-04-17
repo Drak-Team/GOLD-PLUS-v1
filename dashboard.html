@@ -3,132 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Live Dashboard</title>
+    <title>Gold Plus - Home</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --gold-glow: rgba(241, 196, 15, 0.3); --bg: #0f051d; --card: #25163d; }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 100px; }
+        :root { --gold: #f1c40f; --purple: #1a0b2e; --card-bg: #25163d; }
+        body { background: #0f051d; color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 80px; }
 
-        /* Top Bar */
-        .top-bar { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; background: #1a0b2e; }
-        .logo { color: var(--gold); font-weight: bold; font-size: 20px; letter-spacing: 1px; }
+        /* 🖼️ ٹاپ بینر (کمپنی ایونٹ فوٹو) */
+        .top-banner { width: 100%; height: 220px; position: relative; overflow: hidden; }
+        .top-banner img { width: 100%; height: 100%; object-fit: cover; }
+        .banner-overlay { position: absolute; bottom: 0; width: 100%; background: linear-gradient(transparent, #0f051d); height: 80px; }
 
-        .container { padding: 15px; }
+        .container { padding: 15px; margin-top: -30px; position: relative; z-index: 10; }
 
-        /* 🚀 لائیو ارننگ کارڈ (Yellow Gold Theme) */
-        .live-card { 
-            background: linear-gradient(145deg, #2a1b3d, #1a0b2e); 
-            border-radius: 30px; padding: 25px; text-align: center;
-            border: 1px solid var(--gold-glow); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-bottom: 25px; position: relative;
+        /* 💰 بیلنس کارڈ */
+        .balance-card { 
+            background: linear-gradient(135deg, #ff4e00, #ec9f05); 
+            border-radius: 25px; padding: 20px; box-shadow: 0 10px 25px rgba(255, 78, 0, 0.3);
+            margin-bottom: 20px;
         }
-        .live-label { color: var(--gold); font-size: 14px; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .live-label i { animation: pulse 1.5s infinite; }
+        .bal-row { display: flex; justify-content: space-between; align-items: center; }
+        .bal-val { font-size: 28px; font-weight: 800; margin: 10px 0; }
         
-        .balance-main { font-size: 32px; font-weight: bold; color: var(--gold); margin: 15px 0; text-shadow: 0 0 15px var(--gold-glow); }
-        .next-cycle { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; display: inline-flex; align-items: center; gap: 10px; font-size: 13px; color: #ccc; }
-        .timer-val { color: var(--gold); font-family: monospace; font-weight: bold; font-size: 16px; }
+        .main-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .action-btn { background: rgba(255,255,255,0.2); border: none; padding: 12px; border-radius: 12px; color: #fff; font-weight: bold; cursor: pointer; }
 
-        /* چمکتا ہوا گولڈ بٹن */
-        .start-btn { 
-            width: 100%; padding: 18px; margin-top: 20px;
-            background: linear-gradient(90deg, #d4af37, #f1c40f, #d4af37);
-            border: none; border-radius: 20px; font-weight: bold; color: #000;
-            font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-            box-shadow: 0 5px 20px var(--gold-glow);
+        /* ⛏️ مائننگ / مانی سیکشن (الگ سیکشن) */
+        .mining-section { background: var(--card-bg); border-radius: 25px; padding: 20px; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 20px; }
+        .mining-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .mining-status { color: var(--gold); font-size: 13px; font-weight: bold; }
+        
+        .mining-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .m-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 15px; text-align: center; }
+        .m-box small { font-size: 10px; color: #888; display: block; }
+        .m-box b { font-size: 14px; color: var(--gold); }
+
+        .timer-container { text-align: center; margin-bottom: 15px; }
+        #miningTimer { font-family: monospace; font-size: 20px; color: #00ff64; }
+
+        /* 🎁 کلیم بٹن (صرف ٹائمر ختم ہونے پر نظر آئے گا) */
+        #claimBtn { 
+            display: none; width: 100%; padding: 15px; background: #00ff64; 
+            border: none; border-radius: 15px; color: #000; font-weight: bold; font-size: 16px; 
+            box-shadow: 0 0 15px rgba(0, 255, 100, 0.4); cursor: pointer;
         }
 
-        /* 🔗 ریفرل لنک سیکشن */
-        .refer-box { 
-            background: var(--card); padding: 15px; border-radius: 20px; 
-            display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .refer-text { font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; width: 70%; }
-        .refer-btns i { color: var(--gold); margin-left: 10px; cursor: pointer; font-size: 18px; }
-
-        /* 🔳 کوئیک ایکشن بکس */
-        .action-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 25px; }
-        .action-item { 
-            background: var(--card); padding: 20px 10px; border-radius: 25px; 
-            text-align: center; border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
-        .action-item:active { transform: scale(0.95); }
-        .action-item i { font-size: 24px; margin-bottom: 10px; display: block; }
-        .action-item span { font-size: 12px; font-weight: bold; }
-        .action-item p { font-size: 10px; color: #666; margin: 5px 0 0 0; }
-
-        /* کلرز برائے ایکشنز */
-        .col-gold { color: var(--gold); }
-        .col-green { color: #00ff64; }
-        .col-blue { color: #007bff; }
-
-        @keyframes pulse { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        /* 🔗 ریفرل لنک */
+        .refer-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; }
 
         /* Bottom Nav */
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1a0b2e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
-        .nav-link { color: #555; text-decoration: none; font-size: 10px; text-align: center; }
-        .nav-link.active { color: var(--gold); }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: var(--purple); display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-item { color: #555; text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-item.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
-    <div class="top-bar">
-        <div class="logo">GOLD PLUS</div>
-        <div style="background:var(--gold); color:#000; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">U</div>
+    <div class="top-banner">
+        <img src="https://i.ibb.co/LzdjXW3/event.jpg" alt="Company Event"> <div class="banner-overlay"></div>
     </div>
 
     <div class="container">
-        
-        <div class="live-card">
-            <div class="live-label"><i class="fa-solid fa-microchip"></i> Live Earnings</div>
-            <div class="balance-main">Rs. 0.00000000</div>
+        <div class="balance-card">
+            <div class="bal-row">
+                <span>Available Balance</span>
+                <i class="fa-solid fa-wallet"></i>
+            </div>
+            <div class="bal-val">Rs. 5,603.00</div>
+            <div class="main-actions">
+                <button class="action-btn" onclick="location.href='deposit.html'"><i class="fa-solid fa-plus-circle"></i> Deposit</button>
+                <button class="action-btn" onclick="location.href='withdraw.html'"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw</button>
+            </div>
+        </div>
+
+        <div class="mining-section">
+            <div class="mining-header">
+                <h4>Mining Machine</h4>
+                <div class="mining-status"><i class="fa-solid fa-gear fa-spin"></i> Active</div>
+            </div>
             
-            <div class="next-cycle">
-                <i class="fa-solid fa-bolt-lightning col-gold"></i>
-                Next cycle: <span class="timer-val">23 : 59 : 59</span>
+            <div class="mining-stats">
+                <div class="m-box"><small>Active Packages</small><b>02</b></div>
+                <div class="m-box"><small>Daily Income</small><b>Rs. 140.00</b></div>
             </div>
 
-            <button class="start-btn">
-                <i class="fa-solid fa-play"></i> Start Mining Now <i class="fa-solid fa-sparkles"></i>
-            </button>
+            <div class="timer-container">
+                <small style="color:#888;">Next Claim In:</small><br>
+                <span id="miningTimer">00:00:05</span> </div>
+
+            <button id="claimBtn" onclick="claimMoney()">CLAIM PROFIT <i class="fa-solid fa-gift"></i></button>
         </div>
 
+        <div style="margin-bottom:10px; font-size:12px; color:#888; padding-left:10px;">Your Referral Link</div>
         <div class="refer-box">
-            <div class="refer-text">https://goldplus.com/reg?ref=GP-8847</div>
-            <div class="refer-btns">
-                <i class="fa-solid fa-copy"></i>
-                <i class="fa-solid fa-share-nodes"></i>
-            </div>
+            <span>https://goldplus.com/reg?ref=GP-8847</span>
+            <i class="fa-solid fa-copy" style="color:var(--gold)"></i>
         </div>
-
-        <div class="action-grid">
-            <div class="action-item">
-                <i class="fa-solid fa-wallet col-blue"></i>
-                <span>Deposit</span>
-                <p>Add Funds</p>
-            </div>
-            <div class="action-item">
-                <i class="fa-solid fa-layer-group col-gold"></i>
-                <span>Invest</span>
-                <p>Gold Plans</p>
-            </div>
-            <div class="action-item">
-                <i class="fa-solid fa-money-bill-transfer col-green"></i>
-                <span>Withdraw</span>
-                <p>Cash Out</p>
-            </div>
-        </div>
-
     </div>
 
     <nav class="bottom-nav">
-        <a href="dashboard.html" class="nav-link active"><i class="fa-solid fa-house fa-xl"></i><br>HOME</a>
-        <a href="plans.html" class="nav-link"><i class="fa-solid fa-wand-magic-sparkles fa-xl"></i><br>INVEST</a>
-        <a href="refer.html" class="nav-link"><i class="fa-solid fa-paper-plane fa-xl"></i><br>INVITE</a>
-        <a href="profile.html" class="nav-link"><i class="fa-solid fa-circle-user fa-xl"></i><br>PROFILE</a>
+        <a href="#" class="nav-item active"><i class="fa-solid fa-house fa-lg"></i><br>HOME</a>
+        <a href="plans.html" class="nav-item"><i class="fa-solid fa-chart-line fa-lg"></i><br>INVEST</a>
+        <a href="invite.html" class="nav-item"><i class="fa-solid fa-share-nodes fa-lg"></i><br>INVITE</a>
+        <a href="profile.html" class="nav-item"><i class="fa-solid fa-user fa-lg"></i><br>PROFILE</a>
     </nav>
+
+    <script>
+        // 🕒 ٹائمر لاجک
+        let seconds = 5; 
+        const timerDisplay = document.getElementById('miningTimer');
+        const claimBtn = document.getElementById('claimBtn');
+
+        const countdown = setInterval(() => {
+            seconds--;
+            let h = Math.floor(seconds / 3600);
+            let m = Math.floor((seconds % 3600) / 60);
+            let s = seconds % 60;
+            timerDisplay.innerText = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+
+            if (seconds <= 0) {
+                clearInterval(countdown);
+                timerDisplay.style.display = 'none'; // ٹائمر چھپ جائے گا
+                claimBtn.style.display = 'block';    // کلیم بٹن آ جائے گا
+            }
+        }, 1000);
+
+        function claimMoney() {
+            alert("Success! Rs. 140.00 added to your balance.");
+            location.reload(); // دوبارہ ٹائمر شروع کرنے کے لیے
+        }
+    </script>
 
 </body>
 </html>
