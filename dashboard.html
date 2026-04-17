@@ -3,125 +3,113 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Dashboard</title>
+    <title>Gold Plus V1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; --card: #1a0b2e; --grad: linear-gradient(135deg, #f39c12, #e67e22); }
-        body { background: var(--bg); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 90px; }
+        :root { --purple-dark: #0f051d; --card-bg: #1a0b2e; --gold: #f1c40f; --accent: #9b59b6; }
+        body { background: var(--purple-dark); color: #fff; font-family: 'Poppins', sans-serif; margin: 0; padding-bottom: 80px; }
 
-        /* 🏆 اوپر والا لوگو سیکشن */
-        .top-nav { padding: 20px; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .logo-text { font-size: 24px; font-weight: 900; color: var(--gold); letter-spacing: 2px; }
+        /* Header */
+        .header { padding: 20px; display: flex; justify-content: space-between; align-items: center; background: rgba(26, 11, 46, 0.8); }
+        .logo { color: var(--gold); font-weight: 900; font-size: 20px; }
+        .user-icon { background: var(--gold); color: #000; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
 
-        .container { padding: 20px; }
+        .container { padding: 15px; }
 
-        /* 💰 بڑا بیلنس ڈیش بورڈ */
-        .main-balance-card { 
-            background: var(--grad); border-radius: 30px; padding: 30px 20px; 
-            text-align: center; box-shadow: 0 15px 35px rgba(230, 126, 34, 0.4); margin-bottom: 25px;
+        /* Balance Card */
+        .balance-card { 
+            background: linear-gradient(135deg, #1a0b2e, #2a1b4d); 
+            border-radius: 20px; padding: 25px; margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.05); text-align: center;
         }
-        .bal-label { font-size: 14px; opacity: 0.9; text-transform: uppercase; }
-        .total-amount { font-size: 38px; font-weight: 800; margin: 10px 0; }
-        
-        .action-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
-        .act-btn { 
-            background: rgba(255,255,255,0.25); border: none; padding: 15px; 
-            border-radius: 15px; color: #fff; font-weight: bold; cursor: pointer;
-            backdrop-filter: blur(10px); text-decoration: none; font-size: 14px;
-        }
+        .bal-val { font-size: 35px; font-weight: 800; margin: 5px 0; }
+        .bal-sub { display: flex; justify-content: space-around; font-size: 12px; color: #00ff64; margin-top: 10px; }
 
-        /* 📦 چھوٹے ڈبے (سیکشنز) */
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .stat-box { 
-            background: var(--card); border-radius: 20px; padding: 20px; 
-            text-align: center; border: 1px solid rgba(255,255,255,0.05);
-        }
-        .stat-box i { font-size: 25px; color: var(--gold); margin-bottom: 10px; display: block; }
-        .stat-box span { font-size: 12px; color: #888; display: block; margin-bottom: 5px; }
-        .stat-box b { font-size: 16px; color: #fff; }
+        /* Quick Buttons */
+        .quick-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
+        .q-item { text-align: center; text-decoration: none; color: #fff; font-size: 10px; }
+        .q-icon { width: 55px; height: 55px; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; font-size: 20px; }
 
-        /* 📋 ریفرل لنک */
-        .invite-section { background: rgba(241, 196, 15, 0.05); margin-top: 25px; padding: 20px; border-radius: 20px; border: 1px dashed var(--gold); }
-        .invite-section h4 { margin: 0 0 10px 0; font-size: 14px; color: var(--gold); }
-        .ref-box { display: flex; justify-content: space-between; align-items: center; background: #000; padding: 12px; border-radius: 10px; font-size: 12px; }
+        /* Team Battle Arena */
+        .battle-card { background: var(--card-bg); border-radius: 20px; padding: 15px; margin-bottom: 20px; border: 1px solid rgba(155, 89, 182, 0.3); }
+        .battle-header { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .battle-header i { color: #ff4e00; font-size: 24px; }
+        .live-tag { background: #ff4e00; font-size: 10px; padding: 2px 8px; border-radius: 10px; margin-left: auto; animation: blink 1s infinite; }
 
-        /* 底部 پٹی (Bottom Navigation) */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #1a0b2e; 
-            display: flex; justify-content: space-around; padding: 15px 0;
-            border-top: 1px solid rgba(255,255,255,0.05); z-index: 1000;
-        }
-        .nav-link { text-decoration: none; color: #666; text-align: center; font-size: 10px; transition: 0.3s; }
+        .winner-row { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 15px; display: flex; align-items: center; gap: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .rank-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .win-info b { display: block; font-size: 14px; }
+        .win-info small { color: #888; font-size: 11px; }
+        .prize { margin-left: auto; text-align: right; color: var(--gold); font-weight: bold; }
+
+        /* Bottom Nav */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #1a0b2e; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(255,255,255,0.05); }
+        .nav-link { color: #555; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-link.active { color: var(--gold); }
-        .nav-link i { font-size: 22px; margin-bottom: 5px; display: block; }
+        .nav-link i { display: block; font-size: 20px; margin-bottom: 4px; }
+
+        @keyframes blink { 50% { opacity: 0.3; } }
     </style>
 </head>
 <body>
 
-    <div class="top-nav">
-        <div class="logo-text">GOLD PLUS</div>
+    <div class="header">
+        <div class="logo">GOLD PLUS V1</div>
+        <div class="user-icon">A</div>
     </div>
 
     <div class="container">
-        <div class="main-balance-card">
-            <div class="bal-label">Available Balance</div>
-            <div class="total-amount">Rs. 5603.00</div>
-            <div class="action-row">
-                <a href="deposit.html" class="act-btn"><i class="fa-solid fa-wallet"></i> Deposit</a>
-                <a href="withdraw.html" class="act-btn"><i class="fa-solid fa-money-bill-transfer"></i> Withdraw</a>
+        <div class="balance-card">
+            <div style="font-size: 12px; opacity: 0.6;">TOTAL BALANCE</div>
+            <div class="bal-val">$0.00 <span style="font-size: 14px; color:#888;">/ Rs. 0</span></div>
+            <div class="bal-sub">
+                <span>DAILY: +$0.00</span>
+                <span>TOTAL EARNED: +$0.00</span>
             </div>
         </div>
 
-        <div class="stats-grid">
-            <div class="stat-box">
-                <i class="fa-solid fa-users"></i>
-                <span>My Team</span>
-                <b>12 Members</b>
-            </div>
-            <div class="stat-box">
-                <i class="fa-solid fa-chart-line"></i>
-                <span>Daily Profit</span>
-                <b>Rs. 140.00</b>
-            </div>
-            <div class="stat-box">
-                <i class="fa-solid fa-layer-group"></i>
-                <span>Active Plans</span>
-                <b>02 Active</b>
-            </div>
-            <div class="stat-box">
-                <i class="fa-solid fa-clock-rotate-left"></i>
-                <span>Total Earned</span>
-                <b>Rs. 12500.00</b>
-            </div>
+        <div class="quick-grid">
+            <a href="#" class="q-item"><div class="q-icon" style="background:#f1c40f; color:#000;"><i class="fa-solid fa-wallet"></i></div><span>Deposit</span></a>
+            <a href="#" class="q-item"><div class="q-icon" style="background:#2ecc71;"><i class="fa-solid fa-arrow-up"></i></div><span>Withdraw</span></a>
+            <a href="#" class="q-item"><div class="q-icon" style="background:#9b59b6;"><i class="fa-solid fa-gift"></i></div><span>Promo</span></a>
+            <a href="#" class="q-item"><div class="q-icon" style="background:#3498db;"><i class="fa-brands fa-whatsapp"></i></div><span>Admin</span></a>
         </div>
 
-        <div class="invite-section">
-            <h4>Invite Your Friends</h4>
-            <div class="ref-box">
-                <span>goldplus.com/reg?ref=8847</span>
-                <i class="fa-solid fa-copy" style="color:var(--gold)" onclick="alert('Copied!')"></i>
+        <div class="battle-card">
+            <div class="battle-header">
+                <i class="fa-solid fa-swords"></i>
+                <b>Team Battle Arena</b>
+                <span class="live-tag">● LIVE</span>
+            </div>
+            <p style="font-size: 11px; color: #aaa; margin-top: -10px;">Weekly tournament — compete & win big rewards!</p>
+
+            <div class="winner-row">
+                <div class="rank-icon" style="background: rgba(241, 196, 15, 0.2); color: var(--gold);"><i class="fa-solid fa-crown"></i></div>
+                <div class="win-info">
+                    <b>Team Leader Reward</b>
+                    <small>On $100 Team Deposit</small>
+                </div>
+                <div class="prize">$3,000</div>
+            </div>
+
+            <div class="winner-row">
+                <div class="rank-icon" style="background: rgba(255, 255, 255, 0.1); color: #fff;"><i class="fa-solid fa-medal"></i></div>
+                <div class="win-info">
+                    <b>Diamond Leader</b>
+                    <small>Next Level Reward</small>
+                </div>
+                <div class="prize">Coming Soon</div>
             </div>
         </div>
     </div>
 
-    <div class="bottom-nav">
-        <a href="dashboard.html" class="nav-link active">
-            <i class="fa-solid fa-house"></i>
-            <span>HOME</span>
-        </a>
-        <a href="plans.html" class="nav-link">
-            <i class="fa-solid fa-gem"></i>
-            <span>PLANS</span>
-        </a>
-        <a href="mining.html" class="nav-link">
-            <i class="fa-solid fa-microchip"></i>
-            <span>MINING</span>
-        </a>
-        <a href="profile.html" class="nav-link">
-            <i class="fa-solid fa-user-circle"></i>
-            <span>PROFILE</span>
-        </a>
-    </div>
+    <nav class="bottom-nav">
+        <a href="#" class="nav-link active"><i class="fa-solid fa-table-cells-large"></i>HOME</a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-sparkles"></i>INVEST</a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-wallet"></i>EARN</a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-paper-plane"></i>INVITE</a>
+        <a href="#" class="nav-link"><i class="fa-solid fa-circle-user"></i>PROFILE</a>
+    </nav>
 
 </body>
 </html>
