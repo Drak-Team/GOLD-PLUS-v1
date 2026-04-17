@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Luxury Dashboard</title>
+    <style>
+        :root { --gold: #d4af37; --dark: #0a0a0a; --glass: rgba(255, 255, 255, 0.1); }
+        body { background: var(--dark); color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding-bottom: 80px; overflow-x: hidden; }
+        
+        /* Top Slider */
+        .slider { width: 100%; height: 200px; overflow: hidden; position: relative; border-bottom: 2px solid var(--gold); }
+        .slider figure { position: relative; width: 300%; margin: 0; left: 0; animation: 10s slider infinite; }
+        .slider img { width: 33.33%; height: 200px; float: left; object-fit: cover; }
+        @keyframes slider { 0% { left: 0; } 30% { left: 0; } 33% { left: -100%; } 63% { left: -100%; } 66% { left: -200%; } 95% { left: -200%; } 100% { left: 0; } }
+
+        /* Stats Card */
+        .stats { background: linear-gradient(135deg, #1a1a1a, #000); padding: 20px; margin: 15px; border-radius: 20px; border: 1px solid var(--gold); text-align: center; box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
+        .balance-num { font-size: 32px; color: var(--gold); font-weight: bold; margin: 10px 0; }
+
+        /* Mining Section */
+        .mining-area { text-align: center; padding: 20px; }
+        .mine-btn { width: 120px; height: 120px; border-radius: 50%; border: 4px solid var(--gold); background: transparent; color: var(--gold); font-weight: bold; cursor: pointer; animation: pulse 2s infinite; box-shadow: 0 0 20px var(--gold); }
+        @keyframes pulse { 0% { transform: scale(1); box-shadow: 0 0 10px var(--gold); } 50% { transform: scale(1.1); box-shadow: 0 0 30px var(--gold); } 100% { transform: scale(1); box-shadow: 0 0 10px var(--gold); } }
+
+        /* Package Plans */
+        .plans-container { padding: 15px; }
+        .plan-card { background: var(--glass); backdrop-filter: blur(10px); margin-bottom: 15px; padding: 20px; border-radius: 15px; border-left: 5px solid var(--gold); position: relative; transition: 0.3s; }
+        .plan-card:hover { transform: translateY(-5px); background: rgba(212, 175, 55, 0.1); }
+        .plan-card h3 { margin: 0; color: var(--gold); }
+        .plan-card p { margin: 5px 0; font-size: 14px; color: #ccc; }
+        .buy-btn { position: absolute; right: 20px; top: 30%; background: var(--gold); color: #000; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer; }
+        .coming-soon { opacity: 0.6; border-left-color: #555; text-align: center; }
+
+        /* Navbar */
+        .navbar { position: fixed; bottom: 0; width: 100%; background: #000; display: flex; justify-content: space-around; padding: 15px 0; border-top: 2px solid var(--gold); }
+        .navbar a { color: var(--gold); text-decoration: none; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <div class="slider">
+        <figure>
+            <img src="https://img.freepik.com/free-photo/gold-coins-bars-stacked-shiny-background_23-2149103682.jpg" alt="Gold 1">
+            <img src="https://img.freepik.com/free-vector/gradient-golden-luxury-background_23-2149114441.jpg" alt="Gold 2">
+            <img src="https://img.freepik.com/free-photo/view-shining-golden-nuggets_23-2150935560.jpg" alt="Gold 3">
+        </figure>
+    </div>
+
+    <div class="stats">
+        <p style="margin:0; color: #aaa;">Current Gold Balance</p>
+        <div class="balance-num" id="balance">Rs. 0.00</div>
+        <p id="status" style="font-size: 12px; color: var(--gold);">Ready to Mine</p>
+    </div>
+
+    <div class="mining-area">
+        <button class="mine-btn" id="mineBtn" onclick="startMining()">MINE<br>GOLD</button>
+    </div>
+
+    <div class="plans-container">
+        <h2 style="color: var(--gold); text-align: left; font-size: 18px;">Investment Plans</h2>
+        
+        <div class="plan-card">
+            <h3>FREE PLAN</h3>
+            <p>Daily Mining: Rs. 10</p>
+            <p>Validity: 30 Days</p>
+            <button class="buy-btn">Active</button>
+        </div>
+
+        <div class="plan-card">
+            <h3>BRONZE GOLD</h3>
+            <p>Price: Rs. 1,000</p>
+            <p>Daily Mining: Rs. 100</p>
+            <p>Total Return: Rs. 3,000</p>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="plan-card">
+            <h3>SILVER GOLD</h3>
+            <p>Price: Rs. 2,500</p>
+            <p>Daily Mining: Rs. 250</p>
+            <p>Total Return: Rs. 7,500</p>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="plan-card">
+            <h3>PLATINUM GOLD</h3>
+            <p>Price: Rs. 5,000</p>
+            <p>Daily Mining: Rs. 550</p>
+            <p>Total Return: Rs. 16,500</p>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="plan-card coming-soon">
+            <h3>COMING SOON...</h3>
+            <p>High Profit Plans are on the way!</p>
+        </div>
+    </div>
+
+    <div class="navbar">
+        <a href="dashboard.html">🏠 Home</a>
+        <a href="recharge.html">💳 Deposit</a>
+        <a href="withdraw.html">💰 Withdraw</a>
+        <a href="profile.html">👤 Profile</a>
+    </div>
+
+    <script type="module">
+        // فائر بیس لاجک یہاں آئے گی (پچھلے میسج والی)
+        // ... (Firebase initialization) ...
+        
+        window.startMining = () => {
+            alert("Mining Started! Check back in 24 hours.");
+            // بیلنس اپ ڈیٹ کرنے کی لاجک
+        };
+    </script>
+</body>
+</html>
