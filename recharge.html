@@ -3,62 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Recharge</title>
+    <title>Gold Plus - Deposit</title>
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
-        .card { background: #fff; color: #333; padding: 25px; border-radius: 15px; max-width: 350px; margin: auto; box-shadow: 0 0 15px #d4af37; }
-        input { width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; }
-        .btn { background: #d4af37; border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 10px; }
+        :root { --gold: #d4af37; --dark: #0a0a0a; }
+        body { background: var(--dark); color: #fff; font-family: sans-serif; text-align: center; padding: 20px; }
+        .card { background: #1a1a1a; padding: 25px; border-radius: 20px; border: 1px solid var(--gold); max-width: 400px; margin: auto; box-shadow: 0 0 20px rgba(212,175,55,0.2); }
+        .method-box { background: #222; padding: 15px; border-radius: 10px; margin: 10px 0; cursor: pointer; border: 1px solid transparent; transition: 0.3s; }
+        .method-box:hover { border-color: var(--gold); background: #2a2a2a; }
+        .details { display: none; margin-top: 15px; padding: 15px; background: #000; border-radius: 10px; border: 1px dashed var(--gold); }
+        input { width: 100%; margin: 10px 0; padding: 12px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; box-sizing: border-box; }
+        .btn { background: var(--gold); border: none; padding: 15px; width: 100%; font-weight: bold; cursor: pointer; border-radius: 10px; margin-top: 10px; }
+        .copy-btn { font-size: 12px; color: var(--gold); cursor: pointer; text-decoration: underline; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h3 style="color:#d4af37">Deposit Money</h3>
-        <p>Send to EasyPaisa: <br><b>03XXXXXXXXX</b></p>
-        <input type="number" id="amount" placeholder="Enter Amount (PKR)">
-        <input type="file" id="photo" accept="image/*">
-        <button class="btn" id="uploadBtn">Submit Screenshot</button>
-        <p id="msg" style="color: #d4af37; margin-top: 10px;"></p>
+
+<div class="card">
+    <h2 style="color:var(--gold)">Deposit Gold</h2>
+    <p>Select Payment Method:</p>
+
+    <div class="method-box" onclick="showDetails('jazzcash')">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b8/JazzCash_logo.png" width="80" style="vertical-align:middle">
+        <span>JazzCash</span>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
+    <div class="method-box" onclick="showDetails('crypto')">
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" width="30" style="vertical-align:middle">
+        <span>USDT (TRC-20)</span>
+    </div>
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-            authDomain: "gold-plus-v1.firebaseapp.com",
-            projectId: "gold-plus-v1",
-            storageBucket: "gold-plus-v1.firebasestorage.app",
-            messagingSenderId: "474592887487",
-            appId: "1:474592887487:web:e9261d51df5af58a367c0a"
-        };
+    <div id="jazzcash-details" class="details">
+        <p>Name: <b>Ahmad Nafees Anjum</b></p>
+        <p>Number: <b id="jcNum">03037264598</b> <span class="copy-btn" onclick="copyText('jcNum')">Copy</span></p>
+    </div>
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
+    <div id="crypto-details" class="details">
+        <p>Network: <b>TRC-20</b></p>
+        <p style="font-size: 10px;">Address: <b id="trcAdd">YOUR_TRC20_ADDRESS_HERE</b> <br> <span class="copy-btn" onclick="copyText('trcAdd')">Copy</span></p>
+    </div>
 
-        document.getElementById('uploadBtn').onclick = async () => {
-            const file = document.getElementById('photo').files[0];
-            const amount = document.getElementById('amount').value;
-            if(!file || !amount) return alert("Fill all fields");
+    <input type="number" id="amount" placeholder="Enter Amount (PKR)">
+    <input type="file" id="screenshot" accept="image/*">
+    <button class="btn" id="submitBtn">Submit Proof</button>
+</div>
 
-            document.getElementById('msg').innerText = "Uploading...";
-            
-            try {
-                const sRef = ref(storage, 'proofs/' + Date.now());
-                await uploadBytes(sRef, file);
-                const url = await getDownloadURL(sRef);
+<script>
+    function showDetails(method) {
+        document.getElementById('jazzcash-details').style.display = method === 'jazzcash' ? 'block' : 'none';
+        document.getElementById('crypto-details').style.display = method === 'crypto' ? 'block' : 'none';
+    }
 
-                await addDoc(collection(db, "deposits"), {
-                    amount, screenshotUrl: url, status: "pending", time: new Date()
-                });
-
-                alert("Proof submitted for approval!");
-                document.getElementById('msg').innerText = "";
-            } catch (e) { alert(e.message); document.getElementById('msg').innerText = ""; }
-        };
-    </script>
+    function copyText(id) {
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text);
+        alert("Copied: " + text);
+    }
+</script>
 </body>
 </html>
