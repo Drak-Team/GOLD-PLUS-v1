@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Login</title>
+    <title>Gold Plus - Luxury Login</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
-        :root { --gold: #d4af37; --dark: #050505; }
+        :root { --gold: #d4af37; --light-gold: #f9e29c; --dark: #050505; }
         
-        /* ✨ اینیمیٹڈ بیک گراؤنڈ */
+        /* ✨ الٹرا لگژری اینیمیٹڈ بیک گراؤنڈ */
         body { 
             margin: 0; padding: 0;
             font-family: 'Poppins', sans-serif; 
             display: flex; justify-content: center; align-items: center; 
             height: 100vh; overflow: hidden;
-            background: linear-gradient(45deg, #050505, #1a1a1a, #0b0118, #050505);
+            background: linear-gradient(135deg, #050505, #1a1a1a, #0b0118, #050505);
             background-size: 400% 400%;
-            animation: gradientBG 12s ease infinite;
+            animation: gradientBG 15s ease infinite;
         }
 
         @keyframes gradientBG {
@@ -27,85 +27,90 @@
 
         /* 💎 گلاس مورفزم باکس */
         .login-box { 
-            background: rgba(255, 255, 255, 0.05); 
-            padding: 40px 30px; border-radius: 30px; 
-            width: 340px; text-align: center; 
+            background: rgba(255, 255, 255, 0.04); 
+            padding: 45px 35px; border-radius: 35px; 
+            width: 350px; text-align: center; 
             border: 1px solid rgba(212, 175, 55, 0.3);
             backdrop-filter: blur(20px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.9);
             position: relative; z-index: 10;
         }
 
-        /* 🖼️ لوگو امیج ہولڈر */
+        /* 🖼️ سونے کے سکوں والا لوگو کنٹینر */
         .logo-container {
-            width: 90px; height: 90px;
-            background: #000; border: 2px solid var(--gold);
-            border-radius: 50%; margin: 0 auto 25px;
+            width: 100px; height: 100px;
+            background: radial-gradient(circle, #222 0%, #000 100%);
+            border: 3px solid var(--gold);
+            border-radius: 50%; margin: 0 auto 30px;
             display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
             overflow: hidden;
-            animation: pulse 2s infinite;
+            animation: pulse 2.5s infinite ease-in-out;
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
-            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(212, 175, 55, 0.6); }
-            100% { transform: scale(1); box-shadow: 0 0 10px rgba(212, 175, 55, 0.4); }
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
+            50% { transform: scale(1.08); box-shadow: 0 0 35px rgba(212, 175, 55, 0.7); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(212, 175, 55, 0.5); }
         }
 
-        .logo-container img { width: 70%; height: auto; }
+        .logo-container img {
+            width: 75%; height: auto;
+            filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.8));
+        }
 
-        h2 { color: #fff; font-weight: 300; letter-spacing: 2px; margin-bottom: 25px; }
-        h2 b { color: var(--gold); }
+        h2 { color: #fff; font-weight: 300; letter-spacing: 2px; margin-bottom: 35px; font-size: 24px; }
+        h2 b { color: var(--gold); text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
 
-        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group { margin-bottom: 18px; text-align: left; }
         input { 
-            width: 100%; padding: 14px; 
+            width: 100%; padding: 15px; 
             border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; background: rgba(0,0,0,0.5); 
+            border-radius: 14px; background: rgba(0,0,0,0.6); 
             color: #fff; box-sizing: border-box; outline: none;
-            transition: 0.3s; font-size: 14px;
+            transition: 0.3s; font-size: 15px;
         }
-        input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(212, 175, 55, 0.2); }
+        input:focus { border-color: var(--gold); background: rgba(0,0,0,0.8); box-shadow: 0 0 15px rgba(212, 175, 55, 0.3); }
 
         button { 
-            width: 100%; padding: 14px; 
-            background: linear-gradient(45deg, #d4af37, #f9e29c); 
+            width: 100%; padding: 16px; 
+            background: linear-gradient(45deg, var(--gold), var(--light-gold)); 
             border: none; color: #000; font-weight: bold; 
-            border-radius: 12px; cursor: pointer; margin-top: 15px;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+            border-radius: 14px; cursor: pointer; margin-top: 20px;
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s;
+            font-size: 16px;
         }
-        button:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4); }
+        button:hover { transform: translateY(-4px); box-shadow: 0 10px 25px rgba(212, 175, 55, 0.5); }
 
-        .footer-text { margin-top: 25px; font-size: 13px; color: #aaa; }
+        .footer-text { margin-top: 30px; font-size: 14px; color: #aaa; }
         .footer-text a { color: var(--gold); text-decoration: none; font-weight: bold; }
 
-        /* ✨ تیرتے ہوئے ذرات (Particles) */
+        /* ✨ تیرتے ہوئے سنہری ذرات */
         .particle {
             position: absolute; background: var(--gold);
             border-radius: 50%; opacity: 0.3;
-            animation: float 10s infinite linear;
+            animation: float 12s infinite linear;
         }
 
         @keyframes float {
             0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            50% { opacity: 0.5; }
+            50% { opacity: 0.6; }
             100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div class="particle" style="width: 5px; height: 5px; left: 10%; animation-duration: 8s;"></div>
-    <div class="particle" style="width: 3px; height: 3px; left: 50%; animation-duration: 12s; animation-delay: 2s;"></div>
-    <div class="particle" style="width: 7px; height: 7px; left: 80%; animation-duration: 10s; animation-delay: 5s;"></div>
+    <div class="particle" style="width: 6px; height: 6px; left: 15%; animation-duration: 9s;"></div>
+    <div class="particle" style="width: 4px; height: 4px; left: 45%; animation-duration: 14s; animation-delay: 3s;"></div>
+    <div class="particle" style="width: 8px; height: 8px; left: 75%; animation-duration: 11s; animation-delay: 6s;"></div>
 
     <div class="login-box">
         <div class="logo-container">
-            <img src="https://cdn-icons-png.flaticon.com/512/2991/2991148.png" alt="Logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/11186/11186638.png" alt="Gold Coins Logo">
         </div>
         
-        <h2>GOLD <b>PLUS</b></h2>
+        <h2>Welcome to <b>GOLD PLUS</b></h2>
         
         <div class="input-group">
             <input type="email" id="email" placeholder="Email Address">
@@ -117,7 +122,7 @@
         <button id="loginBtn">ACCESS ACCOUNT</button>
         
         <div class="footer-text">
-            Don't have an account? <a href="singup.html">SIGN UP</a>
+            Don't have an account? <a href="singup.html">CREATE ONE</a>
         </div>
     </div>
 
@@ -142,16 +147,16 @@
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('loginBtn');
 
-            if(!email || !pass) return alert("Fields cannot be empty!");
+            if(!email || !pass) return alert("Please fill all fields!");
             
-            btn.innerText = "AUTHENTICATING...";
+            btn.innerText = "Processing...";
             btn.disabled = true;
 
             try {
                 await signInWithEmailAndPassword(auth, email, pass);
                 window.location.href = "dashboard.html"; 
             } catch (e) { 
-                alert("Error: " + e.message); 
+                alert("Login Error: " + e.message); 
                 btn.innerText = "ACCESS ACCOUNT";
                 btn.disabled = false;
             }
