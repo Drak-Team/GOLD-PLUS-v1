@@ -17,47 +17,43 @@
     const database = getDatabase(app);
     const auth = getAuth(app);
 
-    // 1. Gmail Auth اور سیشن چیک (پروفیشنل طریقہ)
+    // 1. Auth Check
     onAuthStateChanged(auth, (user) => {
         const userPhone = localStorage.getItem('userPhone');
-        
         if (user && userPhone) {
-            // اگر یوزر لاگ ان ہے، تو ڈیٹا لوڈ کریں
             listenToUserData(userPhone);
         } else {
-            // اگر سیشن نہیں ہے، تو واپس انڈیکس (لاگ ان) پر بھیجیں
+            // تھوڑا انتظار کریں تاکہ پیج لوڈ ہو جائے، پھر ری ڈائریکٹ کریں
             setTimeout(() => {
-                if (!auth.currentUser) window.location.href = 'index.html';
-            }, 2000); 
+                if(!localStorage.getItem('userPhone')) window.location.href = 'index.html';
+            }, 3000);
         }
     });
 
-    // 2. ڈیٹا بیس سے لائیو معلومات اٹھانا (تاکہ بیلنس خود بخود اپ ڈیٹ ہو)
+    // 2. محفوظ طریقے سے ڈیٹا دکھانا (Safe Update)
     function listenToUserData(phone) {
         const userRef = ref(database, 'users/' + phone);
         onValue(userRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // آپ کے ڈیش بورڈ کے IDs کے مطابق ڈیٹا سیٹ کرنا
-                if(document.getElementById('mainBalance')) 
-                    document.getElementById('mainBalance').innerText = "$" + (data.balance || 0).toFixed(2);
+                // ہر آئی ڈی کو چیک کر کے اپ ڈیٹ کریں تاکہ ایرر نہ آئے
+                const balEl = document.getElementById('mainBalance');
+                if(balEl) balEl.innerText = "$" + (data.balance || 0).toFixed(2);
+
+                const nameEl = document.getElementById('userNameLabel');
+                if(nameEl) nameEl.innerText = "Welcome, " + (data.name || "User") + "!";
+
+                const teamEl = document.getElementById('teamCount');
+                if(teamEl) teamEl.innerText = "+" + (data.referCount || 0) + " Members";
                 
-                if(document.getElementById('userNameLabel')) 
-                    document.getElementById('userNameLabel').innerText = "Welcome, " + (data.name || "User") + "!";
+                const drawEl = document.getElementById('withdrawStat');
+                if(drawEl && data.withdrawTotal) drawEl.innerText = "$" + data.withdrawTotal;
                 
-                if(document.getElementById('teamCount')) 
-                    document.getElementById('teamCount').innerText = "+" + (data.referCount || 0) + " Members";
-                
-                if(data.withdrawTotal && document.getElementById('withdrawStat')) 
-                    document.getElementById('withdrawStat').innerText = "$" + data.withdrawTotal;
-                
-                // پینڈنگ الرٹ چیک کریں
                 checkPendingStatus(phone);
             }
         });
     }
 
-    // پینڈنگ ڈپازٹ الرٹ لائیو چیک کریں
     function checkPendingStatus(phone) {
         const depRef = ref(database, 'deposits/' + phone);
         onValue(depRef, (snapshot) => {
@@ -65,48 +61,43 @@
             snapshot.forEach((child) => {
                 if (child.val().status === "Pending") hasPending = true;
             });
-            const alertBox = document.getElementById('pendingAlert');
-            if(alertBox) alertBox.style.display = hasPending ? 'flex' : 'none';
+            const alertEl = document.getElementById('pendingAlert');
+            if(alertEl) alertEl.style.display = hasPending ? 'flex' : 'none';
         });
     }
 
-    // ارننگ کلیم کرنے کا فنکشن (Mining)
     window.claimDailyEarning = async function(type) {
         const phone = localStorage.getItem('userPhone');
         if(!phone) return;
-
         const userRef = ref(database, 'users/' + phone);
         const snapshot = await get(userRef);
         const data = snapshot.val();
-
         if (data && data.status !== "blocked") {
             let earning = type === 'free' ? 0.50 : 5.00;
             const newBalance = (data.balance || 0) + earning;
-            
             await update(userRef, { balance: newBalance });
-            alert("Success! $" + earning + " added to your assets.");
-        } else {
-            alert("Action failed. Account status: " + (data ? data.status : "Blocked"));
+            alert("Success! $" + earning + " added.");
         }
     };
 
-    // ٹائمر سسٹم (Mining Timer)
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
         const display = document.getElementById(displayId);
-        if(!display) return;
+        if(!display) return; // اگر ٹائمر کا ڈبہ نہیں ہے تو فنکشن روک دو
 
         setInterval(() => {
             hours = Math.floor(timer / 3600);
             minutes = Math.floor((timer % 3600) / 60);
             seconds = timer % 60;
-            display.textContent = 
-                `${hours < 10 ? "0"+hours : hours}:${minutes < 10 ? "0"+minutes : minutes}:${seconds < 10 ? "0"+seconds : seconds}`;
+            display.textContent = `${hours < 10 ? "0"+hours : hours}:${minutes < 10 ? "0"+minutes : minutes}:${seconds < 10 ? "0"+seconds : seconds}`;
             if (--timer < 0) timer = duration;
         }, 1000);
     }
 
     window.onload = function () {
-        startTimer(24 * 60 * 60, "freeTimer");
+        // ٹائمر صرف تب چلے گا اگر آئی ڈی موجود ہو
+        if(document.getElementById('freeTimer')) {
+            startTimer(24 * 60 * 60, "freeTimer");
+        }
     };
 </script>
