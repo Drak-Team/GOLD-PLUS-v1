@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Deposit History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            padding-bottom: 30px;
+        }
+
+        /* Header */
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--glass-border); }
+        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
+        .header h2 { margin: 0; font-size: 18px; }
+
+        .container { padding: 20px; }
+
+        /* History Card */
+        .history-item {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details h4 { margin: 0; font-size: 15px; color: #fff; }
+        .details span { font-size: 11px; color: #aaa; }
+        
+        .amount-info { text-align: right; }
+        .amount-info .price { font-size: 16px; font-weight: bold; color: var(--primary-gold); display: block; }
+        
+        /* Status Badges */
+        .status { font-size: 10px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
+        .pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid #ffc107; }
+        .approved { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid #00ff64; }
+        .rejected { background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; }
+
+        /* Empty State */
+        .no-data { text-align: center; padding: 50px 20px; color: #666; }
+        .no-data i { font-size: 50px; margin-bottom: 15px; display: block; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <h2>Deposit History</h2>
+</div>
+
+<div class="container" id="historyContainer">
+    <div class="history-item">
+        <div class="details">
+            <h4>EasyPaisa Deposit</h4>
+            <span>18 April 2026, 09:30 AM</span>
+        </div>
+        <div class="amount-info">
+            <span class="price">Rs. 600</span>
+            <span class="status pending">Pending</span>
+        </div>
+    </div>
+
+    <div class="history-item">
+        <div class="details">
+            <h4>JazzCash Deposit</h4>
+            <span>15 April 2026, 02:15 PM</span>
+        </div>
+        <div class="amount-info">
+            <span class="price">Rs. 2500</span>
+            <span class="status approved">Approved</span>
+        </div>
+    </div>
+
+    </div>
+
+</body>
+</html>
