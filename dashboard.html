@@ -3,121 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Luxury Dashboard</title>
+    <title>Gold Plus - Cloud Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --dark-gold: #d4af37; --bg: #050505; }
+        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 80px; }
         
-        body { 
-            margin: 0; font-family: 'Poppins', sans-serif; 
-            background: #0a0a0a; color: white; padding-bottom: 90px;
-        }
+        /* Top Stats */
+        .top-header { padding: 20px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .user-welcome { color: #f1c40f; font-size: 14px; margin-bottom: 10px; }
+        .mini-stats { display: flex; gap: 30px; font-size: 12px; }
+        .mini-stats b { font-size: 16px; color: #fff; display: block; }
 
-        /* Top Header Glow */
-        .header { 
-            padding: 25px; background: linear-gradient(to bottom, #1a1a1a, transparent);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .user-info b { color: var(--gold); text-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
+        /* Mining Machines Section */
+        .section-title { padding: 10px 20px; font-size: 14px; color: #aaa; }
+        .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 15px; }
+        .machine-card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .coin-ball { width: 50px; height: 50px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.4); }
+        .coin-ball i { color: #000; font-size: 20px; }
+        .timer { font-size: 10px; color: #f1c40f; margin-bottom: 5px; }
+        .claim-sm-btn { background: var(--gold-grad); border: none; font-size: 9px; padding: 4px; border-radius: 5px; font-weight: bold; width: 100%; cursor: pointer; }
 
-        /* Luxury Balance Card */
-        .balance-card { 
-            background: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #b8860b 100%); 
-            margin: 20px; padding: 40px 20px; border-radius: 30px; 
-            color: #000; text-align: center; 
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.4);
-            position: relative; overflow: hidden;
-        }
-        .balance-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: rgba(255,255,255,0.1); transform: rotate(45deg); pointer-events: none;
-        }
-        .balance-card h1 { margin: 10px 0; font-size: 45px; font-weight: 700; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
+        /* Get All Button */
+        .get-all-box { padding: 20px; }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 18px; color: #000; box-shadow: 0 0 20px rgba(241,196,15,0.3); }
 
-        /* Stats Grid */
-        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .stat-box { 
-            background: rgba(255,255,255,0.05); padding: 25px 15px; border-radius: 25px; 
-            border: 1px solid rgba(212, 175, 55, 0.2); text-align: center;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
-        }
-        .stat-box i { color: var(--gold); font-size: 24px; margin-bottom: 10px; }
-        .stat-box h4 { margin: 5px 0 0; font-size: 18px; color: var(--gold); }
+        /* Main Grid Cards (Deposit, Withdraw, Team) */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
+        .grid-card { background: var(--card-bg); border-radius: 20px; padding: 15px; position: relative; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .grid-card h5 { margin: 0; font-size: 14px; color: #fff; }
+        .grid-card p { margin: 5px 0; font-size: 12px; color: #00ff00; font-weight: bold; }
+        .grid-card .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 5px 15px; border-radius: 20px; font-size: 10px; margin-top: 10px; cursor: pointer; }
+        .card-icon { position: absolute; right: 10px; bottom: 10px; width: 50px; opacity: 0.8; }
 
-        /* Mining Section */
-        .mining-card { 
-            margin: 25px 20px; background: rgba(255,255,255,0.03); 
-            padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
-            text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-        }
-        .timer-box { 
-            font-size: 32px; color: var(--gold); font-weight: bold; margin: 20px 0;
-            letter-spacing: 2px; text-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
-        }
-        
-        .action-btn { 
-            background: linear-gradient(90deg, #d4af37, #f1c40f); color: #000; 
-            border: none; width: 100%; padding: 18px; border-radius: 20px; 
-            font-weight: bold; font-size: 16px; cursor: pointer;
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        /* Professional Bottom Nav */
-        .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #000; 
-            display: flex; justify-content: space-around; padding: 18px 0; 
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-        }
-        .nav-item { color: #555; text-decoration: none; font-size: 11px; text-align: center; }
-        .nav-item.active { color: var(--gold); }
-        .nav-item i { font-size: 22px; margin-bottom: 5px; display: block; }
+        /* Bottom Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-btn { color: #555; text-decoration: none; text-align: center; font-size: 10px; }
+        .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <div class="user-info">
-        <h3 id="userNameLabel" style="font-weight: 300;">Welcome, <b>User</b></h3>
-    </div>
-    <div style="position: relative;">
-        <i class="fas fa-bell" style="color: var(--gold); font-size: 22px;"></i>
-        <span style="position: absolute; top: -5px; right: -5px; background: red; width: 8px; height: 8px; border-radius: 50%;"></span>
+<div class="top-header">
+    <div class="user-welcome" id="userNameLabel">Welcome, Loading...</div>
+    <div class="mini-stats">
+        <div>Total assets <b id="mainBalance">$0.00</b></div>
+        <div>Total Miners <b id="minersCount">4</b></div>
     </div>
 </div>
 
-<div class="balance-card">
-    <span style="letter-spacing: 2px; font-weight: 600;">TOTAL ASSETS</span>
-    <h1 id="mainBalance">$0.00</h1>
-    <div style="font-size: 11px; letter-spacing: 1px; font-weight: bold;">GOLD PLUS PREMIUM MEMBER</div>
+<div class="section-title">Your <b>Mining Machines</b></div>
+<div class="machines-grid">
+    <div class="machine-card">
+        <div class="coin-ball"><i class="fas fa-dollar-sign"></i></div>
+        <div class="timer">00:44</div>
+        <button class="claim-sm-btn">Claim</button>
+    </div>
+    <div class="machine-card">
+        <div class="coin-ball"><i class="fas fa-dollar-sign"></i></div>
+        <div class="timer">01:16</div>
+        <button class="claim-sm-btn">Claim</button>
+    </div>
+    <div class="machine-card">
+        <div class="coin-ball"><i class="fas fa-dollar-sign"></i></div>
+        <div class="timer">00:57</div>
+        <button class="claim-sm-btn">Claim</button>
+    </div>
+    <div class="machine-card">
+        <div class="coin-ball"><i class="fas fa-dollar-sign"></i></div>
+        <div class="timer">00:18</div>
+        <button class="claim-sm-btn">Claim</button>
+    </div>
 </div>
 
-<div class="stats-container">
-    <div class="stat-box">
-        <i class="fas fa-users"></i>
-        <div style="font-size: 12px; color: #aaa;">My Team</div>
-        <h4 id="teamCount">0</h4>
+<div class="get-all-box">
+    <button class="get-all-btn" onclick="claimDailyEarning('free')">Get All</button>
+</div>
+
+<div class="main-grid">
+    <div class="grid-card">
+        <h5>My Team</h5>
+        <span>Invited Members</span>
+        <p id="teamCount">+0</p>
+        <button class="btn-link" onclick="location.href='refer.html'">Manage</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" class="card-icon">
     </div>
-    <div class="stat-box">
-        <i class="fas fa-wallet"></i>
-        <div style="font-size: 12px; color: #aaa;">Withdrawals</div>
-        <h4 id="withdrawStat">$0.00</h4>
+    <div class="grid-card">
+        <h5>Daily Earning</h5>
+        <p>+ $5.00</p>
+        <button class="btn-link" onclick="location.href='history.html'">History</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" class="card-icon">
+    </div>
+    <div class="grid-card">
+        <h5>Withdraw</h5>
+        <p id="withdrawStat">$0.00</p>
+        <button class="btn-link" onclick="location.href='withdraw.html'">Withdraw</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/10149/10149458.png" class="card-icon">
+    </div>
+    <div class="grid-card">
+        <h5>Deposit</h5>
+        <span style="color: #f1c40f;">JazzCash</span>
+        <br>
+        <button class="btn-link" onclick="location.href='deposit.html'">Deposit</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="card-icon">
     </div>
 </div>
 
-<div class="mining-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-        <span style="font-weight: bold;">Mining Server 01</span>
-        <span style="color: #00ff00; font-size: 12px;"><i class="fas fa-circle" style="font-size: 8px;"></i> LIVE</span>
-    </div>
-    <div class="timer-box" id="freeTimer">23:59:59</div>
-    <button class="action-btn" onclick="claimDailyEarning('free')">COLLECT MINING PROFIT</button>
-</div>
-
-<nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i>HOME</a>
-    <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="refer.html" class="nav-item"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
+<nav class="nav-bar">
+    <a href="#" class="nav-btn active"><i class="fas fa-th-large"></i>HOME</a>
+    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
 </nav>
 
 <script type="module">
@@ -139,29 +136,18 @@
 
     window.onload = function() {
         const phone = localStorage.getItem('userPhone');
-        if (!phone) {
-            window.location.href = 'index.html';
-        } else {
-            loadUserData(phone);
-            startTimer(24 * 60 * 60, "freeTimer");
-        }
+        if (!phone) { window.location.href = 'index.html'; }
+        else { loadUserData(phone); }
     };
 
     function loadUserData(phone) {
         onValue(ref(db, 'users/' + phone), (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                const bal = document.getElementById('mainBalance');
-                if(bal) bal.innerText = "$" + (data.balance || 0).toFixed(2);
-                
-                const name = document.getElementById('userNameLabel');
-                if(name) name.innerHTML = "Welcome, <b>" + (data.name || "User") + "</b>";
-                
-                const team = document.getElementById('teamCount');
-                if(team) team.innerText = "+" + (data.referCount || 0);
-                
-                const draw = document.getElementById('withdrawStat');
-                if(draw) draw.innerText = "$" + (data.withdrawTotal || "0.00");
+                document.getElementById('mainBalance').innerText = "$" + (data.balance || 0).toFixed(2);
+                document.getElementById('userNameLabel').innerText = "Welcome, Esteemed Premium Member! (" + (data.name || "User") + ")";
+                document.getElementById('teamCount').innerText = "+" + (data.referCount || 0);
+                document.getElementById('withdrawStat').innerText = "$" + (data.withdrawTotal || "0.00");
             }
         });
     }
@@ -171,24 +157,11 @@
         const snap = await get(ref(db, 'users/' + phone));
         const data = snap.val();
         if(data) {
-            let earn = type === 'free' ? 0.50 : 5.00;
+            let earn = 5.00;
             await update(ref(db, 'users/' + phone), { balance: (data.balance || 0) + earn });
-            alert("Congratulations! $" + earn + " added to your assets.");
+            alert("Success! $" + earn + " added.");
         }
     };
-
-    function startTimer(duration, displayId) {
-        let timer = duration, h, m, s;
-        setInterval(() => {
-            const display = document.getElementById(displayId);
-            if(!display) return;
-            h = parseInt(timer / 3600, 10);
-            m = parseInt((timer % 3600) / 60, 10);
-            s = parseInt(timer % 60, 10);
-            display.textContent = (h < 10 ? "0"+h : h) + ":" + (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
-            if (--timer < 0) timer = duration;
-        }, 1000);
-    }
 </script>
 
 </body>
