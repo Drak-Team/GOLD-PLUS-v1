@@ -4,38 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gold Plus - Withdraw</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { background: #000; color: #fff; font-family: sans-serif; padding: 20px; text-align: center; }
-        .card { background: #111; padding: 25px; border-radius: 20px; border: 1px solid #d4af37; max-width: 400px; margin: auto; }
-        select, input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; background: #000; color: #fff; border: 1px solid #d4af37; box-sizing: border-box; }
-        .btn { background: #d4af37; color: #000; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; animation: glow 2s infinite; }
-        @keyframes glow { 0% { box-shadow: 0 0 5px #d4af37; } 50% { box-shadow: 0 0 20px #d4af37; } 100% { box-shadow: 0 0 5px #d4af37; } }
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            padding-bottom: 50px;
+        }
+
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
+        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
+        .header h2 { margin: 0; font-size: 18px; }
+
+        .container { padding: 20px; }
+
+        /* Balance Info Card */
+        .balance-summary {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        .balance-summary span { font-size: 12px; color: #aaa; text-transform: uppercase; }
+        .balance-summary h3 { font-size: 32px; margin: 10px 0; color: var(--primary-gold); }
+
+        /* Form Styling */
+        .withdraw-form {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid var(--glass-border);
+        }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 8px; }
+        .input-group select, .input-group input {
+            width: 100%; padding: 14px; border-radius: 12px;
+            border: 1px solid var(--glass-border); background: rgba(0,0,0,0.4);
+            color: white; box-sizing: border-box; outline: none;
+        }
+        .input-group select option { background: #1a0b2e; }
+
+        /* Rules Box */
+        .rules-box {
+            background: rgba(241, 196, 15, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 25px;
+            border: 1px dashed rgba(241, 196, 15, 0.3);
+        }
+        .rules-box h4 { margin: 0 0 10px 0; font-size: 13px; color: var(--primary-gold); }
+        .rules-box ul { padding: 0; margin: 0; list-style: none; }
+        .rules-box li { font-size: 11px; color: #ccc; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+        .rules-box li i { font-size: 8px; }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            color: #000; border: none; width: 100%; padding: 15px;
+            border-radius: 18px; font-weight: bold; font-size: 16px;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+            cursor: pointer; margin-top: 10px;
+        }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 style="color:#d4af37">Withdraw Funds</h2>
-    <p style="font-size: 12px; color: #aaa;">Minimum Withdraw: Rs. 500</p>
-    
-    <select id="method">
-        <option value="JazzCash">JazzCash</option>
-        <option value="USDT">USDT (TRC-20)</option>
-    </select>
-    
-    <input type="text" id="accName" placeholder="Account Holder Name">
-    <input type="text" id="accNum" placeholder="Account Number / Wallet Address">
-    <input type="number" id="wAmount" placeholder="Withdraw Amount">
-    
-    <button class="btn" onclick="requestWithdraw()">Request Withdrawal</button>
+<div class="header">
+    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <h2>Withdraw Funds</h2>
+</div>
+
+<div class="container">
+    <div class="balance-summary">
+        <span>Current Assets</span>
+        <h3>$0.00</h3>
+        <p style="font-size: 11px; color: #00ff64; margin: 0;">Withdrawal processing: 1-12 Hours</p>
+    </div>
+
+    <div class="withdraw-form">
+        <div class="input-group">
+            <label>Select Method</label>
+            <select id="method">
+                <option value="easypaisa">EasyPaisa</option>
+                <option value="jazzcash">JazzCash</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label>Account Number</label>
+            <input type="number" id="acc_num" placeholder="03XXXXXXXXX">
+        </div>
+
+        <div class="input-group">
+            <label>Account Holder Name</label>
+            <input type="text" id="acc_name" placeholder="Full Name">
+        </div>
+
+        <div class="input-group">
+            <label>Amount to Withdraw ($)</label>
+            <input type="number" id="amount" placeholder="Minimum $1.00">
+        </div>
+
+        <button class="submit-btn" onclick="processWithdraw()">Confirm Withdraw</button>
+    </div>
+
+    <div class="rules-box">
+        <h4><i class="fas fa-info-circle"></i> Withdrawal Rules</h4>
+        <ul>
+            <li><i class="fas fa-circle"></i> Minimum withdrawal amount is $1.00.</li>
+            <li><i class="fas fa-circle"></i> 5% service tax will be applied on each transaction.</li>
+            <li><i class="fas fa-circle"></i> Payments are processed between 10 AM to 10 PM.</li>
+            <li><i class="fas fa-circle"></i> One withdrawal per day is allowed.</li>
+        </ul>
+    </div>
 </div>
 
 <script>
-    function requestWithdraw() {
-        const amount = document.getElementById('wAmount').value;
-        if(amount < 500) return alert("Minimum withdrawal is 500 PKR");
-        alert("Withdrawal request sent! It will be processed in 24 hours.");
+    function processWithdraw() {
+        const num = document.getElementById('acc_num').value;
+        const name = document.getElementById('acc_name').value;
+        const amt = document.getElementById('amount').value;
+
+        if(num && name && amt) {
+            if(amt < 1) {
+                alert("Minimum withdrawal is $1.00");
+                return;
+            }
+            alert(`Withdrawal request for $${amt} submitted! It will be credited to ${name}'s account after verification.`);
+            window.location.href = 'dashboard.html';
+        } else {
+            alert("Please fill all details correctly.");
+        }
     }
 </script>
+
 </body>
 </html>
