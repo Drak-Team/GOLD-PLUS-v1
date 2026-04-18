@@ -116,26 +116,70 @@
         </div>
     </div>
 
-    <button class="signup-btn" onclick="handleSignup()">Create Account</button>
+    <button class="signup-btn" id="signupBtn">Create Account</button>
 
     <div class="login-link">
         Already have an account? <a href="login.html">Login Now</a>
     </div>
 </div>
 
-<script>
-    function handleSignup() {
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+      authDomain: "gold-plus-v1.firebaseapp.com",
+      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+      projectId: "gold-plus-v1",
+      storageBucket: "gold-plus-v1.firebasestorage.app",
+      messagingSenderId: "474592887487",
+      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    document.getElementById('signupBtn').addEventListener('click', async () => {
         const name = document.getElementById('name').value;
         const phone = document.getElementById('phone').value;
         const pass = document.getElementById('pass').value;
+        const refer = document.getElementById('ref').value || "none";
 
-        if(name && phone && pass) {
-            alert("Account created successfully! Welcome to Gold Plus.");
-            window.location.href = 'dashboard.html';
-        } else {
-            alert("Please fill in all required fields.");
+        if(!name || !phone || !pass) {
+            alert("Please fill all fields!");
+            return;
         }
-    }
+
+        // فون نمبر کو بطور ID استعمال کریں گے تاکہ ہر بندہ ایک ہی بار رجسٹر ہو
+        const userRef = ref(database, 'users/' + phone);
+        
+        try {
+            const snapshot = await get(userRef);
+            if (snapshot.exists()) {
+                alert("This phone number is already registered!");
+            } else {
+                // نیا یوزر ڈیٹا بیس میں ڈالیں
+                await set(userRef, {
+                    name: name,
+                    phone: phone,
+                    password: pass,
+                    referBy: refer,
+                    balance: 0.00,
+                    status: "active",
+                    joiningDate: new Date().toISOString()
+                });
+                
+                alert("Account created successfully!");
+                // لوکل اسٹوریج میں فون نمبر سیو کریں تاکہ لاگ ان یاد رہے
+                localStorage.setItem('userPhone', phone);
+                window.location.href = 'dashboard.html';
+            }
+        } catch (error) {
+            console.error(error);
+            alert("Error: " + error.message);
+        }
+    });
 </script>
 
 </body>
