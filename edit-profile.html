@@ -1,17 +1,114 @@
-<div class="glass-card">
-    <h3>Update Information</h3>
-    <input type="text" id="newName" placeholder="Enter New Name">
-    <input type="password" id="newPass" placeholder="Enter New Password">
-    <button class="main-btn" onclick="updateProfile()">Save Changes</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Gold Plus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            display: flex; flex-direction: column; min-height: 100vh;
+        }
+
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
+        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
+
+        .container { padding: 25px; flex: 1; }
+
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; }
+        .input-group input {
+            width: 100%; padding: 15px; background: rgba(0,0,0,0.3);
+            border: 1px solid var(--glass-border); border-radius: 15px;
+            color: white; font-size: 15px; box-sizing: border-box; outline: none;
+        }
+        .input-group input:focus { border-color: var(--primary-gold); }
+
+        .update-btn {
+            width: 100%; padding: 16px;
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            color: #000; border: none; border-radius: 18px;
+            font-weight: bold; font-size: 16px; cursor: pointer;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <h2>Edit Profile</h2>
 </div>
 
-<script>
-function updateProfile() {
-    const name = document.getElementById('newName').value;
-    const pass = document.getElementById('newPass').value;
-    if(name || pass) {
-        alert("Profile Updated Successfully!");
-        window.location.href = 'profile.html';
-    }
-}
+<div class="container">
+    <div class="input-group">
+        <label>Full Name</label>
+        <input type="text" id="userName" placeholder="Enter new name">
+    </div>
+
+    <div class="input-group">
+        <label>New Password</label>
+        <input type="password" id="userPass" placeholder="Enter new password">
+    </div>
+
+    <button class="update-btn" id="saveBtn">Save Changes</button>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, updatePassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    document.getElementById('saveBtn').onclick = async () => {
+        const name = document.getElementById('userName').value;
+        const pass = document.getElementById('userPass').value;
+        const user = auth.currentUser;
+
+        if (user) {
+            try {
+                // نام اپ ڈیٹ کرنا (Realtime Database میں)
+                if (name) {
+                    await update(ref(db, 'users/' + user.uid), { name: name });
+                }
+                
+                // پاسورڈ اپ ڈیٹ کرنا (Authentication میں)
+                if (pass) {
+                    await updatePassword(user, pass);
+                }
+
+                alert("Profile updated successfully!");
+                window.location.href = 'profile.html';
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+        }
+    };
 </script>
+
+</body>
+</html>
