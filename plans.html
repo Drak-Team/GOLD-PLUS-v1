@@ -101,9 +101,9 @@
             border-radius: 25px; padding: 20px; margin-top: 30px; text-align: center;
         }
         .calc-input {
-            width: 80%; background: #0a0414; border: 1px solid #f1c40f;
-            color: #fff; padding: 10px; border-radius: 12px; text-align: center;
-            font-size: 18px; margin-bottom: 15px;
+            width: 85%; background: #0a0414; border: 1px solid #f1c40f;
+            color: #fff; padding: 12px; border-radius: 12px; text-align: center;
+            font-size: 18px; margin-bottom: 15px; outline: none;
         }
 
         .bottom-nav {
@@ -120,11 +120,33 @@
 
 <div class="header">
     <i class="fas fa-coins"></i>
-    <h2>Gold Plus Plans</h2>
+    <h2>Investment Plans</h2>
 </div>
 
 <div class="container">
-    <p class="section-desc">Start mining with 1$ = 300 PKR fixed rate.</p>
+    <p class="section-desc">Fixed Exchange Rate: 1$ = 300 PKR</p>
+
+    <div class="plan-card">
+        <div class="plan-badge">Free Trail</div>
+        <div class="plan-header">
+            <div class="plan-icon-box"><i class="fas fa-gift"></i></div>
+            <div class="plan-title">
+                <h3>Free Miner</h3>
+                <span>Investment: Rs. 0 <small>($0.00)</small></span>
+            </div>
+        </div>
+        <div class="details-grid">
+            <div class="detail-box">
+                <label>Daily Profit</label>
+                <div class="profit-text">Rs. 10 <span class="small-usd">($0.03)</span></div>
+            </div>
+            <div class="detail-box">
+                <label>Validity</label>
+                <div>30 Days</div>
+            </div>
+        </div>
+        <button class="invest-btn" onclick="activateFree()">Activate Free Plan</button>
+    </div>
 
     <div class="plan-card">
         <div class="plan-header">
@@ -140,7 +162,7 @@
                 <div class="profit-text">Rs. 50 <span class="small-usd">($0.16)</span></div>
             </div>
             <div class="detail-box">
-                <label>Monthly Return</label>
+                <label>Total Return</label>
                 <div>Rs. 1500 <span class="small-usd">($5.00)</span></div>
             </div>
         </div>
@@ -161,7 +183,7 @@
                 <div class="profit-text">Rs. 130 <span class="small-usd">($0.43)</span></div>
             </div>
             <div class="detail-box">
-                <label>Monthly Return</label>
+                <label>Total Return</label>
                 <div>Rs. 3900 <span class="small-usd">($13.00)</span></div>
             </div>
         </div>
@@ -182,7 +204,7 @@
                 <div class="profit-text">Rs. 280 <span class="small-usd">($0.93)</span></div>
             </div>
             <div class="detail-box">
-                <label>Monthly Return</label>
+                <label>Total Return</label>
                 <div>Rs. 8400 <span class="small-usd">($28.00)</span></div>
             </div>
         </div>
@@ -190,19 +212,18 @@
     </div>
 
     <div class="calc-box">
-        <h4 style="color: var(--primary-gold); margin-top: 0;"><i class="fas fa-calculator"></i> Custom ROI Calculator</h4>
-        <input type="number" id="calcInp" class="calc-input" placeholder="Enter Amount in $" oninput="runCalc()">
+        <h4 style="color: var(--primary-gold); margin-top: 0;"><i class="fas fa-calculator"></i> Profit Calculator</h4>
+        <input type="number" id="calcInp" class="calc-input" placeholder="Enter Dollars ($)" oninput="runCalc()">
         <div class="details-grid" style="margin-top: 10px;">
             <div class="detail-box">
                 <label>Daily (PKR)</label>
-                <div id="resDaily" style="color: #00ff64;">0</div>
+                <div id="resDaily" style="color: #00ff64;">0 PKR</div>
             </div>
             <div class="detail-box">
                 <label>Monthly (PKR)</label>
-                <div id="resMonthly" style="color: #00ff64;">0</div>
+                <div id="resMonthly" style="color: #00ff64;">0 PKR</div>
             </div>
         </div>
-        <p style="font-size: 10px; color: #777; margin-top: 10px;">Profit estimates based on 10% daily mining rate.</p>
     </div>
 </div>
 
@@ -219,14 +240,22 @@
         window.location.href = `deposit.html?plan=${plan}&price=${price}`;
     }
 
+    function activateFree() {
+        alert("Free Miner Activated! Start earning 10 PKR daily.");
+        window.location.href = 'dashboard.html';
+    }
+
     function runCalc() {
         const usd = document.getElementById('calcInp').value;
         const rate = 300;
         if(usd > 0) {
-            const dailyUsd = usd * 0.10;
+            const dailyUsd = usd * 0.10; // 10% Profit
             const monthlyUsd = dailyUsd * 30;
-            document.getElementById('resDaily').innerText = "Rs. " + (dailyUsd * rate).toLocaleString();
-            document.getElementById('resMonthly').innerText = "Rs. " + (monthlyUsd * rate).toLocaleString();
+            document.getElementById('resDaily').innerText = Math.floor(dailyUsd * rate) + " PKR";
+            document.getElementById('resMonthly').innerText = Math.floor(monthlyUsd * rate) + " PKR";
+        } else {
+            document.getElementById('resDaily').innerText = "0 PKR";
+            document.getElementById('resMonthly').innerText = "0 PKR";
         }
     }
 </script>
