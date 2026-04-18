@@ -1,28 +1,202 @@
-<div class="menu-container">
-    <a href="edit-profile.html" class="menu-item">
-        <i class="fas fa-user-edit"></i>
-        <span>Edit Profile</span>
-        <i class="fas fa-chevron-right"></i>
-    </a>
-    <a href="deposit-history.html" class="menu-item">
-        <i class="fas fa-file-invoice-dollar"></i>
-        <span>Deposit History</span>
-        <i class="fas fa-chevron-right"></i>
-    </a>
-    <a href="withdraw-history.html" class="menu-item">
-        <i class="fas fa-history"></i>
-        <span>Withdraw History</span>
-        <i class="fas fa-chevron-right"></i>
-    </a>
-    <a href="refer.html" class="menu-item"> <i class="fas fa-user-plus"></i>
-        <span>Refer & Earn</span>
-        <i class="fas fa-chevron-right"></i>
-    </a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* الٹرا پریمیم گولڈ تھیم - انٹرنل سی ایس ایس */
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            padding-bottom: 100px;
+            min-height: 100vh;
+        }
+
+        .profile-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0,0,0,0.2);
+            border-bottom-left-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+
+        .avatar-box {
+            width: 80px; height: 80px;
+            background: var(--primary-gold);
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 35px; color: #000; font-weight: bold;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+        }
+
+        .user-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
+        .user-id { font-size: 12px; color: #aaa; letter-spacing: 1px; }
+
+        .container { padding: 20px; }
+
+        .stats-row {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 15px; margin-top: -30px; margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: #25163d; border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 15px; text-align: center;
+        }
+
+        .stat-card i { color: var(--primary-gold); font-size: 18px; margin-bottom: 8px; }
+        .stat-card b { font-size: 16px; color: #fff; display: block; }
+        .stat-card span { font-size: 10px; color: #aaa; text-transform: uppercase; }
+
+        .menu-container {
+            background: var(--card-bg); border-radius: 25px;
+            padding: 10px; border: 1px solid var(--glass-border);
+        }
+
+        .menu-item {
+            display: flex; align-items: center; padding: 15px;
+            text-decoration: none; color: #fff;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .menu-item i {
+            width: 35px; height: 35px;
+            background: rgba(255,255,255,0.05); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 15px; color: var(--primary-gold);
+        }
+
+        .menu-item span { flex: 1; font-size: 14px; }
+
+        .logout-btn {
+            margin-top: 30px; width: 100%; padding: 15px;
+            background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2);
+            color: #ff4444; border-radius: 18px; font-weight: bold;
+        }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%;
+            background: #110720; display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 1px solid var(--glass-border); z-index: 1000;
+        }
+
+        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
+        .nav-item.active { color: var(--primary-gold); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="profile-header">
+    <div class="avatar-box" id="avatarChar">U</div>
+    <div class="user-name" id="profileName">Loading...</div>
+    <div class="user-id" id="profileID">ID: GP-000000</div>
+</div>
+
+<div class="container">
+    <div class="stats-row">
+        <div class="stat-card">
+            <i class="fas fa-wallet"></i>
+            <span>Total Balance</span>
+            <b id="totalBalance">$0.00</b>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <span>My Team</span>
+            <b id="myTeam">0 Members</b>
+        </div>
+    </div>
+
+    <div class="menu-container">
+        <a href="edit-profile.html" class="menu-item">
+            <i class="fas fa-user-edit"></i>
+            <span>Edit Profile</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="deposit-history.html" class="menu-item">
+            <i class="fas fa-file-invoice-dollar"></i>
+            <span>Deposit History</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="withdraw-history.html" class="menu-item">
+            <i class="fas fa-history"></i>
+            <span>Withdraw History</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="refer.html" class="menu-item">
+            <i class="fas fa-user-plus"></i>
+            <span>Refer & Earn</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="https://wa.me/923000000000" class="menu-item">
+            <i class="fab fa-whatsapp"></i>
+            <span>Contact Support</span>
+            <i class="fas fa-chevron-right"></i>
+        </a>
+    </div>
+
+    <button class="logout-btn" id="logoutBtn">Logout Account</button>
 </div>
 
 <nav class="bottom-nav">
     <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a> <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
     <a href="profile.html" class="nav-item active"><i class="fas fa-user-circle"></i>PROFILE</a>
 </nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    document.getElementById('profileName').innerText = data.name || "User";
+                    document.getElementById('profileID').innerText = "ID: GP-" + user.uid.substring(0,6).toUpperCase();
+                    document.getElementById('totalBalance').innerText = "$" + (data.balance || "0.00");
+                    document.getElementById('myTeam').innerText = (data.teamCount || "0") + " Members";
+                    document.getElementById('avatarChar').innerText = data.name ? data.name.charAt(0).toUpperCase() : "U";
+                }
+            });
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    document.getElementById('logoutBtn').onclick = () => {
+        signOut(auth).then(() => { window.location.href = 'index.html'; });
+    };
+</script>
+
+</body>
+</html>
