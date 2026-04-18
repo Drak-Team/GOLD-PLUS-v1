@@ -1,31 +1,149 @@
-<div class="deposit-container" style="padding: 20px;">
-    <h3 style="color: var(--primary-gold); text-align: center;">Deposit Funds</h3>
-    
-    <div class="payment-card" style="background: var(--card-bg); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/JazzCash_logo.png" width="40" style="border-radius: 5px;">
-            <h4 style="margin: 0;">JazzCash Transfer</h4>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Deposit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            padding-bottom: 20px;
+        }
+
+        .header { padding: 20px; text-align: center; }
+        .header h2 { color: var(--primary-gold); margin: 0; font-size: 22px; }
+
+        .container { padding: 15px; }
+
+        /* JazzCash Card */
+        .payment-card {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .method-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .method-title img { width: 35px; border-radius: 5px; }
+
+        .account-details {
+            background: rgba(0,0,0,0.3);
+            border: 1px dashed var(--primary-gold);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; }
+        .account-details b { display: block; font-size: 22px; color: #fff; margin: 5px 0; letter-spacing: 1px; }
+        .account-details p { margin: 0; font-size: 14px; color: #ddd; }
+
+        /* Upload Section */
+        .upload-section {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            padding: 20px;
+            border-radius: 20px;
+        }
+
+        .input-group { margin-bottom: 15px; text-align: left; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            color: #fff;
+            box-sizing: border-box;
+        }
+
+        input[type="file"] {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(90deg, #f1c40f, #e67e22);
+            color: #000;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.2);
+        }
+
+        .back-link {
+            display: block;
+            margin-top: 20px;
+            color: #888;
+            text-decoration: none;
+            font-size: 13px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2>Deposit Funds</h2>
+</div>
+
+<div class="container">
+    <div class="payment-card">
+        <div class="method-title">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/JazzCash_logo.png" alt="JazzCash">
+            <h4>JazzCash Transfer</h4>
         </div>
         
-        <p style="font-size: 13px; color: #aaa;">Please send your deposit amount to this account:</p>
-        
-        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary-gold); text-align: center;">
-            <span style="font-size: 12px; color: var(--primary-gold); display: block;">Account Number:</span>
-            <b style="font-size: 20px; letter-spacing: 1px; color: #fff;">03037264598</b>
-            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
-            <span style="font-size: 12px; color: var(--primary-gold); display: block;">Account Holder Name:</span>
-            <b style="font-size: 16px; color: #fff;">Ahmad Nafees Anjum</b>
+        <div class="account-details">
+            <span>Account Number</span>
+            <b>03037264598</b>
+            <p>Name: Ahmad Nafees Anjum</p>
         </div>
     </div>
 
-    <div class="upload-box" style="background: var(--card-bg); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px;">
-        <h4 style="margin-top: 0; font-size: 14px;">Upload Payment Proof</h4>
-        <p style="font-size: 11px; color: #888;">Enter Transaction ID and attach screenshot</p>
+    <div class="upload-section">
+        <div class="input-group">
+            <label>Transaction ID (TID)</label>
+            <input type="text" placeholder="Enter 12-digit TID">
+        </div>
         
-        <input type="text" placeholder="Enter Transaction ID (TID)" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; margin-bottom: 15px; box-sizing: border-box;">
-        
-        <input type="file" id="proof" accept="image/*" style="font-size: 12px; margin-bottom: 20px;">
-        
-        <button class="action-btn" style="width: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer;">SUBMIT DEPOSIT REQUEST</button>
+        <div class="input-group">
+            <label>Payment Screenshot</label>
+            <input type="file" accept="image/*">
+        </div>
+
+        <button class="submit-btn">SUBMIT REQUEST</button>
     </div>
+
+    <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
 </div>
+
+</body>
+</html>
