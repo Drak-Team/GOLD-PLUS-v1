@@ -30,17 +30,11 @@
             border-bottom-right-radius: 40px;
         }
         .avatar-box {
-            width: 80px;
-            height: 80px;
+            width: 80px; height: 80px;
             background: var(--primary-gold);
-            border-radius: 50%;
-            margin: 0 auto 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 35px;
-            color: #000;
-            font-weight: bold;
+            border-radius: 50%; margin: 0 auto 15px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 35px; color: #000; font-weight: bold;
             box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
         }
         .user-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
@@ -50,18 +44,12 @@
 
         /* Stats Grid */
         .stats-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: -30px;
-            margin-bottom: 25px;
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 15px; margin-top: -30px; margin-bottom: 25px;
         }
         .stat-card {
-            background: #25163d;
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
+            background: #25163d; border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 15px; text-align: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
         .stat-card i { color: var(--primary-gold); font-size: 18px; margin-bottom: 8px; }
@@ -70,54 +58,35 @@
 
         /* Menu List */
         .menu-container {
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 10px;
-            border: 1px solid var(--glass-border);
+            background: var(--card-bg); border-radius: 25px;
+            padding: 10px; border: 1px solid var(--glass-border);
         }
         .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            text-decoration: none;
-            color: #fff;
+            display: flex; align-items: center; padding: 15px;
+            text-decoration: none; color: #fff;
             border-bottom: 1px solid rgba(255,255,255,0.05);
         }
         .menu-item:last-child { border-bottom: none; }
         .menu-item i {
-            width: 35px;
-            height: 35px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            color: var(--primary-gold);
-            font-size: 16px;
+            width: 35px; height: 35px;
+            background: rgba(255,255,255,0.05); border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            margin-right: 15px; color: var(--primary-gold); font-size: 16px;
         }
         .menu-item span { flex: 1; font-size: 14px; }
         .menu-item .fa-chevron-right { font-size: 12px; color: #444; }
 
         .logout-btn {
-            margin-top: 30px;
-            width: 100%;
-            padding: 15px;
-            background: rgba(255, 50, 50, 0.1);
-            border: 1px solid rgba(255, 50, 50, 0.2);
-            color: #ff4444;
-            border-radius: 18px;
-            font-weight: bold;
-            cursor: pointer;
+            margin-top: 30px; width: 100%; padding: 15px;
+            background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2);
+            color: #ff4444; border-radius: 18px; font-weight: bold; cursor: pointer;
         }
 
         /* Bottom Nav */
         .bottom-nav {
-            position: fixed;
-            bottom: 0; width: 100%;
-            background: #110720;
-            display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid var(--glass-border);
+            position: fixed; bottom: 0; width: 100%;
+            background: #110720; display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 1px solid var(--glass-border); z-index: 1000;
         }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
@@ -127,9 +96,9 @@
 <body>
 
 <div class="profile-header">
-    <div class="avatar-box">U</div>
-    <div class="user-name">Ahmad Nafees</div>
-    <div class="user-id">ID: GP-992831</div>
+    <div class="avatar-box" id="avatarChar">U</div>
+    <div class="user-name" id="profileName">Loading...</div>
+    <div class="user-id" id="profileID">ID: GP-000000</div>
 </div>
 
 <div class="container">
@@ -137,12 +106,12 @@
         <div class="stat-card">
             <i class="fas fa-wallet"></i>
             <span>Total Balance</span>
-            <b>$0.00</b>
+            <b id="totalBalance">$0.00</b>
         </div>
         <div class="stat-card">
             <i class="fas fa-users"></i>
             <span>My Team</span>
-            <b>0 Members</b>
+            <b id="myTeam">0 Members</b>
         </div>
     </div>
 
@@ -152,12 +121,12 @@
             <span>Edit Profile</span>
             <i class="fas fa-chevron-right"></i>
         </a>
-        <a href="deposit.html" class="menu-item">
+        <a href="deposit-history.html" class="menu-item">
             <i class="fas fa-file-invoice-dollar"></i>
             <span>Deposit History</span>
             <i class="fas fa-chevron-right"></i>
         </a>
-        <a href="withdraw.html" class="menu-item">
+        <a href="withdraw-history.html" class="menu-item">
             <i class="fas fa-history"></i>
             <span>Withdraw History</span>
             <i class="fas fa-chevron-right"></i>
@@ -174,7 +143,7 @@
         </a>
     </div>
 
-    <button class="logout-btn" onclick="alert('Logging out...')">Logout Account</button>
+    <button class="logout-btn" id="logoutBtn">Logout Account</button>
 </div>
 
 <nav class="bottom-nav">
@@ -184,6 +153,51 @@
     <a href="invite.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
     <a href="profile.html" class="nav-item active"><i class="fas fa-user-circle"></i>PROFILE</a>
 </nav>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            // یوزر کا ڈیٹا فائر بیس سے نکالنا
+            const userRef = ref(db, 'users/' + user.uid);
+            onValue(userRef, (snapshot) => {
+                const data = snapshot.val();
+                if(data) {
+                    document.getElementById('profileName').innerText = data.name || "User";
+                    document.getElementById('profileID').innerText = "ID: GP-" + user.uid.substring(0,6).toUpperCase();
+                    document.getElementById('totalBalance').innerText = "$" + (data.balance || "0.00");
+                    document.getElementById('myTeam').innerText = (data.teamCount || "0") + " Members";
+                    document.getElementById('avatarChar').innerText = data.name ? data.name.charAt(0).toUpperCase() : "U";
+                }
+            });
+        } else {
+            window.location.href = 'index.html';
+        }
+    });
+
+    // لاگ آؤٹ فنکشن
+    document.getElementById('logoutBtn').onclick = () => {
+        signOut(auth).then(() => {
+            window.location.href = 'index.html';
+        });
+    };
+</script>
 
 </body>
 </html>
