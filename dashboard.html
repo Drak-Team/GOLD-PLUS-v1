@@ -3,135 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gold Plus Dashboard</title>
+<title>Gold Plus</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <style>
-body {
-  margin: 0;
-  font-family: 'Segoe UI';
-  background: linear-gradient(135deg, #0f051d, #1a0b2e);
-  color: white;
-  padding-bottom: 80px;
-}
-
-/* ANIMATION */
-.card {
-  animation: fadeIn 0.6s ease;
-}
-@keyframes fadeIn {
-  from {opacity:0; transform:translateY(20px);}
-  to {opacity:1; transform:translateY(0);}
+body{
+margin:0;
+font-family:Arial;
+background:linear-gradient(135deg,#12002b,#1e003d);
+color:#fff;
 }
 
 /* HEADER */
-.header { padding: 20px; }
-.header h1 { color: #f1c40f; }
+.header{
+padding:15px;
+}
+.logo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+.logo h2{color:#fff;}
+.play{
+font-size:12px;
+text-align:right;
+}
+.play small{display:block;color:#aaa;}
 
-/* CARD */
-.card {
-  background: rgba(255,255,255,0.03);
-  border-radius: 20px;
-  padding: 20px;
-  margin: 10px;
-  transition: 0.3s;
-}
-.card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 20px rgba(241,196,15,0.3);
-}
-
-/* MINERS */
-.miners { display: flex; gap: 10px; }
-.miner { flex: 1; text-align: center; }
-.miner img {
-  width: 70px;
-  animation: float 3s infinite ease-in-out;
-}
-@keyframes float {
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-8px)}
+.stats{
+display:flex;
+justify-content:space-between;
+margin-top:10px;
+font-size:14px;
 }
 
-.timer {
-  margin: 10px;
-  font-weight: bold;
-  color: #ff4e00;
+/* MINING BOX */
+.mining-box{
+background:rgba(255,255,255,0.05);
+margin:15px;
+padding:15px;
+border-radius:20px;
 }
 
-/* BUTTON */
-.btn {
-  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
-  padding: 12px;
-  border-radius: 12px;
-  border: none;
-  width: 100%;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.btn:active { transform: scale(0.95); }
-
-/* ripple */
-.btn::after {
-  content: "";
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: rgba(255,255,255,0.4);
-  border-radius: 50%;
-  transform: scale(0);
-  opacity: 0;
-}
-.btn:active::after {
-  transform: scale(2);
-  opacity: 1;
-  transition: 0.4s;
+.machines{
+display:flex;
+gap:10px;
+overflow:auto;
 }
 
-/* BALANCE */
-.balance { text-align: center; }
-.balance h2 { font-size: 40px; }
-
-/* ACTIONS */
-.actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 15px; }
-.action {
-  background: rgba(255,255,255,0.05);
-  padding: 15px;
-  border-radius: 15px;
-  text-align: center;
-  transition: 0.3s;
-}
-.action:hover {
-  background: rgba(241,196,15,0.2);
+.machine{
+min-width:120px;
+text-align:center;
 }
 
-/* NAVBAR */
-.navbar {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: #1a0b2e;
-  display: flex;
-  justify-content: space-around;
+.machine img{
+width:70px;
+animation:float 3s infinite;
 }
-.nav-item {
-  padding: 10px;
-  color: #777;
-}
-.nav-item.active {
-  color: #f1c40f;
+@keyframes float{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-8px)}
 }
 
-/* TOAST */
-.toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #2ecc71;
-  padding: 10px 15px;
-  border-radius: 8px;
-  display: none;
+.timer{
+margin:5px 0;
+font-weight:bold;
+}
+
+.claim{
+background:gold;
+border:none;
+padding:6px 10px;
+border-radius:10px;
+cursor:pointer;
+}
+
+/* GET ALL */
+.getall{
+margin:15px;
+text-align:center;
+}
+.getall button{
+background:linear-gradient(45deg,gold,orange);
+border:none;
+padding:12px;
+width:90%;
+border-radius:20px;
+font-size:16px;
+}
+
+/* CARDS */
+.cards{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+padding:10px;
+}
+.card{
+background:rgba(255,255,255,0.05);
+padding:15px;
+border-radius:15px;
+}
+
+/* NAV */
+.nav{
+position:fixed;
+bottom:0;
+width:100%;
+display:flex;
+justify-content:space-around;
+background:#140033;
+padding:10px;
 }
 </style>
 </head>
@@ -139,88 +121,108 @@ body {
 <body>
 
 <div class="header">
-  <h1>Gold Plus Dashboard</h1>
+<div class="logo">
+<h2>Gold Plus</h2>
+<div class="play">
+<i class="fab fa-google-play"></i>
+<small>Coming Soon</small>
+</div>
 </div>
 
-<div class="miners">
-  <div class="card miner">
-    <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-    <h3>Gold 1</h3>
-    <div class="timer" id="time1"></div>
-    <button class="btn" onclick="collect(2, 'time1')">Collect</button>
-  </div>
-
-  <div class="card miner">
-    <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-    <h3>Gold 2</h3>
-    <div class="timer" id="time2"></div>
-    <button class="btn" onclick="collect(1, 'time2')">Collect</button>
-  </div>
+<div class="stats">
+<div>Total Balance: $<span id="bal">0</span></div>
+<div>Miners: <span id="miners">3</span></div>
+</div>
 </div>
 
-<div class="card balance">
-  <h2 id="balance">$0.00</h2>
+<!-- MINING -->
+<div class="mining-box">
+<h3>Your Mining Machines</h3>
+
+<div class="machines" id="machines"></div>
 </div>
 
-<div class="actions">
-  <div class="action">Deposit</div>
-  <div class="action">Withdraw</div>
-  <div class="action">Promo</div>
-  <div class="action">Support</div>
+<!-- GET ALL -->
+<div class="getall">
+<button onclick="getAll()">GET ALL</button>
+<p style="font-size:12px;color:#aaa;">Claim before 24h</p>
 </div>
 
-<div class="navbar">
-  <div class="nav-item active" onclick="setNav(this)">Home</div>
-  <div class="nav-item" onclick="setNav(this)">Invest</div>
-  <div class="nav-item" onclick="setNav(this)">Earn</div>
-  <div class="nav-item" onclick="setNav(this)">Invite</div>
-  <div class="nav-item" onclick="setNav(this)">Profile</div>
+<!-- CARDS -->
+<div class="cards">
+<div class="card">My Team</div>
+<div class="card">Daily Earning</div>
+<div class="card">Withdraw</div>
+<div class="card">Deposit</div>
 </div>
 
-<div class="toast" id="toast"></div>
+<!-- NAV -->
+<div class="nav">
+<div>Home</div>
+<div>Invest</div>
+<div>Earn</div>
+<div>Invite</div>
+<div>Profile</div>
+</div>
 
 <script>
-let balance = 0;
+let balance=0;
+
+let machines=[
+{time:60,reward:2},
+{time:40,reward:1},
+{time:20,reward:3}
+];
+
+function render(){
+let html="";
+machines.forEach((m,i)=>{
+html+=`
+<div class="machine">
+<img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
+<div class="timer" id="t${i}"></div>
+<button class="claim" onclick="claim(${i})">Claim</button>
+</div>`;
+});
+document.getElementById("machines").innerHTML=html;
+}
+
+render();
 
 // TIMER
-function startTimer(id, seconds) {
-  let timer = seconds;
-  const el = document.getElementById(id);
+machines.forEach((m,i)=>{
+let t=m.time;
+setInterval(()=>{
+let m1=Math.floor(t/60);
+let s=t%60;
+document.getElementById("t"+i).innerText=m1+":"+s;
+if(t>0)t--;
+},1000);
+});
 
-  setInterval(() => {
-    let h = Math.floor(timer / 3600);
-    let m = Math.floor((timer % 3600) / 60);
-    let s = timer % 60;
-
-    el.innerText = `${h}:${m}:${s}`;
-
-    if (timer > 0) timer--;
-  }, 1000);
+// CLAIM
+function claim(i){
+if(machines[i].time>0){
+alert("Time not finished!");
+return;
+}
+balance+=machines[i].reward;
+document.getElementById("bal").innerText=balance;
+machines[i].time=60;
 }
 
-// START
-startTimer("time1", 20);
-startTimer("time2", 10);
-
-// COLLECT
-function collect(amount, id) {
-  balance += amount;
-  document.getElementById("balance").innerText = "$" + balance.toFixed(2);
-  showToast("Collected $" + amount);
+// GET ALL
+function getAll(){
+let total=0;
+machines.forEach(m=>{
+if(m.time<=0){
+total+=m.reward;
+m.time=60;
 }
-
-// TOAST
-function showToast(msg) {
-  let t = document.getElementById("toast");
-  t.innerText = msg;
-  t.style.display = "block";
-  setTimeout(()=> t.style.display="none",2000);
-}
-
-// NAV
-function setNav(el) {
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-  el.classList.add("active");
+});
+if(total==0) return alert("Nothing to collect");
+balance+=total;
+document.getElementById("bal").innerText=balance;
 }
 </script>
 
