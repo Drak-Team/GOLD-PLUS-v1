@@ -33,11 +33,27 @@
             display: flex; align-items: center; gap: 5px; font-weight: bold;
         }
 
-        .welcome-msg { padding: 0 20px; font-size: 13px; color: var(--primary-gold); margin-bottom: 15px; }
+        .welcome-msg { padding: 0 20px; font-size: 13px; color: var(--primary-gold); margin-bottom: 10px; }
+
+        /* Pending Alert Box */
+        #pendingAlert {
+            display: none; /* پہلے چھپا ہوا ہوگا */
+            margin: 0 20px 15px; 
+            background: rgba(243, 156, 18, 0.1); 
+            border: 1px solid #f39c12; 
+            padding: 12px; 
+            border-radius: 15px; 
+            align-items: center; 
+            gap: 12px;
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.8; } 50% { opacity: 1; } 100% { opacity: 0.8; }
+        }
 
         .top-stats { display: grid; grid-template-columns: 1.5fr 1fr; padding: 0 20px; margin-bottom: 20px; }
         .stat-item span { display: block; font-size: 11px; color: #aaa; margin-bottom: 5px; }
-        .stat-item b { font-size: 18px; }
+        .stat-item b { font-size: 22px; color: #fff; }
 
         /* Mining Section */
         .mining-container {
@@ -50,13 +66,11 @@
         .machine { text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; border: 1px solid var(--glass-border); position: relative; }
         .package-name { font-size: 9px; color: #000; background: var(--primary-gold); padding: 2px 5px; border-radius: 5px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
         
-        /* Active Badge for Paid Miners */
         .active-badge {
             position: absolute; top: -8px; right: -5px;
             background: var(--primary-gold); color: #000;
             font-size: 8px; font-weight: bold; padding: 2px 6px;
             border-radius: 5px; border: 2px solid #1a0b2e;
-            box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
         }
 
         .machine img { width: 45px; filter: drop-shadow(0 0 8px gold); }
@@ -75,7 +89,7 @@
         .feature-card img { position: absolute; right: -8px; bottom: -8px; width: 55px; opacity: 0.3; }
         .feature-card h4 { margin: 0; font-size: 13px; color: #ddd; }
         .feature-card p { margin: 5px 0; font-size: 15px; font-weight: bold; color: #fff; }
-        .sub-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 10px; padding: 5px 12px; border-radius: 8px; width: fit-content; z-index: 1; cursor: pointer; }
+        .sub-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 10px; padding: 5px 12px; border-radius: 8px; z-index: 1; cursor: pointer; }
         .gold-btn { background: var(--primary-gold) !important; color: #000 !important; font-weight: bold; }
 
         /* Bottom Nav */
@@ -94,8 +108,17 @@
 
 <div class="welcome-msg">Welcome, Ahmad Nafees!</div>
 
+<div id="pendingAlert">
+    <i class="fas fa-clock" style="color: #f39c12; font-size: 20px;"></i>
+    <div style="flex-grow: 1;">
+        <span style="color: #f39c12; font-weight: bold; display: block; font-size: 12px;">Deposit Pending</span>
+        <span id="pendingText" style="font-size: 10px; color: #ddd;">Your request is under review.</span>
+    </div>
+    <a href="deposit-history.html" style="font-size: 10px; color: #fff; background: #f39c12; padding: 5px 10px; border-radius: 8px; text-decoration: none; font-weight: bold;">VIEW</a>
+</div>
+
 <div class="top-stats">
-    <div class="stat-item"><span>Total assets</span><b>$0.00</b></div>
+    <div class="stat-item"><span>Total assets</span><b id="mainBalance">$0.00</b></div>
     <div class="stat-item"><span>Total Miners</span><b><span id="activeMinersCount">0</span> Active</b></div>
 </div>
 
@@ -128,7 +151,7 @@
     </div>
     <div class="feature-card">
         <h4>Daily Earning</h4>
-        <p style="color: #00ff64;">+ $0.00</p>
+        <p id="dailyEarn" style="color: #00ff64;">+ $0.00</p>
         <button class="sub-btn">History</button>
         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png">
     </div>
@@ -140,8 +163,8 @@
     </div>
     <div class="feature-card">
         <h4>Deposit</h4>
-        <p style="color: var(--primary-gold); font-size: 11px;">Fast Payment</p>
-        <button class="sub-btn gold-btn" onclick="location.href='deposit.html'">Deposit</button>
+        <p style="color: var(--primary-gold); font-size: 11px;">History</p>
+        <button class="sub-btn gold-btn" onclick="location.href='deposit-history.html'">History</button>
         <img src="https://cdn-icons-png.flaticon.com/512/3037/3037150.png">
     </div>
 </div>
@@ -155,6 +178,28 @@
 </nav>
 
 <script>
+    // بیلنس اور پینڈنگ الرٹ چیک کرنے کا سسٹم
+    function updateDashboard() {
+        // لوکل اسٹوریج سے ٹیسٹ ڈیٹا چیک کرنا
+        const history = JSON.parse(localStorage.getItem('depositHistory')) || [];
+        const pendingItem = history.find(item => item.status === "Pending");
+        
+        const alertBox = document.getElementById('pendingAlert');
+        if (pendingItem) {
+            alertBox.style.display = 'flex';
+            document.getElementById('pendingText').innerText = `Your request for $${pendingItem.amount} is under review.`;
+        } else {
+            alertBox.style.display = 'none';
+        }
+
+        // بیلنس لوڈ کرنا (ٹیسٹ کے لیے ہم اسے فائر بیس سے جوڑیں گے)
+        // فی الحال اگر کوئی اپروو ہے تو بیلنس دکھا دے گا
+        const approvedItems = history.filter(item => item.status === "Approved");
+        let total = 0;
+        approvedItems.forEach(item => total += parseFloat(item.amount));
+        document.getElementById('mainBalance').innerText = "$" + total.toFixed(2);
+    }
+
     // ٹائمر فنکشن
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
@@ -171,11 +216,11 @@
     }
 
     window.onload = function () {
+        updateDashboard();
         startTimer(24 * 60 * 60, "freeTimer");
-        // مثال کے طور پر اگر 2 پلان ایکٹیو ہوں تو بیج اپ ڈیٹ کریں
-        let activePaidPlans = 2; // یہ ڈیٹا فائر بیس سے آئے گا
+        let activePaidPlans = 0; 
         document.getElementById('minerBadge').textContent = activePaidPlans + " ACTIVE";
-        document.getElementById('activeMinersCount').textContent = activePaidPlans + 1; // +1 فری والا
+        document.getElementById('activeMinersCount').textContent = activePaidPlans + 1;
         if(activePaidPlans > 0) startTimer(24 * 60 * 60, "paidTimer");
     };
 </script>
