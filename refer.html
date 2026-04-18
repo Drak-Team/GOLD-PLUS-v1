@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Invite Friends</title>
+    <title>Gold Plus - Refer & Earn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -27,7 +27,6 @@
 
         .container { padding: 20px; text-align: center; }
 
-        /* Invite Banner */
         .invite-banner {
             background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.1));
             border-radius: 30px;
@@ -39,7 +38,6 @@
         .invite-banner h3 { margin: 0; font-size: 22px; }
         .invite-banner p { font-size: 13px; color: #ccc; margin: 10px 0 0; }
 
-        /* Referral Link Box */
         .referral-box {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
@@ -57,9 +55,9 @@
             font-size: 13px;
             word-break: break-all;
             margin-bottom: 15px;
+            min-height: 20px;
         }
 
-        /* Commission Grid */
         .commission-title { text-align: left; font-size: 14px; color: var(--primary-gold); margin-bottom: 15px; padding-left: 5px; }
         .comm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 30px; }
         .comm-card {
@@ -79,7 +77,6 @@
             cursor: pointer;
         }
 
-        /* Bottom Nav */
         .bottom-nav {
             position: fixed;
             bottom: 0; width: 100%;
@@ -95,7 +92,7 @@
 <body>
 
 <div class="header">
-    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <i class="fas fa-arrow-left" onclick="window.location.href='dashboard.html'"></i>
     <h2>Refer & Earn</h2>
 </div>
 
@@ -108,7 +105,7 @@
 
     <div class="referral-box">
         <label>Your Referral Link</label>
-        <div class="link-input" id="refLink">https://goldplusv1.com/register?ref=GP992831</div>
+        <div class="link-input" id="refLink">Loading your link...</div>
         <button class="share-btn" onclick="copyLink()">
             <i class="fas fa-copy"></i> Copy Link
         </button>
@@ -116,18 +113,9 @@
 
     <div class="commission-title">Team Reward System</div>
     <div class="comm-grid">
-        <div class="comm-card">
-            <span>Level 1</span>
-            <b>15%</b>
-        </div>
-        <div class="comm-card">
-            <span>Level 2</span>
-            <b>7%</b>
-        </div>
-        <div class="comm-card">
-            <span>Level 3</span>
-            <b>3%</b>
-        </div>
+        <div class="comm-card"><span>Level 1</span><b>15%</b></div>
+        <div class="comm-card"><span>Level 2</span><b>7%</b></div>
+        <div class="comm-card"><span>Level 3</span><b>3%</b></div>
     </div>
 
     <p style="font-size: 11px; color: #666;">Rewards are automatically added to your assets once your team claims their mining profit.</p>
@@ -137,15 +125,33 @@
     <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
     <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="invite.html" class="nav-item active"><i class="fas fa-paper-plane"></i>INVITE</a>
+    <a href="refer.html" class="nav-item active"><i class="fas fa-paper-plane"></i>INVITE</a>
     <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
 </nav>
 
 <script>
+    // پیج لوڈ ہوتے ہی یوزر کا ریفرل لنک بنانا
+    window.onload = function() {
+        const userPhone = localStorage.getItem('userPhone');
+        if (userPhone) {
+            // یہ خود بخود آپ کی ویب سائٹ کا ایڈریس اور ریفرل کوڈ جوڑ دے گا
+            const siteUrl = window.location.origin;
+            const referLink = siteUrl + "/signup.html?ref=" + userPhone;
+            document.getElementById('refLink').innerText = referLink;
+        } else {
+            document.getElementById('refLink').innerText = "Please login to see link";
+        }
+    };
+
     function copyLink() {
         const link = document.getElementById('refLink').innerText;
-        navigator.clipboard.writeText(link);
-        alert("Referral Link Copied! Share it with your friends.");
+        if(link.includes("Loading") || link.includes("Please login")) return;
+
+        navigator.clipboard.writeText(link).then(() => {
+            alert("Referral Link Copied!");
+        }).catch(err => {
+            console.error('Copy failed: ', err);
+        });
     }
 </script>
 
