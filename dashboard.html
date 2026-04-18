@@ -22,120 +22,54 @@
         }
 
         /* Top Header */
-        .header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+        .header { padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .brand { display: flex; align-items: center; gap: 8px; }
-        /* لوگو کو گولڈ کر دیا گیا ہے */
         .brand i { color: var(--primary-gold); font-size: 24px; filter: drop-shadow(0 0 5px var(--primary-gold)); }
         .brand span { font-size: 20px; font-weight: bold; }
         
-        /* واٹس ایپ گروپ بٹن */
         .whatsapp-btn {
-            background: #25d366;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-weight: bold;
+            background: #25d366; color: white; padding: 5px 12px;
+            border-radius: 10px; text-decoration: none; font-size: 11px;
+            display: flex; align-items: center; gap: 5px; font-weight: bold;
         }
 
         .welcome-msg { padding: 0 20px; font-size: 13px; color: var(--primary-gold); margin-bottom: 15px; }
 
-        /* Stats Section */
-        .top-stats {
-            display: grid;
-            grid-template-columns: 1.5fr 1fr;
-            padding: 0 20px;
-            margin-bottom: 20px;
-        }
+        .top-stats { display: grid; grid-template-columns: 1.5fr 1fr; padding: 0 20px; margin-bottom: 20px; }
         .stat-item span { display: block; font-size: 11px; color: #aaa; margin-bottom: 5px; }
         .stat-item b { font-size: 18px; }
 
         /* Mining Section */
         .mining-container {
-            background: var(--card-bg);
-            margin: 0 15px;
-            border-radius: 25px;
-            padding: 20px;
-            border: 1px solid var(--glass-border);
-            position: relative;
+            background: var(--card-bg); margin: 0 15px; border-radius: 25px;
+            padding: 20px; border: 1px solid var(--glass-border);
             background-image: url('https://www.transparenttextures.com/patterns/stardust.png');
         }
         .mining-title { font-size: 14px; margin-bottom: 20px; color: #ddd; }
-        
-        .machines-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        .machine { 
-            text-align: center; 
-            background: rgba(0,0,0,0.2); 
-            padding: 10px; 
-            border-radius: 15px;
-            border: 1px solid var(--glass-border);
-        }
-        /* پیکج نیم اسٹائل */
-        .package-name { font-size: 9px; color: #fff; background: var(--primary-gold); color: #000; padding: 2px 5px; border-radius: 5px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
-        .machine img { width: 100%; max-width: 50px; filter: drop-shadow(0 0 10px gold); }
-        .m-timer { font-size: 12px; color: var(--primary-gold); margin: 5px 0; font-family: monospace; }
-        .claim-btn { 
-            background: linear-gradient(180deg, #f39c12, #d35400);
-            border: none; color: #fff; font-size: 10px; padding: 6px 0;
-            width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer;
-        }
+        .machines-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
+        .machine { text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; border: 1px solid var(--glass-border); }
+        .package-name { font-size: 9px; color: #000; background: var(--primary-gold); padding: 2px 5px; border-radius: 5px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .machine img { width: 45px; filter: drop-shadow(0 0 8px gold); }
+        .m-timer { font-size: 11px; color: var(--primary-gold); margin: 5px 0; font-family: monospace; }
+        .claim-btn { background: linear-gradient(180deg, #f39c12, #d35400); border: none; color: #fff; font-size: 10px; padding: 6px 0; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        .get-all-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000; border: none; width: 100%; padding: 12px;
-            border-radius: 15px; font-weight: bold; font-size: 16px;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
-        }
+        .get-all-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 12px; border-radius: 15px; font-weight: bold; font-size: 15px; margin-top: 10px; }
 
-        /* Feature Cards */
-        .features-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            padding: 20px 15px;
-        }
+        /* Feature Cards Grid (4 Cards total) */
+        .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 15px; }
         .feature-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
+            background: var(--card-bg); border: 1px solid var(--glass-border);
+            border-radius: 20px; padding: 15px; display: flex; flex-direction: column;
+            justify-content: space-between; position: relative; overflow: hidden; height: 110px;
         }
-        .feature-card img { position: absolute; right: -10px; bottom: -10px; width: 60px; opacity: 0.3; }
-        .feature-card h4 { margin: 0; font-size: 13px; }
-        .feature-card p { margin: 5px 0; font-size: 16px; font-weight: bold; color: #fff; }
-        .sub-btn { 
-            background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 10px;
-            padding: 5px 15px; border-radius: 8px; width: fit-content; z-index: 1;
-        }
+        .feature-card img { position: absolute; right: -8px; bottom: -8px; width: 55px; opacity: 0.3; }
+        .feature-card h4 { margin: 0; font-size: 13px; color: #ddd; }
+        .feature-card p { margin: 5px 0; font-size: 15px; font-weight: bold; color: #fff; }
+        .sub-btn { background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 10px; padding: 5px 12px; border-radius: 8px; width: fit-content; z-index: 1; cursor: pointer; }
+        .gold-btn { background: var(--primary-gold) !important; color: #000 !important; font-weight: bold; }
 
         /* Bottom Nav */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; width: 100%;
-            background: #110720;
-            display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid var(--glass-border);
-            z-index: 100;
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); z-index: 100; }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -144,26 +78,15 @@
 <body>
 
 <div class="header">
-    <div class="brand">
-        <i class="fas fa-cloud"></i>
-        <span>Gold Plus</span>
-    </div>
-    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="whatsapp-btn">
-        <i class="fab fa-whatsapp"></i> JOIN GROUP
-    </a>
+    <div class="brand"><i class="fas fa-cloud"></i><span>Gold Plus</span></div>
+    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="whatsapp-btn"><i class="fab fa-whatsapp"></i> JOIN GROUP</a>
 </div>
 
 <div class="welcome-msg">Welcome, Ahmad Nafees!</div>
 
 <div class="top-stats">
-    <div class="stat-item">
-        <span>Total assets</span>
-        <b id="totalAssets">$0.00</b>
-    </div>
-    <div class="stat-item">
-        <span>Total Miners</span>
-        <b>2 Active</b>
-    </div>
+    <div class="stat-item"><span>Total assets</span><b>$0.00</b></div>
+    <div class="stat-item"><span>Total Miners</span><b>2 Active</b></div>
 </div>
 
 <div class="mining-container">
@@ -183,7 +106,6 @@
         </div>
     </div>
     <button class="get-all-btn">Claim All Earnings</button>
-    <p style="text-align: center; font-size: 9px; color: #888; margin-top: 10px;">Note: Mining resets every 24 hours.</p>
 </div>
 
 <div class="features-grid">
@@ -199,40 +121,45 @@
         <button class="sub-btn">History</button>
         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png">
     </div>
+    <div class="feature-card">
+        <h4>Withdraw</h4>
+        <p>$0.00</p>
+        <button class="sub-btn gold-btn" onclick="location.href='withdraw.html'">Withdraw</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/10142/10142318.png">
+    </div>
+    <div class="feature-card">
+        <h4>Deposit</h4>
+        <p style="color: var(--primary-gold); font-size: 11px;">Fast Payment</p>
+        <button class="sub-btn gold-btn" onclick="location.href='deposit.html'">Deposit</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/3037/3037150.png">
+    </div>
 </div>
 
-<div class="bottom-nav">
+<nav class="bottom-nav">
     <a href="dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
     <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
     <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
-</div>
+</nav>
 
 <script>
-    // الٹا ٹائمر چلانے کا فنکشن (24 گھنٹے)
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
         setInterval(function () {
             hours = parseInt(timer / 3600, 10);
             minutes = parseInt((timer % 3600) / 60, 10);
             seconds = parseInt(timer % 60, 10);
-
             hours = hours < 10 ? "0" + hours : hours;
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
-
             document.getElementById(displayId).textContent = hours + ":" + minutes + ":" + seconds;
-
-            if (--timer < 0) {
-                timer = duration; // ری سیٹ
-            }
+            if (--timer < 0) timer = duration;
         }, 1000);
     }
-
     window.onload = function () {
-        startTimer(24 * 60 * 60, "timer1"); // 24 گھنٹے مشین 1 کے لیے
-        startTimer(24 * 60 * 60, "timer2"); // 24 گھنٹے مشین 2 کے لیے
+        startTimer(24 * 60 * 60, "timer1");
+        startTimer(24 * 60 * 60, "timer2");
     };
 </script>
 
