@@ -1,7 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - VIP Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #f1c40f; --bg: #0b0118; --card: rgba(255,255,255,0.06); }
+        
+        body { 
+            margin: 0; font-family: 'Poppins', sans-serif; 
+            background: radial-gradient(circle at top, #1a0b2e, #050505); 
+            color: white; padding-bottom: 90px; overflow-x: hidden;
+        }
+
+        .header { padding: 25px; display: flex; justify-content: space-between; align-items: center; }
+        .user-info h3 { margin: 0; font-size: 18px; font-weight: 300; }
+        .user-info b { color: var(--gold); }
+
+        .balance-card { 
+            background: linear-gradient(135deg, #f1c40f, #e67e22); 
+            margin: 15px; padding: 35px 20px; border-radius: 30px; 
+            color: #000; text-align: center; box-shadow: 0 15px 35px rgba(241, 196, 15, 0.3);
+        }
+        .balance-card span { font-size: 14px; opacity: 0.8; font-weight: bold; }
+        .balance-card h1 { margin: 10px 0; font-size: 40px; letter-spacing: 1px; }
+
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
+        .stat-box { 
+            background: var(--card); padding: 20px; border-radius: 20px; 
+            border: 1px solid rgba(255,255,255,0.1); text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .stat-box i { color: var(--gold); margin-bottom: 10px; font-size: 20px; }
+        .stat-box div { font-size: 12px; color: #aaa; margin-bottom: 5px; }
+        .stat-box h4 { margin: 0; font-size: 16px; }
+
+        .mining-card { 
+            margin: 20px 15px; background: var(--card); 
+            padding: 25px; border-radius: 25px; border: 1px solid rgba(241, 196, 15, 0.2);
+            text-align: center;
+        }
+        .timer-box { font-size: 24px; color: var(--gold); font-weight: bold; margin: 15px 0; }
+        
+        .action-btn { 
+            background: var(--gold); color: #000; border: none; width: 100%; 
+            padding: 16px; border-radius: 15px; font-weight: bold; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        .action-btn:active { transform: scale(0.95); }
+
+        /* Bottom Nav */
+        .bottom-nav { 
+            position: fixed; bottom: 0; width: 100%; background: #110720; 
+            display: flex; justify-content: space-around; padding: 15px 0; 
+            border-top: 1px solid rgba(255,255,255,0.1); z-index: 100;
+        }
+        .nav-item { color: #666; text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-item.active { color: var(--gold); }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <div class="user-info">
+        <h3 id="userNameLabel">Loading...</h3>
+    </div>
+    <i class="fas fa-bell" style="color: var(--gold); font-size: 20px;"></i>
+</div>
+
+<div class="balance-card">
+    <span>TOTAL ASSETS</span>
+    <h1 id="mainBalance">$0.00</h1>
+    <div style="font-size: 12px; font-weight: bold;">GOLD PLUS PREMIUM ACCOUNT</div>
+</div>
+
+<div class="stats-container">
+    <div class="stat-box">
+        <i class="fas fa-users"></i>
+        <div>My Team</div>
+        <h4 id="teamCount">0</h4>
+    </div>
+    <div class="stat-box">
+        <i class="fas fa-wallet"></i>
+        <div>Withdraws</div>
+        <h4 id="withdrawStat">$0.00</h4>
+    </div>
+</div>
+
+<div class="mining-card">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span>Cloud Mining</span>
+        <span style="background: rgba(0,255,0,0.1); color: #00ff00; padding: 4px 10px; border-radius: 10px; font-size: 10px;">ACTIVE</span>
+    </div>
+    <div class="timer-box" id="freeTimer">24:00:00</div>
+    <button class="action-btn" onclick="claimDailyEarning('free')">Collect Profit</button>
+</div>
+
+<nav class="bottom-nav">
+    <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i>HOME</a>
+    <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-share-alt"></i>REFER</a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i>PROFILE</a>
+</nav>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -14,95 +120,63 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const database = getDatabase(app);
-    const auth = getAuth(app);
+    const db = getDatabase(app);
 
-    // 1. Gmail Auth اور لاگ ان چیک
-    onAuthStateChanged(auth, (user) => {
-        const userPhone = localStorage.getItem('userPhone');
-        if (user && userPhone) {
-            listenToUserData(userPhone);
+    // پیج لوڈ ہوتے ہی چیک کریں
+    window.onload = function() {
+        const phone = localStorage.getItem('userPhone');
+        if (!phone) {
+            window.location.href = 'index.html';
         } else {
-            // اگر فائر بیس ابھی لوڈ ہو رہا ہو تو فوراً ری ڈائریکٹ نہ کریں
-            setTimeout(() => {
-                if (!auth.currentUser && !localStorage.getItem('userPhone')) {
-                    window.location.href = 'index.html';
-                }
-            }, 3000);
+            loadUserData(phone);
+            startTimer(24 * 60 * 60, "freeTimer");
         }
-    });
+    };
 
-    // 2. ڈیٹا بیس سے لائیو معلومات اٹھانا
-    function listenToUserData(phone) {
-        const userRef = ref(database, 'users/' + phone);
+    function loadUserData(phone) {
+        const userRef = ref(db, 'users/' + phone);
         onValue(userRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // پریمیم ڈیش بورڈ کی ویلیوز اپ ڈیٹ کریں (محفوظ طریقے سے)
-                const bal = document.getElementById('mainBalance');
-                if(bal) bal.innerText = "$" + (data.balance || 0).toFixed(2);
-
-                const nameL = document.getElementById('userNameLabel');
-                if(nameL) nameL.innerText = "Welcome, " + (data.name || "User") + "!";
-
-                const teamC = document.getElementById('teamCount');
-                if(teamC) teamC.innerText = "+" + (data.referCount || 0) + " Members";
-                
-                const withS = document.getElementById('withdrawStat');
-                if(withS && data.withdrawTotal) withS.innerText = "$" + data.withdrawTotal;
-                
-                checkPendingStatus(phone);
+                // ڈیٹا کو محفوظ طریقے سے اپ ڈیٹ کریں تاکہ اسکرین سفید نہ ہو
+                updateElement('mainBalance', "$" + (data.balance || 0).toFixed(2));
+                updateElement('userNameLabel', "Welcome, <b>" + (data.name || "User") + "</b>");
+                updateElement('teamCount', "+" + (data.referCount || 0));
+                updateElement('withdrawStat', "$" + (data.withdrawTotal || "0.00"));
             }
         });
     }
 
-    function checkPendingStatus(phone) {
-        const depRef = ref(database, 'deposits/' + phone);
-        onValue(depRef, (snapshot) => {
-            let hasPending = false;
-            snapshot.forEach((child) => {
-                if (child.val().status === "Pending") hasPending = true;
-            });
-            const pAlert = document.getElementById('pendingAlert');
-            if(pAlert) pAlert.style.display = hasPending ? 'flex' : 'none';
-        });
+    // سیف اپ ڈیٹ فنکشن
+    function updateElement(id, value) {
+        const el = document.getElementById(id);
+        if(el) el.innerHTML = value;
     }
 
-    window.claimDailyEarning = async function(type) {
+    window.claimDailyEarning = async (type) => {
         const phone = localStorage.getItem('userPhone');
-        if(!phone) return;
-
-        const userRef = ref(database, 'users/' + phone);
-        const snapshot = await get(userRef);
-        const data = snapshot.val();
-
-        if (data && data.status !== "blocked") {
-            let earning = type === 'free' ? 0.50 : 5.00;
-            const newBalance = (data.balance || 0) + earning;
-            await update(userRef, { balance: newBalance });
-            alert("Success! $" + earning + " added.");
-        } else {
-            alert("Action failed!");
+        const snap = await get(ref(db, 'users/' + phone));
+        const data = snap.val();
+        if(data) {
+            let earn = type === 'free' ? 0.50 : 5.00;
+            await update(ref(db, 'users/' + phone), { balance: (data.balance || 0) + earn });
+            alert("Mining Profit Added: $" + earn);
         }
     };
 
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
-        const display = document.getElementById(displayId);
-        if(!display) return; 
-
         setInterval(() => {
-            hours = Math.floor(timer / 3600);
-            minutes = Math.floor((timer % 3600) / 60);
-            seconds = timer % 60;
-            display.textContent = `${hours < 10 ? "0"+hours : hours}:${minutes < 10 ? "0"+minutes : minutes}:${seconds < 10 ? "0"+seconds : seconds}`;
+            const display = document.getElementById(displayId);
+            if(!display) return;
+            hours = parseInt(timer / 3600, 10);
+            minutes = parseInt((timer % 3600) / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+            display.textContent = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
             if (--timer < 0) timer = duration;
         }, 1000);
     }
-
-    window.onload = function () {
-        if(document.getElementById('freeTimer')) {
-            startTimer(24 * 60 * 60, "freeTimer");
-        }
-    };
 </script>
+
+</body>
+</html>
