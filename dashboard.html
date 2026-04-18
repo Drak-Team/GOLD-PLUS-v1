@@ -31,6 +31,10 @@
         .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; }
         .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; }
 
+        /* Floating WhatsApp Button */
+        .ws-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 999; text-decoration: none; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-btn.active { color: #f1c40f; }
@@ -97,6 +101,10 @@
     </div>
 </div>
 
+<a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="ws-float" target="_blank">
+    <i class="fab fa-whatsapp"></i>
+</a>
+
 <nav class="nav-bar">
     <a href="#" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
@@ -106,7 +114,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
