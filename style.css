@@ -1,57 +1,97 @@
+/* Master Variables for Easy Control */
+:root {
+    --primary-gold: #f1c40f;
+    --secondary-orange: #e67e22;
+    --bg-dark: #0f051d;
+    --bg-gradient: radial-gradient(circle at top, #1a0b2e, #0f051d);
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-gray: #aaa;
+}
+
+/* Global Setup */
 body {
-  margin: 0;
-  font-family: Arial;
-  background: #0D0D0D;
-  color: white;
+    margin: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, sans-serif;
+    background: var(--bg-gradient);
+    color: white;
+    min-height: 100vh;
 }
 
-/* LOGIN */
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.login-box {
-  background: #111;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-  width: 300px;
-}
-
-.login-box input {
-  width: 90%;
-  margin: 10px 0;
-  padding: 10px;
-}
-
-.login-box button {
-  width: 95%;
-  padding: 10px;
-  margin: 5px 0;
-  background: gold;
-  border: none;
-}
-
-/* SITE */
+/* Header Styling */
 .header {
-  text-align: center;
-  padding: 15px;
-  background: black;
-  color: gold;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid var(--glass-border);
 }
 
-.card {
-  background: gold;
-  color: black;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 10px;
+.brand { display: flex; align-items: center; gap: 10px; }
+.brand i { color: var(--primary-gold); font-size: 24px; filter: drop-shadow(0 0 5px gold); }
+.brand span { font-size: 20px; font-weight: bold; background: linear-gradient(to right, #f1c40f, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Dashboard Cards */
+.glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 25px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    margin: 10px;
 }
 
-.deposit {
-  padding: 20px;
-  text-align: center;
+/* Buttons Styling */
+.main-btn {
+    background: linear-gradient(90deg, var(--primary-gold), var(--secondary-orange));
+    color: #000;
+    border: none;
+    width: 100%;
+    padding: 15px;
+    border-radius: 18px;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.main-btn:active { transform: scale(0.96); }
+
+/* Input Styling */
+input, select {
+    width: 100%;
+    padding: 14px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid var(--glass-border);
+    border-radius: 15px;
+    color: white;
+    box-sizing: border-box;
+    outline: none;
+    margin: 10px 0;
+}
+
+input:focus { border-color: var(--primary-gold); }
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0; width: 100%;
+    background: #110720;
+    display: flex; justify-content: space-around;
+    padding: 15px 0; border-top: 1px solid var(--glass-border);
+    z-index: 1000;
+}
+
+.nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
+.nav-item.active { color: var(--primary-gold); }
+.nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+
+/* Mining Section Special Style */
+.mining-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    padding: 10px;
 }
