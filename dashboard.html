@@ -31,11 +31,9 @@
         .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; }
         .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; }
 
-        /* Floating WhatsApp Button */
         .ws-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 999; text-decoration: none; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
-        /* Payout Toast Style */
         #payout-toast { position: fixed; bottom: 85px; left: 15px; background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); border-left: 5px solid var(--primary-gold); padding: 12px 18px; border-radius: 15px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); min-width: 220px; transition: all 0.5s ease; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
@@ -53,6 +51,10 @@
         <div>Active Plan <b id="activePlan">Free</b></div>
     </div>
 </div>
+
+<marquee style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; font-size: 10px; padding: 6px 0; border-bottom: 1px solid rgba(241, 196, 15, 0.1);">
+    🚀 Notice: Invite 5 friends and get a $1.00 bonus instantly! | 💳 Minimum withdrawal is only Rs. 500. | 🛡️ Secure Cloud Mining in progress...
+</marquee>
 
 <div style="padding: 10px 20px 0;">
     <p style="font-size: 10px; color: #ff4444; margin: 0; animation: pulse 1.5s infinite; text-align: center;">
@@ -110,6 +112,16 @@
     </div>
 </div>
 
+<div style="padding: 25px 20px; text-align: center; opacity: 0.5;">
+    <p style="font-size: 10px; color: #aaa; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Official Partners</p>
+    <div style="display: flex; justify-content: space-around; align-items: center; filter: grayscale(100%);">
+        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" style="width: 20px;">
+        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" style="width: 20px;">
+        <img src="https://cryptologos.cc/logos/tron-trx-logo.png" style="width: 20px;">
+        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" style="width: 20px;">
+    </div>
+</div>
+
 <div id="payout-toast">
     <div style="display: flex; align-items: center; gap: 12px;">
         <div style="background: rgba(241, 196, 15, 0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
@@ -155,7 +167,7 @@
         const phone = localStorage.getItem('userPhone');
         if (!phone) window.location.href = 'index.html';
         else syncData(phone);
-        startGreedyPopup(); // لالچ والا فنکشن یہاں سے شروع ہوگا
+        startGreedyPopup();
     };
 
     function syncData(phone) {
@@ -230,7 +242,6 @@
         alert("Profit Claimed: $" + earn);
     };
 
-    // --- GREEDY POPUP LOGIC ---
     function startGreedyPopup() {
         const allNames = ["Ahmad", "Zeeshan", "Irfan", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Nabeel", "Arsalan", "Tayyab", "Faisal", "Umair", "Waqas", "Zohaib", "Shahid", "Adeel", "Muneeb", "Haris", "Salman", "Asif", "Farhan", "Rizwan", "Tanveer", "Shoaib", "Junaid", "Saqib", "Umar", "Ali", "Haider", "Zain", "Babar", "Imran", "Kashif", "Nasir", "Yasir", "Atif", "Fahad", "Shabbir", "Nouman", "Hassan", "Tahir", "Qasim", "Rehan", "Sarmad", "Waseem", "Majid", "Shakeel", "Arshad", "Saad", "Talha", "Daniyal", "Faraz", "Mudassir", "Afzal", "Ijaz", "Saif", "Asad", "Wajid"];
         const cities = ["Faisalabad", "Lahore", "Karachi", "Multan", "Sialkot", "Peshawar", "Gujranwala"];
@@ -240,12 +251,13 @@
             const name = allNames[Math.floor(Math.random() * allNames.length)];
             const city = cities[Math.floor(Math.random() * cities.length)];
             const amount = amounts[Math.floor(Math.random() * amounts.length)];
-            
-            document.getElementById('payout-msg').innerHTML = `<b style="color:#f1c40f">${name}</b> from ${city} <br>Withdrawal <b style="color:#00ff64">Rs. ${amount.toLocaleString()}</b>`;
-            const toast = document.getElementById('payout-toast');
-            toast.style.display = 'block';
-            setTimeout(() => { toast.style.display = 'none'; }, 5000);
-            
+            const msgElement = document.getElementById('payout-msg');
+            if(msgElement) {
+                msgElement.innerHTML = `<b style="color:#f1c40f">${name}</b> from ${city} <br>Withdrawal <b style="color:#00ff64">Rs. ${amount.toLocaleString()}</b>`;
+                const toast = document.getElementById('payout-toast');
+                toast.style.display = 'block';
+                setTimeout(() => { toast.style.display = 'none'; }, 5000);
+            }
             const nextTime = Math.floor(Math.random() * (25000 - 15000) + 15000);
             setTimeout(showNext, nextTime);
         }
