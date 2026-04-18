@@ -3,106 +3,121 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Dashboard</title>
+    <title>Gold Plus - Luxury Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0b0118; --card: rgba(255,255,255,0.06); }
+        :root { --gold: #f1c40f; --dark-gold: #d4af37; --bg: #050505; }
         
         body { 
             margin: 0; font-family: 'Poppins', sans-serif; 
-            background: radial-gradient(circle at top, #1a0b2e, #050505); 
-            color: white; padding-bottom: 90px; overflow-x: hidden;
+            background: #0a0a0a; color: white; padding-bottom: 90px;
         }
 
-        .header { padding: 25px; display: flex; justify-content: space-between; align-items: center; }
-        .user-info h3 { margin: 0; font-size: 18px; font-weight: 300; }
-        .user-info b { color: var(--gold); }
+        /* Top Header Glow */
+        .header { 
+            padding: 25px; background: linear-gradient(to bottom, #1a1a1a, transparent);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .user-info b { color: var(--gold); text-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
 
+        /* Luxury Balance Card */
         .balance-card { 
-            background: linear-gradient(135deg, #f1c40f, #e67e22); 
-            margin: 15px; padding: 35px 20px; border-radius: 30px; 
-            color: #000; text-align: center; box-shadow: 0 15px 35px rgba(241, 196, 15, 0.3);
+            background: linear-gradient(135deg, #d4af37 0%, #f1c40f 50%, #b8860b 100%); 
+            margin: 20px; padding: 40px 20px; border-radius: 30px; 
+            color: #000; text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), inset 0 0 20px rgba(255,255,255,0.4);
+            position: relative; overflow: hidden;
         }
-        .balance-card span { font-size: 14px; opacity: 0.8; font-weight: bold; }
-        .balance-card h1 { margin: 10px 0; font-size: 40px; letter-spacing: 1px; }
+        .balance-card::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: rgba(255,255,255,0.1); transform: rotate(45deg); pointer-events: none;
+        }
+        .balance-card h1 { margin: 10px 0; font-size: 45px; font-weight: 700; text-shadow: 1px 1px 2px rgba(255,255,255,0.5); }
 
-        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 15px; }
+        /* Stats Grid */
+        .stats-container { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .stat-box { 
-            background: var(--card); padding: 20px; border-radius: 20px; 
-            border: 1px solid rgba(255,255,255,0.1); text-align: center;
-            backdrop-filter: blur(10px);
+            background: rgba(255,255,255,0.05); padding: 25px 15px; border-radius: 25px; 
+            border: 1px solid rgba(212, 175, 55, 0.2); text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
         }
-        .stat-box i { color: var(--gold); margin-bottom: 10px; font-size: 20px; }
-        .stat-box div { font-size: 12px; color: #aaa; margin-bottom: 5px; }
-        .stat-box h4 { margin: 0; font-size: 16px; }
+        .stat-box i { color: var(--gold); font-size: 24px; margin-bottom: 10px; }
+        .stat-box h4 { margin: 5px 0 0; font-size: 18px; color: var(--gold); }
 
+        /* Mining Section */
         .mining-card { 
-            margin: 20px 15px; background: var(--card); 
-            padding: 25px; border-radius: 25px; border: 1px solid rgba(241, 196, 15, 0.2);
-            text-align: center;
+            margin: 25px 20px; background: rgba(255,255,255,0.03); 
+            padding: 30px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.4);
         }
-        .timer-box { font-size: 24px; color: var(--gold); font-weight: bold; margin: 15px 0; }
+        .timer-box { 
+            font-size: 32px; color: var(--gold); font-weight: bold; margin: 20px 0;
+            letter-spacing: 2px; text-shadow: 0 0 15px rgba(241, 196, 15, 0.3);
+        }
         
         .action-btn { 
-            background: var(--gold); color: #000; border: none; width: 100%; 
-            padding: 16px; border-radius: 15px; font-weight: bold; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+            background: linear-gradient(90deg, #d4af37, #f1c40f); color: #000; 
+            border: none; width: 100%; padding: 18px; border-radius: 20px; 
+            font-weight: bold; font-size: 16px; cursor: pointer;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
         }
-        .action-btn:active { transform: scale(0.95); }
 
-        /* Bottom Nav */
+        /* Professional Bottom Nav */
         .bottom-nav { 
-            position: fixed; bottom: 0; width: 100%; background: #110720; 
-            display: flex; justify-content: space-around; padding: 15px 0; 
-            border-top: 1px solid rgba(255,255,255,0.1); z-index: 100;
+            position: fixed; bottom: 0; width: 100%; background: #000; 
+            display: flex; justify-content: space-around; padding: 18px 0; 
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
-        .nav-item { color: #666; text-decoration: none; font-size: 10px; text-align: center; }
+        .nav-item { color: #555; text-decoration: none; font-size: 11px; text-align: center; }
         .nav-item.active { color: var(--gold); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 22px; margin-bottom: 5px; display: block; }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="user-info">
-        <h3 id="userNameLabel">Loading...</h3>
+        <h3 id="userNameLabel" style="font-weight: 300;">Welcome, <b>User</b></h3>
     </div>
-    <i class="fas fa-bell" style="color: var(--gold); font-size: 20px;"></i>
+    <div style="position: relative;">
+        <i class="fas fa-bell" style="color: var(--gold); font-size: 22px;"></i>
+        <span style="position: absolute; top: -5px; right: -5px; background: red; width: 8px; height: 8px; border-radius: 50%;"></span>
+    </div>
 </div>
 
 <div class="balance-card">
-    <span>TOTAL ASSETS</span>
+    <span style="letter-spacing: 2px; font-weight: 600;">TOTAL ASSETS</span>
     <h1 id="mainBalance">$0.00</h1>
-    <div style="font-size: 12px; font-weight: bold;">GOLD PLUS PREMIUM ACCOUNT</div>
+    <div style="font-size: 11px; letter-spacing: 1px; font-weight: bold;">GOLD PLUS PREMIUM MEMBER</div>
 </div>
 
 <div class="stats-container">
     <div class="stat-box">
         <i class="fas fa-users"></i>
-        <div>My Team</div>
+        <div style="font-size: 12px; color: #aaa;">My Team</div>
         <h4 id="teamCount">0</h4>
     </div>
     <div class="stat-box">
         <i class="fas fa-wallet"></i>
-        <div>Withdraws</div>
+        <div style="font-size: 12px; color: #aaa;">Withdrawals</div>
         <h4 id="withdrawStat">$0.00</h4>
     </div>
 </div>
 
 <div class="mining-card">
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-        <span>Cloud Mining</span>
-        <span style="background: rgba(0,255,0,0.1); color: #00ff00; padding: 4px 10px; border-radius: 10px; font-size: 10px;">ACTIVE</span>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <span style="font-weight: bold;">Mining Server 01</span>
+        <span style="color: #00ff00; font-size: 12px;"><i class="fas fa-circle" style="font-size: 8px;"></i> LIVE</span>
     </div>
-    <div class="timer-box" id="freeTimer">24:00:00</div>
-    <button class="action-btn" onclick="claimDailyEarning('free')">Collect Profit</button>
+    <div class="timer-box" id="freeTimer">23:59:59</div>
+    <button class="action-btn" onclick="claimDailyEarning('free')">COLLECT MINING PROFIT</button>
 </div>
 
 <nav class="bottom-nav">
     <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="refer.html" class="nav-item"><i class="fas fa-share-alt"></i>REFER</a>
-    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i>PROFILE</a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
 </nav>
 
 <script type="module">
@@ -122,7 +137,6 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // پیج لوڈ ہوتے ہی چیک کریں
     window.onload = function() {
         const phone = localStorage.getItem('userPhone');
         if (!phone) {
@@ -134,23 +148,22 @@
     };
 
     function loadUserData(phone) {
-        const userRef = ref(db, 'users/' + phone);
-        onValue(userRef, (snapshot) => {
+        onValue(ref(db, 'users/' + phone), (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // ڈیٹا کو محفوظ طریقے سے اپ ڈیٹ کریں تاکہ اسکرین سفید نہ ہو
-                updateElement('mainBalance', "$" + (data.balance || 0).toFixed(2));
-                updateElement('userNameLabel', "Welcome, <b>" + (data.name || "User") + "</b>");
-                updateElement('teamCount', "+" + (data.referCount || 0));
-                updateElement('withdrawStat', "$" + (data.withdrawTotal || "0.00"));
+                const bal = document.getElementById('mainBalance');
+                if(bal) bal.innerText = "$" + (data.balance || 0).toFixed(2);
+                
+                const name = document.getElementById('userNameLabel');
+                if(name) name.innerHTML = "Welcome, <b>" + (data.name || "User") + "</b>";
+                
+                const team = document.getElementById('teamCount');
+                if(team) team.innerText = "+" + (data.referCount || 0);
+                
+                const draw = document.getElementById('withdrawStat');
+                if(draw) draw.innerText = "$" + (data.withdrawTotal || "0.00");
             }
         });
-    }
-
-    // سیف اپ ڈیٹ فنکشن
-    function updateElement(id, value) {
-        const el = document.getElementById(id);
-        if(el) el.innerHTML = value;
     }
 
     window.claimDailyEarning = async (type) => {
@@ -160,19 +173,19 @@
         if(data) {
             let earn = type === 'free' ? 0.50 : 5.00;
             await update(ref(db, 'users/' + phone), { balance: (data.balance || 0) + earn });
-            alert("Mining Profit Added: $" + earn);
+            alert("Congratulations! $" + earn + " added to your assets.");
         }
     };
 
     function startTimer(duration, displayId) {
-        let timer = duration, hours, minutes, seconds;
+        let timer = duration, h, m, s;
         setInterval(() => {
             const display = document.getElementById(displayId);
             if(!display) return;
-            hours = parseInt(timer / 3600, 10);
-            minutes = parseInt((timer % 3600) / 60, 10);
-            seconds = parseInt(timer % 60, 10);
-            display.textContent = (hours < 10 ? "0" + hours : hours) + ":" + (minutes < 10 ? "0" + minutes : minutes) + ":" + (seconds < 10 ? "0" + seconds : seconds);
+            h = parseInt(timer / 3600, 10);
+            m = parseInt((timer % 3600) / 60, 10);
+            s = parseInt(timer % 60, 10);
+            display.textContent = (h < 10 ? "0"+h : h) + ":" + (m < 10 ? "0"+m : m) + ":" + (s < 10 ? "0"+s : s);
             if (--timer < 0) timer = duration;
         }, 1000);
     }
