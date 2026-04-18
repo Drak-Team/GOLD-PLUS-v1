@@ -3,106 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Final Build</title>
+    <title>Gold Plus - VIP Cloud Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 80px; }
         
-        .top-header { padding: 20px; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .user-welcome { color: #f1c40f; font-size: 14px; margin-bottom: 10px; }
-        .mini-stats { display: flex; gap: 30px; font-size: 12px; }
-        .mini-stats b { font-size: 16px; color: #fff; display: block; }
+        /* Premium Header */
+        .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
+        .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
+        .mini-stats { display: flex; justify-content: space-between; }
+        .mini-stats div { font-size: 12px; color: #aaa; }
+        .mini-stats b { font-size: 18px; color: #fff; display: block; margin-top: 5px; }
 
-        .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
-        .machine-card { background: var(--card-bg); border-radius: 15px; padding: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
-        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 10px rgba(241,196,15,0.3); }
-        .coin-ball i { color: #000; font-size: 18px; }
-        .timer-text { font-size: 10px; color: #f1c40f; font-weight: bold; }
+        /* Mining Grid */
+        .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
+        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); animation: spin 4s linear infinite; }
+        @keyframes spin { 100% { transform: rotateY(360deg); } }
+        .timer-text { font-size: 10px; color: #00ff00; font-weight: bold; }
 
-        .get-all-box { padding: 10px 20px; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; font-size: 18px; color: #000; cursor: pointer; transition: 0.3s; }
-        .get-all-btn:disabled { background: #555; color: #aaa; cursor: not-allowed; }
+        /* Main Action Button */
+        .get-all-box { padding: 0 20px 20px; text-align: center; }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241,196,15,0.3); transition: 0.3s; }
+        .get-all-btn:disabled { background: #333; color: #777; box-shadow: none; cursor: not-allowed; }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
-        .grid-card { background: var(--card-bg); border-radius: 20px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); position: relative; }
-        .grid-card h5 { margin: 0; font-size: 14px; }
-        .grid-card p { margin: 5px 0; font-size: 13px; color: #00ff00; font-weight: bold; }
-        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 10px; cursor: pointer; margin-top: 8px; }
+        /* Luxury Cards Grid */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
+        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; min-height: 100px; }
+        .grid-card h5 { margin: 0; font-size: 14px; letter-spacing: 0.5px; color: #f1c40f; }
+        .grid-card p { margin: 8px 0; font-size: 16px; color: #fff; font-weight: bold; }
+        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; cursor: pointer; }
+        .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; filter: drop-shadow(0 0 5px rgba(0,0,0,0.5)); }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(255,255,255,0.1); }
-        .nav-btn { color: #555; text-decoration: none; text-align: center; font-size: 10px; }
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241,196,15,0.2); }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-btn i { font-size: 22px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="top-header">
-    <div class="user-welcome" id="userNameLabel">Welcome, Gold Member</div>
+    <div class="user-welcome" id="userNameLabel">Welcome back!</div>
     <div class="mini-stats">
-        <div>Total assets <b id="mainBalance">$0.00</b></div>
-        <div>Active Plan <b id="activePlan">Free</b></div>
+        <div>Total Balance <b id="mainBalance">$0.00</b></div>
+        <div>Current Plan <b id="activePlan">Free</b></div>
     </div>
 </div>
 
 <div class="machines-grid">
     <div class="machine-card">
-        <div class="coin-ball"><i class="fas fa-coins"></i></div>
-        <div class="timer-text" id="t1">Ready</div>
+        <div class="coin-ball"><i class="fas fa-microchip"></i></div>
+        <div class="timer-text t-sync">Ready</div>
     </div>
     <div class="machine-card">
-        <div class="coin-ball"><i class="fas fa-coins"></i></div>
-        <div class="timer-text" id="t2">Ready</div>
+        <div class="coin-ball"><i class="fas fa-bolt"></i></div>
+        <div class="timer-text t-sync">Ready</div>
     </div>
     <div class="machine-card">
-        <div class="coin-ball"><i class="fas fa-coins"></i></div>
-        <div class="timer-text" id="t3">Ready</div>
+        <div class="coin-ball"><i class="fas fa-server"></i></div>
+        <div class="timer-text t-sync">Ready</div>
     </div>
     <div class="machine-card">
-        <div class="coin-ball"><i class="fas fa-coins"></i></div>
-        <div class="timer-text" id="t4">Ready</div>
+        <div class="coin-ball"><i class="fas fa-link"></i></div>
+        <div class="timer-text t-sync">Ready</div>
     </div>
 </div>
 
 <div class="get-all-box">
-    <button class="get-all-btn" id="claimBtn" onclick="processClaim()">Get All Profit</button>
-    <p id="timerDisplay" style="text-align: center; color: #f1c40f; font-size: 14px; margin-top: 10px;"></p>
+    <button class="get-all-btn" id="claimBtn" onclick="processClaim()">CLAIM MINING PROFIT</button>
 </div>
 
 <div class="main-grid">
     <div class="grid-card">
-        <h5>Daily Earning</h5>
-        <p id="dailyRate">$0.50</p>
-        <button class="btn-link">Details</button>
+        <h5>My Team</h5>
+        <p id="teamCount">+0 Members</p>
+        <button class="btn-link" onclick="location.href='refer.html'">Invite</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" class="card-img">
     </div>
     <div class="grid-card">
-        <h5>My Team</h5>
-        <p id="teamCount">+0</p>
-        <button class="btn-link" onclick="location.href='refer.html'">Invite</button>
+        <h5>Daily Profit</h5>
+        <p id="dailyRate">$0.50</p>
+        <button class="btn-link" onclick="location.href='history.html'">History</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" class="card-img">
     </div>
     <div class="grid-card">
         <h5>Withdraw</h5>
         <p id="withdrawStat">$0.00</p>
-        <button class="btn-link" onclick="location.href='withdraw.html'">Payout</button>
+        <button class="btn-link" onclick="location.href='withdraw.html'">Cash Out</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/10149/10149458.png" class="card-img">
     </div>
     <div class="grid-card">
         <h5>Deposit</h5>
-        <p style="color: #f1c40f;">Active</p>
-        <button class="btn-link" onclick="location.href='deposit.html'">Add Cash</button>
+        <p style="color: #f1c40f;">Instant Pay</p>
+        <button class="btn-link" onclick="location.href='deposit.html'">Add Funds</button>
+        <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="card-img">
     </div>
 </div>
 
 <nav class="nav-bar">
-    <a href="#" class="nav-btn active"><i class="fas fa-home"></i>HOME</a>
+    <a href="#" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, get, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -116,82 +126,77 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    let currentUserData = null;
+    let userData = null;
 
     window.onload = function() {
         const phone = localStorage.getItem('userPhone');
         if (!phone) window.location.href = 'index.html';
-        else loadUserData(phone);
+        else syncData(phone);
     };
 
-    function loadUserData(phone) {
+    function syncData(phone) {
         onValue(ref(db, 'users/' + phone), (snapshot) => {
-            currentUserData = snapshot.val();
-            if (currentUserData) {
-                document.getElementById('mainBalance').innerText = "$" + (currentUserData.balance || 0).toFixed(2);
-                document.getElementById('userNameLabel').innerText = "Welcome, " + (currentUserData.name || "User");
-                document.getElementById('teamCount').innerText = "+" + (currentUserData.referCount || 0);
-                document.getElementById('withdrawStat').innerText = "$" + (currentUserData.withdrawTotal || "0.00");
+            userData = snapshot.val();
+            if (userData) {
+                document.getElementById('mainBalance').innerText = "$" + (userData.balance || 0).toFixed(2);
+                document.getElementById('userNameLabel').innerText = "Hello, " + (userData.name || "Gold Member");
+                document.getElementById('teamCount').innerText = "+" + (userData.referCount || 0) + " Members";
+                document.getElementById('withdrawStat').innerText = "$" + (userData.withdrawTotal || "0.00");
                 
-                // پلان کے مطابق ڈیلی ریٹ دکھانا
-                const plan = currentUserData.plan || "Free";
+                const plan = userData.plan || "Free";
                 document.getElementById('activePlan').innerText = plan;
-                const rate = plan === "Free" ? 0.50 : (currentUserData.dailyEarning || 5.00);
+                const rate = plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
                 document.getElementById('dailyRate').innerText = "$" + rate.toFixed(2);
 
-                checkTimer(currentUserData.lastClaim);
+                handleTimer(userData.lastClaim);
             }
         });
     }
 
-    function checkTimer(lastClaimTime) {
-        const claimBtn = document.getElementById('claimBtn');
-        const timerDisplay = document.getElementById('timerDisplay');
-        const miniTimers = ['t1', 't2', 't3', 't4'];
+    function handleTimer(lastClaim) {
+        const btn = document.getElementById('claimBtn');
+        const miniTimers = document.querySelectorAll('.t-sync');
 
-        if (!lastClaimTime) {
-            timerDisplay.innerText = "Ready to Claim!";
-            claimBtn.disabled = false;
+        if (!lastClaim) {
+            btn.disabled = false;
+            btn.innerText = "CLAIM MINING PROFIT";
             return;
         }
 
-        const interval = setInterval(() => {
+        const runTimer = () => {
             const now = new Date().getTime();
-            const distance = (lastClaimTime + (24 * 60 * 60 * 1000)) - now;
+            const timeLeft = (lastClaim + (24 * 60 * 60 * 1000)) - now;
 
-            if (distance < 0) {
-                clearInterval(interval);
-                timerDisplay.innerText = "Ready to Claim!";
-                claimBtn.disabled = false;
-                claimBtn.innerText = "Get All Profit";
-                miniTimers.forEach(id => document.getElementById(id).innerText = "Ready");
+            if (timeLeft <= 0) {
+                btn.disabled = false;
+                btn.innerText = "CLAIM MINING PROFIT";
+                miniTimers.forEach(t => t.innerText = "Ready");
+                clearInterval(timerInterval);
             } else {
-                claimBtn.disabled = true;
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                const timeStr = `${hours}h ${minutes}m ${seconds}s`;
-                
-                timerDisplay.innerText = "Next Claim in: " + timeStr;
-                claimBtn.innerText = "Mining...";
-                miniTimers.forEach(id => document.getElementById(id).innerText = timeStr);
+                btn.disabled = true;
+                const h = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+                const m = Math.floor((timeLeft / (1000 * 60)) % 60);
+                const s = Math.floor((timeLeft / 1000) % 60);
+                const string = `${h}h ${m}m ${s}s`;
+                btn.innerText = "MINING IN PROGRESS: " + string;
+                miniTimers.forEach(t => t.innerText = string);
             }
-        }, 1000);
+        };
+
+        const timerInterval = setInterval(runTimer, 1000);
+        runTimer();
     }
 
     window.processClaim = async () => {
         const phone = localStorage.getItem('userPhone');
-        const plan = currentUserData.plan || "Free";
-        const earning = plan === "Free" ? 0.50 : (currentUserData.dailyEarning || 5.00);
-        
-        const newBalance = (currentUserData.balance || 0) + earning;
+        const plan = userData.plan || "Free";
+        const earn = plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
         
         await update(ref(db, 'users/' + phone), {
-            balance: newBalance,
-            lastClaim: new Date().getTime() // ہم موجودہ ٹائم سیو کر رہے ہیں
+            balance: (userData.balance || 0) + earn,
+            lastClaim: new Date().getTime()
         });
-        
-        alert("Success! $" + earning + " earned today.");
+        alert("Profit Success! $" + earn + " added to your wallet.");
     };
 </script>
 
