@@ -29,12 +29,23 @@
             align-items: center;
         }
         .brand { display: flex; align-items: center; gap: 8px; }
-        .brand i { color: #3498db; font-size: 24px; }
+        /* لوگو کو گولڈ کر دیا گیا ہے */
+        .brand i { color: var(--primary-gold); font-size: 24px; filter: drop-shadow(0 0 5px var(--primary-gold)); }
         .brand span { font-size: 20px; font-weight: bold; }
         
-        .playstore-section { text-align: right; }
-        .playstore-btn { display: flex; align-items: center; gap: 5px; color: #fff; text-decoration: none; font-size: 12px; }
-        .coming-soon-tag { font-size: 9px; color: var(--primary-gold); display: block; margin-top: -2px; }
+        /* واٹس ایپ گروپ بٹن */
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: bold;
+        }
 
         .welcome-msg { padding: 0 20px; font-size: 13px; color: var(--primary-gold); margin-bottom: 15px; }
 
@@ -62,17 +73,25 @@
         
         .machines-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
             margin-bottom: 20px;
         }
-        .machine { text-align: center; }
-        .machine img { width: 100%; max-width: 60px; filter: drop-shadow(0 0 10px gold); }
-        .m-timer { font-size: 10px; color: var(--primary-gold); margin: 5px 0; }
+        .machine { 
+            text-align: center; 
+            background: rgba(0,0,0,0.2); 
+            padding: 10px; 
+            border-radius: 15px;
+            border: 1px solid var(--glass-border);
+        }
+        /* پیکج نیم اسٹائل */
+        .package-name { font-size: 9px; color: #fff; background: var(--primary-gold); color: #000; padding: 2px 5px; border-radius: 5px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .machine img { width: 100%; max-width: 50px; filter: drop-shadow(0 0 10px gold); }
+        .m-timer { font-size: 12px; color: var(--primary-gold); margin: 5px 0; font-family: monospace; }
         .claim-btn { 
             background: linear-gradient(180deg, #f39c12, #d35400);
-            border: none; color: #fff; font-size: 10px; padding: 4px 0;
-            width: 100%; border-radius: 10px; font-weight: bold;
+            border: none; color: #fff; font-size: 10px; padding: 6px 0;
+            width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer;
         }
 
         .get-all-btn {
@@ -100,19 +119,12 @@
             position: relative;
             overflow: hidden;
         }
-        .feature-card img {
-            position: absolute;
-            right: -10px;
-            bottom: -10px;
-            width: 70px;
-            opacity: 0.5;
-        }
+        .feature-card img { position: absolute; right: -10px; bottom: -10px; width: 60px; opacity: 0.3; }
         .feature-card h4 { margin: 0; font-size: 13px; }
         .feature-card p { margin: 5px 0; font-size: 16px; font-weight: bold; color: #fff; }
         .sub-btn { 
-            background: rgba(255,255,255,0.1); 
-            border: none; color: #fff; font-size: 10px;
-            padding: 5px 15px; border-radius: 8px; width: fit-content;
+            background: rgba(255,255,255,0.1); border: none; color: #fff; font-size: 10px;
+            padding: 5px 15px; border-radius: 8px; width: fit-content; z-index: 1;
         }
 
         /* Bottom Nav */
@@ -122,6 +134,7 @@
             background: #110720;
             display: flex; justify-content: space-around;
             padding: 15px 0; border-top: 1px solid var(--glass-border);
+            z-index: 100;
         }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
@@ -135,61 +148,49 @@
         <i class="fas fa-cloud"></i>
         <span>Gold Plus</span>
     </div>
-    <div class="playstore-section">
-        <a href="#" class="playstore-btn">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Google_Play_Arrow_logo.svg" width="15">
-            <b>Google Play</b>
-        </a>
-        <span class="coming-soon-tag">Coming Soon</span>
-    </div>
+    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="whatsapp-btn">
+        <i class="fab fa-whatsapp"></i> JOIN GROUP
+    </a>
 </div>
 
-<div class="welcome-msg">Welcome, Esteemed Premium Member!</div>
+<div class="welcome-msg">Welcome, Ahmad Nafees!</div>
 
 <div class="top-stats">
     <div class="stat-item">
         <span>Total assets</span>
-        <b>$0.00</b>
+        <b id="totalAssets">$0.00</b>
     </div>
     <div class="stat-item">
         <span>Total Miners</span>
-        <b>4</b>
+        <b>2 Active</b>
     </div>
 </div>
 
 <div class="mining-container">
-    <div class="mining-title">Your <b>Mining Machines</b></div>
+    <div class="mining-title">Active <b>Mining Machines</b></div>
     <div class="machines-grid">
         <div class="machine">
+            <span class="package-name">PREMIUM PLAN</span>
             <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer">00:44</div>
-            <button class="claim-btn">Claim</button>
+            <div class="m-timer" id="timer1">23:59:59</div>
+            <button class="claim-btn">Claim Now</button>
         </div>
         <div class="machine">
+            <span class="package-name">BASIC PLAN</span>
             <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer">01:16</div>
-            <button class="claim-btn">Claim</button>
-        </div>
-        <div class="machine">
-            <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer">00:57</div>
-            <button class="claim-btn" style="background: var(--primary-gold); color: #000;">Claim</button>
-        </div>
-        <div class="machine">
-            <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer">00:18</div>
-            <button class="claim-btn" style="background: var(--primary-gold); color: #000;">Claim</button>
+            <div class="m-timer" id="timer2">23:59:59</div>
+            <button class="claim-btn">Claim Now</button>
         </div>
     </div>
-    <button class="get-all-btn">Get All</button>
-    <p style="text-align: center; font-size: 9px; color: #666; margin-top: 10px;">Claim your earnings before 24 hours or they will disappear.</p>
+    <button class="get-all-btn">Claim All Earnings</button>
+    <p style="text-align: center; font-size: 9px; color: #888; margin-top: 10px;">Note: Mining resets every 24 hours.</p>
 </div>
 
 <div class="features-grid">
     <div class="feature-card">
         <h4>My Team</h4>
-        <p style="color: #00ff64;">+0%</p>
-        <button class="sub-btn">Manage</button>
+        <p style="color: #00ff64;">+0 Members</p>
+        <button class="sub-btn" onclick="location.href='refer.html'">Invite</button>
         <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png">
     </div>
     <div class="feature-card">
@@ -198,27 +199,42 @@
         <button class="sub-btn">History</button>
         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png">
     </div>
-    <div class="feature-card">
-        <h4>Withdraw</h4>
-        <p>$0.00</p>
-        <button class="sub-btn" style="background: var(--primary-gold); color: #000;">Withdraw</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/10142/10142318.png">
-    </div>
-    <div class="feature-card">
-        <h4>Deposit</h4>
-        <p style="color: var(--primary-gold); font-size: 12px;">JazzCash / EasyPaisa</p>
-        <button class="sub-btn" style="background: var(--primary-gold); color: #000;">Deposit</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/3037/3037150.png">
-    </div>
 </div>
 
 <div class="bottom-nav">
     <a href="dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
     <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="invite.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
     <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
 </div>
+
+<script>
+    // الٹا ٹائمر چلانے کا فنکشن (24 گھنٹے)
+    function startTimer(duration, displayId) {
+        let timer = duration, hours, minutes, seconds;
+        setInterval(function () {
+            hours = parseInt(timer / 3600, 10);
+            minutes = parseInt((timer % 3600) / 60, 10);
+            seconds = parseInt(timer % 60, 10);
+
+            hours = hours < 10 ? "0" + hours : hours;
+            minutes = minutes < 10 ? "0" + minutes : minutes;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById(displayId).textContent = hours + ":" + minutes + ":" + seconds;
+
+            if (--timer < 0) {
+                timer = duration; // ری سیٹ
+            }
+        }, 1000);
+    }
+
+    window.onload = function () {
+        startTimer(24 * 60 * 60, "timer1"); // 24 گھنٹے مشین 1 کے لیے
+        startTimer(24 * 60 * 60, "timer2"); // 24 گھنٹے مشین 2 کے لیے
+    };
+</script>
 
 </body>
 </html>
