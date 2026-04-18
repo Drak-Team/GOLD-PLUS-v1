@@ -3,26 +3,21 @@
     const ADMIN_PIN = "231426"; 
 
     function checkAdmin() {
-        // سیشن چیک کریں تاکہ بار بار پن نہ مانگے جب تک براؤزر کھلا ہے
         const access = sessionStorage.getItem("admin_access");
-        
         if (access !== "granted") {
             const enteredPin = prompt("Gold Plus Admin\nPlease enter your Secret PIN:");
-            
             if (enteredPin === ADMIN_PIN) {
                 sessionStorage.setItem("admin_access", "granted");
                 alert("Access Granted. Welcome Ahmad Nafees!");
             } else {
                 alert("Incorrect PIN! Access Denied.");
-                // غلط پن کی صورت میں واپس مین پیج پر بھیج دے گا
                 window.location.href = "index.html"; 
             }
         }
     }
-
-    // جیسے ہی پیج لوڈ ہوگا، یہ فنکشن چلے گا
     window.onload = checkAdmin;
 </script>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -42,55 +37,57 @@
         .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--glass-border); padding-bottom: 15px; }
         .admin-header h2 { color: var(--primary-gold); margin: 0; font-size: 20px; }
 
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 25px; }
-        .stat-box { background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1px solid var(--glass-border); text-align: center; }
-        .stat-box b { font-size: 18px; color: var(--primary-gold); display: block; }
-        .stat-box span { font-size: 11px; color: #aaa; }
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 25px; }
+        .stat-box { background: var(--card-bg); padding: 12px; border-radius: 12px; border: 1px solid var(--glass-border); text-align: center; }
+        .stat-box b { font-size: 16px; color: var(--primary-gold); display: block; }
+        .stat-box span { font-size: 10px; color: #aaa; text-transform: uppercase; }
 
-        .section-title { font-size: 14px; color: var(--primary-gold); margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--primary-gold); padding-left: 10px; }
+        .section-title { font-size: 13px; color: var(--primary-gold); margin: 25px 0 15px; text-transform: uppercase; letter-spacing: 1px; border-left: 3px solid var(--primary-gold); padding-left: 10px; }
 
-        /* Common Card Style */
-        .admin-card { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; margin-bottom: 15px; }
+        .admin-card { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; margin-bottom: 15px; position: relative; }
         
-        /* Withdrawal Styles */
         .req-info { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .req-info h4 { margin: 0; font-size: 14px; }
-        .req-info p { margin: 2px 0; font-size: 11px; color: #888; }
+        .req-info h4 { margin: 0; font-size: 14px; color: #fff; }
+        .req-info p { margin: 2px 0; font-size: 11px; color: #aaa; }
         .amount { color: var(--primary-gold); font-weight: bold; font-size: 16px; }
 
-        /* Chat Styles */
-        .chat-item { border-left: 2px solid #444; padding-left: 15px; }
-        .user-msg { font-size: 13px; background: rgba(255,255,255,0.05); padding: 8px; border-radius: 8px; margin: 5px 0; }
-        .reply-box { display: flex; gap: 8px; margin-top: 10px; }
-        .reply-box input { flex: 1; background: #000; border: 1px solid var(--glass-border); padding: 8px; border-radius: 8px; color: white; font-size: 12px; outline: none; }
-        .reply-btn { background: var(--primary-gold); border: none; padding: 8px 15px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 12px; }
+        .proof-img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; margin: 10px 0; border: 1px solid #444; cursor: pointer; }
 
         .btn-group { display: flex; gap: 10px; margin-top: 10px; }
-        .approve-btn { flex: 1; padding: 10px; background: #00ff6422; border: 1px solid #00ff64; color: #00ff64; border-radius: 10px; font-weight: bold; cursor: pointer; }
-        .reject-btn { flex: 1; padding: 10px; background: #ff444422; border: 1px solid #ff4444; color: #ff4444; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .approve-btn { flex: 1; padding: 12px; background: #00ff6422; border: 1px solid #00ff64; color: #00ff64; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .reject-btn { flex: 1; padding: 12px; background: #ff444422; border: 1px solid #ff4444; color: #ff4444; border-radius: 10px; font-weight: bold; cursor: pointer; }
+
+        .user-msg { font-size: 12px; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 10px; margin: 8px 0; border-left: 2px solid var(--primary-gold); }
+        .reply-box { display: flex; gap: 8px; }
+        .reply-box input { flex: 1; background: #000; border: 1px solid #333; padding: 10px; border-radius: 8px; color: white; outline: none; }
+        .reply-btn { background: var(--primary-gold); border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
 
 <div class="admin-header">
-    <h2><i class="fas fa-user-shield"></i> Admin Panel</h2>
-    <span id="adminName">Ahmad Nafees</span>
+    <h2><i class="fas fa-user-shield"></i> Gold Plus Admin</h2>
+    <span style="font-size: 12px; color: #888;">Logged in: Ahmad Nafees</span>
 </div>
 
 <div class="stat-grid">
-    <div class="stat-box"><span>Pending Withdraws</span><b id="pendingReq">0</b></div>
-    <div class="stat-box"><span>Support Tickets</span><b id="activeChats">0</b></div>
+    <div class="stat-box"><span>Deposits</span><b id="pendingDep">0</b></div>
+    <div class="stat-box"><span>Withdraws</span><b id="pendingWith">0</b></div>
+    <div class="stat-box"><span>Chats</span><b id="activeChats">0</b></div>
 </div>
 
+<div class="section-title">Pending Deposits</div>
+<div id="depositContainer"><p style="text-align: center; color: #444; font-size: 12px;">Checking deposits...</p></div>
+
 <div class="section-title">Withdraw Requests</div>
-<div id="withdrawContainer"><p style="text-align: center; color: #444;">Loading...</p></div>
+<div id="withdrawContainer"><p style="text-align: center; color: #444; font-size: 12px;">Checking withdrawals...</p></div>
 
 <div class="section-title">Support Messages</div>
-<div id="chatContainer"><p style="text-align: center; color: #444;">No messages yet</p></div>
+<div id="chatContainer"><p style="text-align: center; color: #444; font-size: 12px;">No messages yet</p></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -104,15 +101,44 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 1. Withdrawals Logic
+    // 1. Deposits Logic (Approved karne par wallet update hoga)
+    onValue(ref(db, 'deposits'), (snapshot) => {
+        const container = document.getElementById('depositContainer');
+        container.innerHTML = '';
+        let count = 0;
+        snapshot.forEach((userSnap) => {
+            const uid = userSnap.key;
+            userSnap.forEach((reqSnap) => {
+                const data = reqSnap.val();
+                if(data.status === "Pending") {
+                    count++;
+                    container.innerHTML += `
+                        <div class="admin-card">
+                            <div class="req-info">
+                                <div><h4>${data.userName || 'User'}</h4><p>TID: ${data.tid}</p></div>
+                                <div class="amount">$${data.amount}</div>
+                            </div>
+                            <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
+                            <div class="btn-group">
+                                <button class="approve-btn" onclick="handleDeposit('${uid}', '${reqSnap.key}', '${data.amount}')">Approve</button>
+                                <button class="reject-btn" onclick="updateStatus('deposits', '${uid}', '${reqSnap.key}', 'Rejected')">Reject</button>
+                            </div>
+                        </div>`;
+                }
+            });
+        });
+        document.getElementById('pendingDep').innerText = count;
+        if(count === 0) container.innerHTML = '<p style="text-align:center;color:#444;">No pending deposits</p>';
+    });
+
+    // 2. Withdrawals Logic
     onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawContainer');
         container.innerHTML = '';
         let count = 0;
-        snapshot.forEach((userSnapshot) => {
-            const uid = userSnapshot.key;
-            userSnapshot.forEach((reqSnap) => {
-                const rid = reqSnap.key;
+        snapshot.forEach((userSnap) => {
+            const uid = userSnap.key;
+            userSnap.forEach((reqSnap) => {
                 const data = reqSnap.val();
                 if(data.status === "Pending") {
                     count++;
@@ -123,63 +149,68 @@
                                 <div class="amount">$${data.amount}</div>
                             </div>
                             <div class="btn-group">
-                                <button class="approve-btn" onclick="handleReq('${uid}', '${rid}', 'Approved')">Approve</button>
-                                <button class="reject-btn" onclick="handleReq('${uid}', '${rid}', 'Rejected')">Reject</button>
+                                <button class="approve-btn" onclick="updateStatus('withdrawals', '${uid}', '${reqSnap.key}', 'Approved')">Approve</button>
+                                <button class="reject-btn" onclick="updateStatus('withdrawals', '${uid}', '${reqSnap.key}', 'Rejected')">Reject</button>
                             </div>
                         </div>`;
                 }
             });
         });
-        document.getElementById('pendingReq').innerText = count;
+        document.getElementById('pendingWith').innerText = count;
         if(count === 0) container.innerHTML = '<p style="text-align:center;color:#444;">No pending withdrawals</p>';
     });
 
-    // 2. Chat Support Logic
+    // Handle Deposit (Approval + Wallet Addition)
+    window.handleDeposit = (uid, rid, amount) => {
+        const walletRef = ref(db, `users/${uid}/wallet`);
+        runTransaction(walletRef, (current) => {
+            return (current || 0) + parseFloat(amount);
+        }).then(() => {
+            updateStatus('deposits', uid, rid, 'Approved');
+        });
+    };
+
+    // Global Status Updater
+    window.updateStatus = (path, uid, rid, status) => {
+        update(ref(db, `${path}/${uid}/${rid}`), { status: status }).then(() => alert("Request " + status));
+    };
+
+    // 3. Support Messages Logic
     onValue(ref(db, 'support'), (snapshot) => {
         const chatContainer = document.getElementById('chatContainer');
         chatContainer.innerHTML = '';
         let chatCount = 0;
-
         snapshot.forEach((userChat) => {
             const uid = userChat.key;
             const msgs = userChat.val().messages;
             if(!msgs) return;
-            
             chatCount++;
-            const lastMsg = Object.values(msgs).pop(); // آخری میسج دکھانے کے لیے
-            
+            const lastMsg = Object.values(msgs).pop();
             chatContainer.innerHTML += `
                 <div class="admin-card chat-item">
-                    <div style="font-size:12px; color:var(--primary-gold); font-weight:bold;">User ID: ${uid.substring(0,8)}</div>
-                    <div class="user-msg"><b>User:</b> ${lastMsg.text}</div>
+                    <p style="font-size:10px; color:#888; margin:0;">User: ${uid.substring(0,6)}...</p>
+                    <div class="user-msg">${lastMsg.text}</div>
                     <div class="reply-box">
-                        <input type="text" id="reply_${uid}" placeholder="Type reply...">
-                        <button class="reply-btn" onclick="sendReply('${uid}')">Reply</button>
+                        <input type="text" id="reply_${uid}" placeholder="Your reply...">
+                        <button class="reply-btn" onclick="sendReply('${uid}')"><i class="fas fa-paper-plane"></i></button>
                     </div>
                 </div>`;
         });
         document.getElementById('activeChats').innerText = chatCount;
     });
 
-    // Actions
-    window.handleReq = (uid, rid, status) => {
-        update(ref(db, `withdrawals/${uid}/${rid}`), { status: status }).then(() => alert("Success!"));
-    };
-
     window.sendReply = (uid) => {
         const text = document.getElementById(`reply_${uid}`).value;
         if(!text) return;
-        const msgRef = ref(db, `support/${uid}/messages`);
-        push(msgRef, {
+        push(ref(db, `support/${uid}/messages`), {
             sender: 'admin',
             text: text,
-            date: new Date().toDateString()
+            date: new Date().toLocaleDateString()
         }).then(() => {
             alert("Reply sent!");
             document.getElementById(`reply_${uid}`).value = '';
         });
     };
-
 </script>
 </body>
 </html>
