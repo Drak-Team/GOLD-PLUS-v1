@@ -34,6 +34,7 @@
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
 
         .method-title {
@@ -44,7 +45,7 @@
             margin-bottom: 15px;
         }
 
-        .method-title img { width: 45px; height: 45px; border-radius: 8px; object-fit: cover; }
+        .method-title img { width: 50px; height: auto; border-radius: 8px; }
 
         .account-details {
             background: rgba(0,0,0,0.3);
@@ -54,20 +55,23 @@
             position: relative;
         }
 
-        .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; }
-        .account-details b { display: block; font-size: 22px; color: #fff; margin: 8px 0; letter-spacing: 1px; }
+        .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; letter-spacing: 1px; }
+        .account-details b { display: block; font-size: 24px; color: #fff; margin: 8px 0; letter-spacing: 2px; }
         
         .copy-btn {
             background: var(--primary-gold);
             color: #000;
             border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
+            padding: 8px 20px;
+            border-radius: 8px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
             margin-top: 5px;
+            text-transform: uppercase;
+            transition: 0.2s;
         }
+        .copy-btn:active { transform: scale(0.9); }
 
         /* Upload Section */
         .upload-section {
@@ -78,47 +82,50 @@
         }
 
         .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 8px; }
         
-        input[type="text"] {
+        input[type="text"], input[type="number"] {
             width: 100%;
-            padding: 12px;
+            padding: 14px;
             background: rgba(0,0,0,0.2);
             border: 1px solid var(--glass-border);
-            border-radius: 10px;
+            border-radius: 12px;
             color: #fff;
             box-sizing: border-box;
             outline: none;
+            font-size: 15px;
         }
 
         .file-input-wrapper {
             margin-top: 10px;
-            border: 1px dashed #444;
-            padding: 15px;
-            border-radius: 10px;
+            border: 2px dashed #444;
+            padding: 25px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
+            transition: 0.3s;
         }
+        .file-input-wrapper:hover { border-color: var(--primary-gold); background: rgba(241, 196, 15, 0.05); }
 
         .submit-btn {
             background: linear-gradient(90deg, #f1c40f, #e67e22);
             color: #000;
             border: none;
             width: 100%;
-            padding: 15px;
+            padding: 16px;
             border-radius: 15px;
             font-weight: bold;
             font-size: 16px;
-            margin-top: 15px;
+            margin-top: 20px;
             cursor: pointer;
-            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
         }
 
-        .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .submit-btn:disabled { opacity: 0.5; }
 
         .back-link {
             display: block;
-            margin-top: 20px;
+            margin-top: 25px;
             color: #888;
             text-decoration: none;
             font-size: 13px;
@@ -135,19 +142,24 @@
 <div class="container">
     <div class="payment-card">
         <div class="method-title">
-            <img src="https://play-lh.googleusercontent.com/9v1K-u4u-y0pLh_J6a1-J9Y_vV_P5zK_BfR_V_WfVzYJ_V_V_V_V_V_V_V_V_V" alt="JazzCash">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/JazzCash_logo.png" alt="JazzCash">
             <h4>JazzCash Transfer</h4>
         </div>
         
         <div class="account-details">
             <span>Account Number</span>
             <b id="accNumber">03037264598</b>
-            <p style="margin: 0; color: #ddd; font-size: 14px;">Ahmad Nafees Anjum</p>
-            <button class="copy-btn" onclick="copyNumber()">COPY NUMBER</button>
+            <p style="margin: 0; color: #ddd; font-size: 15px; font-weight: 500;">Ahmad Nafees Anjum</p>
+            <button class="copy-btn" onclick="copyNumber()"> <i class="fas fa-copy"></i> Copy Number</button>
         </div>
     </div>
 
     <div class="upload-section">
+        <div class="input-group">
+            <label>Amount to Deposit ($)</label>
+            <input type="number" id="depositAmount" placeholder="Example: 50">
+        </div>
+
         <div class="input-group">
             <label>Transaction ID (TID)</label>
             <input type="text" id="tid" placeholder="Enter 12-digit TID">
@@ -156,13 +168,13 @@
         <div class="input-group">
             <label>Payment Screenshot</label>
             <div class="file-input-wrapper" onclick="document.getElementById('proof').click()">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: var(--primary-gold);"></i>
-                <p id="fileName" style="font-size: 12px; margin: 5px 0;">Click to upload screenshot</p>
+                <i class="fas fa-cloud-upload-alt" style="font-size: 30px; color: var(--primary-gold); margin-bottom: 10px; display: block;"></i>
+                <p id="fileName" style="font-size: 13px; margin: 0; color: #888;">Tap to upload proof</p>
                 <input type="file" id="proof" accept="image/*" style="display: none;" onchange="updateFileName()">
             </div>
         </div>
 
-        <button class="submit-btn" onclick="handleSubmit()" id="submitBtn">SUBMIT REQUEST</button>
+        <button class="submit-btn" onclick="handleSubmit()" id="submitBtn">SUBMIT DEPOSIT REQUEST</button>
     </div>
 
     <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
@@ -172,9 +184,13 @@
     // نمبر کاپی کرنے کا فنکشن
     function copyNumber() {
         const num = document.getElementById('accNumber').innerText;
-        navigator.clipboard.writeText(num).then(() => {
-            alert("Account number copied: " + num);
-        });
+        const tempInput = document.createElement("input");
+        tempInput.value = num;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        alert("Number Copied: " + num);
     }
 
     // فائل کا نام دکھانے کے لیے
@@ -182,35 +198,41 @@
         const fileInput = document.getElementById('proof');
         const fileNameDisplay = document.getElementById('fileName');
         if (fileInput.files.length > 0) {
-            fileNameDisplay.innerText = fileInput.files[0].name;
-            fileNameDisplay.style.color = "#00ff64";
+            fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
+            fileNameDisplay.style.color = "#2ecc71";
         }
     }
 
-    // فارم جمع کرنے کا فنکشن
+    // آٹو ٹیسٹ اور سبمٹ لاجک
     function handleSubmit() {
         const tid = document.getElementById('tid').value;
+        const amount = document.getElementById('depositAmount').value;
         const file = document.getElementById('proof').files[0];
         const btn = document.getElementById('submitBtn');
 
-        if (!tid || tid.length < 5) {
-            alert("Please enter a valid Transaction ID.");
-            return;
-        }
-        if (!file) {
-            alert("Please upload the payment screenshot.");
-            return;
-        }
+        if (!amount || amount <= 0) { alert("Please enter amount."); return; }
+        if (!tid || tid.length < 5) { alert("Please enter valid TID."); return; }
+        if (!file) { alert("Please upload screenshot."); return; }
 
-        // ایکشن شروع
         btn.disabled = true;
         btn.innerText = "Processing...";
 
-        // یہاں فائر بیس کا کوڈ آئے گا، فی الحال ہم صرف میسج دکھا رہے ہیں
+        // لوکل اسٹوریج میں ہسٹری سیو کرنا (آٹو ٹیسٹ کے لیے)
+        const depositRecord = {
+            tid: tid,
+            amount: amount,
+            date: new Date().toLocaleDateString(),
+            status: "Pending"
+        };
+
+        let history = JSON.parse(localStorage.getItem('depositHistory')) || [];
+        history.unshift(depositRecord);
+        localStorage.setItem('depositHistory', JSON.stringify(history));
+
         setTimeout(() => {
-            alert("Success! Your deposit request has been submitted. Admin will approve it soon.");
-            window.location.href = "dashboard.html";
-        }, 2000);
+            alert("Deposit request submitted successfully!");
+            window.location.href = "deposit-history.html";
+        }, 1500);
     }
 </script>
 
