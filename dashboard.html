@@ -47,15 +47,25 @@
         }
         .mining-title { font-size: 14px; margin-bottom: 20px; color: #ddd; }
         .machines-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
-        .machine { text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; border: 1px solid var(--glass-border); }
+        .machine { text-align: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 15px; border: 1px solid var(--glass-border); position: relative; }
         .package-name { font-size: 9px; color: #000; background: var(--primary-gold); padding: 2px 5px; border-radius: 5px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        
+        /* Active Badge for Paid Miners */
+        .active-badge {
+            position: absolute; top: -8px; right: -5px;
+            background: var(--primary-gold); color: #000;
+            font-size: 8px; font-weight: bold; padding: 2px 6px;
+            border-radius: 5px; border: 2px solid #1a0b2e;
+            box-shadow: 0 0 10px rgba(241, 196, 15, 0.4);
+        }
+
         .machine img { width: 45px; filter: drop-shadow(0 0 8px gold); }
         .m-timer { font-size: 11px; color: var(--primary-gold); margin: 5px 0; font-family: monospace; }
         .claim-btn { background: linear-gradient(180deg, #f39c12, #d35400); border: none; color: #fff; font-size: 10px; padding: 6px 0; width: 100%; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        .get-all-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 12px; border-radius: 15px; font-weight: bold; font-size: 15px; margin-top: 10px; }
+        .get-all-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 12px; border-radius: 15px; font-weight: bold; font-size: 15px; margin-top: 10px; cursor: pointer; }
 
-        /* Feature Cards Grid (4 Cards total) */
+        /* Feature Cards Grid */
         .features-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px 15px; }
         .feature-card {
             background: var(--card-bg); border: 1px solid var(--glass-border);
@@ -86,23 +96,24 @@
 
 <div class="top-stats">
     <div class="stat-item"><span>Total assets</span><b>$0.00</b></div>
-    <div class="stat-item"><span>Total Miners</span><b>2 Active</b></div>
+    <div class="stat-item"><span>Total Miners</span><b><span id="activeMinersCount">0</span> Active</b></div>
 </div>
 
 <div class="mining-container">
-    <div class="mining-title">Active <b>Mining Machines</b></div>
+    <div class="mining-title">Your <b>Mining Center</b></div>
     <div class="machines-grid">
         <div class="machine">
-            <span class="package-name">PREMIUM PLAN</span>
+            <span class="package-name" style="background: #7f8c8d; color: white;">FREE PLAN</span>
             <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer" id="timer1">23:59:59</div>
-            <button class="claim-btn">Claim Now</button>
+            <div class="m-timer" id="freeTimer">23:59:59</div>
+            <button class="claim-btn" style="background: #34495e;">Claim Free</button>
         </div>
         <div class="machine">
-            <span class="package-name">BASIC PLAN</span>
-            <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
-            <div class="m-timer" id="timer2">23:59:59</div>
-            <button class="claim-btn">Claim Now</button>
+            <div class="active-badge" id="minerBadge">0 ACTIVE</div>
+            <span class="package-name">PAID MINERS</span>
+            <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" style="filter: drop-shadow(0 0 10px gold);">
+            <div class="m-timer" id="paidTimer">00:00:00</div>
+            <button class="claim-btn">Claim Paid</button>
         </div>
     </div>
     <button class="get-all-btn">Claim All Earnings</button>
@@ -144,6 +155,7 @@
 </nav>
 
 <script>
+    // ٹائمر فنکشن
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
         setInterval(function () {
@@ -157,9 +169,14 @@
             if (--timer < 0) timer = duration;
         }, 1000);
     }
+
     window.onload = function () {
-        startTimer(24 * 60 * 60, "timer1");
-        startTimer(24 * 60 * 60, "timer2");
+        startTimer(24 * 60 * 60, "freeTimer");
+        // مثال کے طور پر اگر 2 پلان ایکٹیو ہوں تو بیج اپ ڈیٹ کریں
+        let activePaidPlans = 2; // یہ ڈیٹا فائر بیس سے آئے گا
+        document.getElementById('minerBadge').textContent = activePaidPlans + " ACTIVE";
+        document.getElementById('activeMinersCount').textContent = activePaidPlans + 1; // +1 فری والا
+        if(activePaidPlans > 0) startTimer(24 * 60 * 60, "paidTimer");
     };
 </script>
 
