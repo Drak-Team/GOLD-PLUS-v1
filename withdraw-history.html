@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Withdraw History</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-gold: #f1c40f;
+            --bg-dark: #0f051d;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
+            color: white;
+            padding-bottom: 30px;
+        }
+
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--glass-border); }
+        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
+        .header h2 { margin: 0; font-size: 18px; }
+
+        .container { padding: 20px; }
+
+        .history-item {
+            background: var(--card-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 18px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details h4 { margin: 0; font-size: 14px; color: #fff; }
+        .details span { font-size: 11px; color: #aaa; }
+        
+        .amount-info { text-align: right; }
+        .amount-info .price { font-size: 15px; font-weight: bold; color: #ff4444; display: block; }
+        
+        .status { font-size: 10px; padding: 3px 8px; border-radius: 10px; text-transform: uppercase; font-weight: bold; margin-top: 5px; display: inline-block; }
+        .pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid #ffc107; }
+        .approved { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid #00ff64; }
+
+        .no-data { text-align: center; padding: 50px 20px; color: #666; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <h2>Withdraw History</h2>
+</div>
+
+<div class="container" id="withdrawList">
+    <div class="no-data" id="loading">Loading history...</div>
+</div>
+
+<script type="module">
+    // آپ کا Firebase کنفگ یہاں آئے گا
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const auth = getAuth(app);
+
+    // ڈیٹا لوڈ کرنے کا فنکشن
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const historyRef = ref(db, 'withdrawals/' + user.uid);
+            onValue(historyRef, (snapshot) => {
+                const data = snapshot.val();
+                const container = document.getElementById('withdrawList');
+                container.innerHTML = ''; // لوڈنگ ختم کریں
+
+                if (data) {
+                    Object.values(data).forEach(item => {
+                        const html = `
+                            <div class="history-item">
+                                <div class="details">
+                                    <h4>Withdraw to ${item.method || 'Account'}</h4>
+                                    <span>${item.date || 'Recent'}</span>
+                                </div>
+                                <div class="amount-info">
+                                    <span class="price">-$${item.amount}</span>
+                                    <span class="status ${item.status.toLowerCase()}">${item.status}</span>
+                                </div>
+                            </div>
+                        `;
+                        container.innerHTML += html;
+                    });
+                } else {
+                    container.innerHTML = '<div class="no-data">No withdraw records yet.</div>';
+                }
+            });
+        }
+    });
+</script>
+
+</body>
+</html>
