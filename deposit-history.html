@@ -18,76 +18,86 @@
             font-family: 'Segoe UI', sans-serif;
             background: radial-gradient(circle at top, #1a0b2e, #0f051d);
             color: white;
-            padding-bottom: 30px;
+            padding-bottom: 20px;
         }
 
-        /* Header */
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--glass-border); }
-        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
-        .header h2 { margin: 0; font-size: 18px; }
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header h2 { color: var(--primary-gold); font-size: 20px; margin: 0; }
+        .header a { color: white; text-decoration: none; font-size: 20px; }
 
-        .container { padding: 20px; }
+        .container { padding: 15px; }
 
         /* History Card */
         .history-item {
             background: var(--card-bg);
             border: 1px solid var(--glass-border);
-            border-radius: 18px;
+            border-radius: 15px;
             padding: 15px;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .details h4 { margin: 0; font-size: 15px; color: #fff; }
-        .details span { font-size: 11px; color: #aaa; }
+        .info h4 { margin: 0; font-size: 14px; color: #fff; }
+        .info span { font-size: 11px; color: #888; display: block; margin-top: 4px; }
         
-        .amount-info { text-align: right; }
-        .amount-info .price { font-size: 16px; font-weight: bold; color: var(--primary-gold); display: block; }
+        .status-box { text-align: right; }
+        .amount { display: block; font-weight: bold; color: var(--primary-gold); font-size: 16px; }
         
         /* Status Badges */
-        .status { font-size: 10px; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; font-weight: bold; }
-        .pending { background: rgba(255, 193, 7, 0.1); color: #ffc107; border: 1px solid #ffc107; }
-        .approved { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid #00ff64; }
-        .rejected { background: rgba(255, 68, 68, 0.1); color: #ff4444; border: 1px solid #ff4444; }
+        .badge {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        .pending { background: #f39c12; color: #000; }
+        .approved { background: #2ecc71; color: #000; }
+        .rejected { background: #e74c3c; color: #fff; }
 
-        /* Empty State */
-        .no-data { text-align: center; padding: 50px 20px; color: #666; }
-        .no-data i { font-size: 50px; margin-bottom: 15px; display: block; }
+        .no-data { text-align: center; margin-top: 50px; color: #666; }
+        .no-data i { font-size: 50px; display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <i class="fas fa-arrow-left" onclick="history.back()"></i>
+    <a href="dashboard.html"><i class="fas fa-arrow-left"></i></a>
     <h2>Deposit History</h2>
 </div>
 
 <div class="container" id="historyContainer">
     <div class="history-item">
-        <div class="details">
-            <h4>EasyPaisa Deposit</h4>
-            <span>18 April 2026, 09:30 AM</span>
+        <div class="info">
+            <h4>JazzCash Deposit</h4>
+            <span>TID: 982736451234</span>
+            <span>Date: 18 April, 2026</span>
         </div>
-        <div class="amount-info">
-            <span class="price">Rs. 600</span>
-            <span class="status pending">Pending</span>
+        <div class="status-box">
+            <span class="amount">+$50.00</span>
+            <span class="badge pending">Pending</span>
         </div>
     </div>
 
     <div class="history-item">
-        <div class="details">
+        <div class="info">
             <h4>JazzCash Deposit</h4>
-            <span>15 April 2026, 02:15 PM</span>
+            <span>TID: 881234567890</span>
+            <span>Date: 15 April, 2026</span>
         </div>
-        <div class="amount-info">
-            <span class="price">Rs. 2500</span>
-            <span class="status approved">Approved</span>
+        <div class="status-box">
+            <span class="amount">+$20.00</span>
+            <span class="badge approved">Approved</span>
         </div>
     </div>
+</div>
 
-    </div>
+<script>
+    // یہاں ہم فائر بیس سے ڈیٹا لوڈ کرنے کا فنکشن ڈالیں گے
+    // فی الحال یہ ڈیزائن دکھانے کے لیے اسٹیٹک ہے
+</script>
 
 </body>
 </html>
