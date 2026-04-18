@@ -200,3 +200,45 @@
 
 </body>
 </html>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+      authDomain: "gold-plus-v1.firebaseapp.com",
+      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+      projectId: "gold-plus-v1",
+      storageBucket: "gold-plus-v1.firebasestorage.app",
+      messagingSenderId: "474592887487",
+      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    window.onload = function() {
+        const phone = localStorage.getItem('userPhone');
+        if (!phone) {
+            window.location.href = 'index.html';
+        } else {
+            // "onValue" کا مطلب ہے کہ ڈیٹا بیس میں تبدیلی ہوتے ہی یہاں بھی خود بدل جائے گا
+            onValue(ref(db, 'users/' + phone), (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    // پکا کر لیں کہ ڈیٹا بیس میں نام 'balance' (چھوٹے b کے ساتھ) ہی ہے
+                    const currentBalance = data.balance || 0; 
+                    document.getElementById('totalBalance').innerText = "$" + parseFloat(currentBalance).toFixed(2);
+                    document.getElementById('profileName').innerText = data.name || "User";
+                    document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
+                    document.getElementById('avatarChar').innerText = (data.name || "U").charAt(0).toUpperCase();
+                }
+            });
+        }
+    };
+
+    window.logout = () => {
+        localStorage.removeItem('userPhone');
+        window.location.href = 'index.html';
+    };
+</script>
