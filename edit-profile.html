@@ -1,0 +1,17 @@
+<div class="glass-card">
+    <h3>Update Information</h3>
+    <input type="text" id="newName" placeholder="Enter New Name">
+    <input type="password" id="newPass" placeholder="Enter New Password">
+    <button class="main-btn" onclick="updateProfile()">Save Changes</button>
+</div>
+
+<script>
+function updateProfile() {
+    const name = document.getElementById('newName').value;
+    const pass = document.getElementById('newPass').value;
+    if(name || pass) {
+        alert("Profile Updated Successfully!");
+        window.location.href = 'profile.html';
+    }
+}
+</script>
