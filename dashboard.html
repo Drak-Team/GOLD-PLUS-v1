@@ -17,37 +17,39 @@
     const database = getDatabase(app);
     const auth = getAuth(app);
 
-    // 1. Auth Check
+    // 1. Gmail Auth اور لاگ ان چیک
     onAuthStateChanged(auth, (user) => {
         const userPhone = localStorage.getItem('userPhone');
         if (user && userPhone) {
             listenToUserData(userPhone);
         } else {
-            // تھوڑا انتظار کریں تاکہ پیج لوڈ ہو جائے، پھر ری ڈائریکٹ کریں
+            // اگر فائر بیس ابھی لوڈ ہو رہا ہو تو فوراً ری ڈائریکٹ نہ کریں
             setTimeout(() => {
-                if(!localStorage.getItem('userPhone')) window.location.href = 'index.html';
+                if (!auth.currentUser && !localStorage.getItem('userPhone')) {
+                    window.location.href = 'index.html';
+                }
             }, 3000);
         }
     });
 
-    // 2. محفوظ طریقے سے ڈیٹا دکھانا (Safe Update)
+    // 2. ڈیٹا بیس سے لائیو معلومات اٹھانا
     function listenToUserData(phone) {
         const userRef = ref(database, 'users/' + phone);
         onValue(userRef, (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                // ہر آئی ڈی کو چیک کر کے اپ ڈیٹ کریں تاکہ ایرر نہ آئے
-                const balEl = document.getElementById('mainBalance');
-                if(balEl) balEl.innerText = "$" + (data.balance || 0).toFixed(2);
+                // پریمیم ڈیش بورڈ کی ویلیوز اپ ڈیٹ کریں (محفوظ طریقے سے)
+                const bal = document.getElementById('mainBalance');
+                if(bal) bal.innerText = "$" + (data.balance || 0).toFixed(2);
 
-                const nameEl = document.getElementById('userNameLabel');
-                if(nameEl) nameEl.innerText = "Welcome, " + (data.name || "User") + "!";
+                const nameL = document.getElementById('userNameLabel');
+                if(nameL) nameL.innerText = "Welcome, " + (data.name || "User") + "!";
 
-                const teamEl = document.getElementById('teamCount');
-                if(teamEl) teamEl.innerText = "+" + (data.referCount || 0) + " Members";
+                const teamC = document.getElementById('teamCount');
+                if(teamC) teamC.innerText = "+" + (data.referCount || 0) + " Members";
                 
-                const drawEl = document.getElementById('withdrawStat');
-                if(drawEl && data.withdrawTotal) drawEl.innerText = "$" + data.withdrawTotal;
+                const withS = document.getElementById('withdrawStat');
+                if(withS && data.withdrawTotal) withS.innerText = "$" + data.withdrawTotal;
                 
                 checkPendingStatus(phone);
             }
@@ -61,29 +63,33 @@
             snapshot.forEach((child) => {
                 if (child.val().status === "Pending") hasPending = true;
             });
-            const alertEl = document.getElementById('pendingAlert');
-            if(alertEl) alertEl.style.display = hasPending ? 'flex' : 'none';
+            const pAlert = document.getElementById('pendingAlert');
+            if(pAlert) pAlert.style.display = hasPending ? 'flex' : 'none';
         });
     }
 
     window.claimDailyEarning = async function(type) {
         const phone = localStorage.getItem('userPhone');
         if(!phone) return;
+
         const userRef = ref(database, 'users/' + phone);
         const snapshot = await get(userRef);
         const data = snapshot.val();
+
         if (data && data.status !== "blocked") {
             let earning = type === 'free' ? 0.50 : 5.00;
             const newBalance = (data.balance || 0) + earning;
             await update(userRef, { balance: newBalance });
             alert("Success! $" + earning + " added.");
+        } else {
+            alert("Action failed!");
         }
     };
 
     function startTimer(duration, displayId) {
         let timer = duration, hours, minutes, seconds;
         const display = document.getElementById(displayId);
-        if(!display) return; // اگر ٹائمر کا ڈبہ نہیں ہے تو فنکشن روک دو
+        if(!display) return; 
 
         setInterval(() => {
             hours = Math.floor(timer / 3600);
@@ -95,7 +101,6 @@
     }
 
     window.onload = function () {
-        // ٹائمر صرف تب چلے گا اگر آئی ڈی موجود ہو
         if(document.getElementById('freeTimer')) {
             startTimer(24 * 60 * 60, "freeTimer");
         }
