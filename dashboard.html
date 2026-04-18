@@ -5,166 +5,223 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gold Plus Dashboard</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 <style>
-  body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #0f051d, #1a0b2e);
-    color: white;
-    padding-bottom: 80px;
-  }
+body {
+  margin: 0;
+  font-family: 'Segoe UI';
+  background: linear-gradient(135deg, #0f051d, #1a0b2e);
+  color: white;
+  padding-bottom: 80px;
+}
 
-  /* HEADER */
-  .header { padding: 20px; }
-  .header h1 { color: #f1c40f; margin: 0; font-size: 24px; }
-  .top-info { display: flex; justify-content: space-between; margin-top: 10px; font-size: 13px; opacity: 0.8; }
+/* ANIMATION */
+.card {
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
 
-  /* CARD */
-  .card {
-    background: rgba(255,255,255,0.03);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 20px;
-    padding: 20px;
-    margin: 10px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  }
+/* HEADER */
+.header { padding: 20px; }
+.header h1 { color: #f1c40f; }
 
-  /* MINERS */
-  .miners { display: flex; gap: 10px; padding: 5px; }
-  .miner { flex: 1; text-align: center; }
-  .miner img { width: 70px; margin-bottom: 10px; filter: drop-shadow(0 0 10px gold); }
-  .miner h3 { margin: 5px 0; font-size: 16px; }
-  .miner p { font-size: 12px; color: #aaa; margin: 5px 0; }
-  .timer { margin: 10px 0; font-size: 16px; font-weight: bold; color: #ff4e00; font-family: monospace; }
-  .btn {
-    background: linear-gradient(135deg, #f1c40f, #d4ac0d);
-    color: black;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    width: 100%;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-  }
-  .btn:active { transform: scale(0.95); }
+/* CARD */
+.card {
+  background: rgba(255,255,255,0.03);
+  border-radius: 20px;
+  padding: 20px;
+  margin: 10px;
+  transition: 0.3s;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 20px rgba(241,196,15,0.3);
+}
 
-  /* BALANCE */
-  .balance { text-align: center; }
-  .balance h2 { font-size: 40px; margin: 10px 0; letter-spacing: 1px; }
-  .bal-sub { display: flex; justify-content: space-around; font-size: 12px; }
+/* MINERS */
+.miners { display: flex; gap: 10px; }
+.miner { flex: 1; text-align: center; }
+.miner img {
+  width: 70px;
+  animation: float 3s infinite ease-in-out;
+}
+@keyframes float {
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
 
-  /* ACTION BUTTONS */
-  .actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 15px; }
-  .action { 
-    background: rgba(255,255,255,0.05); 
-    padding: 15px 5px; 
-    border-radius: 15px; 
-    text-align: center; 
-    font-size: 11px;
-    color: #fff;
-    text-decoration: none;
-  }
-  .action i { display: block; font-size: 24px; margin-bottom: 8px; }
-  .icon-dep { color: #f1c40f; }
-  .icon-wit { color: #2ecc71; }
-  .icon-pro { color: #9b59b6; }
-  .icon-sup { color: #25d366; }
+.timer {
+  margin: 10px;
+  font-weight: bold;
+  color: #ff4e00;
+}
 
-  /* NAVBAR */
-  .navbar {
-    position: fixed;
-    bottom: 0;
-    width: 100%;
-    background: #1a0b2e;
-    display: flex;
-    justify-content: space-around;
-    padding: 15px 0;
-    border-top: 1px solid rgba(255,255,255,0.05);
-  }
-  .nav-item { text-align: center; font-size: 10px; color: #666; text-decoration: none; }
-  .nav-item.active { color: #f1c40f; }
-  .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
+/* BUTTON */
+.btn {
+  background: linear-gradient(135deg, #f1c40f, #d4ac0d);
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  width: 100%;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.btn:active { transform: scale(0.95); }
+
+/* ripple */
+.btn::after {
+  content: "";
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: rgba(255,255,255,0.4);
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0;
+}
+.btn:active::after {
+  transform: scale(2);
+  opacity: 1;
+  transition: 0.4s;
+}
+
+/* BALANCE */
+.balance { text-align: center; }
+.balance h2 { font-size: 40px; }
+
+/* ACTIONS */
+.actions { display: grid; grid-template-columns: repeat(4,1fr); gap: 10px; padding: 15px; }
+.action {
+  background: rgba(255,255,255,0.05);
+  padding: 15px;
+  border-radius: 15px;
+  text-align: center;
+  transition: 0.3s;
+}
+.action:hover {
+  background: rgba(241,196,15,0.2);
+}
+
+/* NAVBAR */
+.navbar {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background: #1a0b2e;
+  display: flex;
+  justify-content: space-around;
+}
+.nav-item {
+  padding: 10px;
+  color: #777;
+}
+.nav-item.active {
+  color: #f1c40f;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #2ecc71;
+  padding: 10px 15px;
+  border-radius: 8px;
+  display: none;
+}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>Gold Plus <span style="font-weight: 300; font-size: 16px; color: white;">Dashboard</span></h1>
-  <div class="top-info">
-    <div>Welcome, User</div>
-    <div style="text-align: right;">Active Miners: <b style="color: #f1c40f;">2</b></div>
-  </div>
+  <h1>Gold Plus Dashboard</h1>
 </div>
 
 <div class="miners">
   <div class="card miner">
     <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
     <h3>Gold 1</h3>
-    <p>Earning: $2/day</p>
-    <div class="timer" id="time1">02:15:30</div>
-    <button class="btn" onclick="collect('time1')">Collect</button>
+    <div class="timer" id="time1"></div>
+    <button class="btn" onclick="collect(2, 'time1')">Collect</button>
   </div>
 
   <div class="card miner">
     <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
     <h3>Gold 2</h3>
-    <p>Earning: $1/day</p>
-    <div class="timer" id="time2">01:30:45</div>
-    <button class="btn" onclick="collect('time2')">Collect</button>
+    <div class="timer" id="time2"></div>
+    <button class="btn" onclick="collect(1, 'time2')">Collect</button>
   </div>
 </div>
 
 <div class="card balance">
-  <p style="font-size: 12px; opacity: 0.6; margin: 0;">Total Balance</p>
-  <h2>$0.00</h2>
-  <div class="bal-sub">
-    <span style="color: #2ecc71;">Daily: +$0.00</span>
-    <span>Total Earned: $0.00</span>
-  </div>
+  <h2 id="balance">$0.00</h2>
 </div>
 
 <div class="actions">
-  <a href="deposit.html" class="action"><i class="fas fa-wallet icon-dep"></i>Deposit</a>
-  <a href="withdraw.html" class="action"><i class="fas fa-money-bill-transfer icon-wit"></i>Withdraw</a>
-  <a href="promo.html" class="action"><i class="fas fa-gift icon-pro"></i>Promo</a>
-  <a href="https://wa.me/923000000000" class="action"><i class="fab fa-whatsapp icon-sup"></i>Support</a>
+  <div class="action">Deposit</div>
+  <div class="action">Withdraw</div>
+  <div class="action">Promo</div>
+  <div class="action">Support</div>
 </div>
 
 <div class="navbar">
-  <a href="#" class="nav-item active"><i class="fas fa-th-large"></i>Home</a>
-  <a href="#" class="nav-item"><i class="fas fa-chart-line"></i>Invest</a>
-  <a href="#" class="nav-item"><i class="fas fa-coins"></i>Earn</a>
-  <a href="#" class="nav-item"><i class="fas fa-paper-plane"></i>Invite</a>
-  <a href="#" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
+  <div class="nav-item active" onclick="setNav(this)">Home</div>
+  <div class="nav-item" onclick="setNav(this)">Invest</div>
+  <div class="nav-item" onclick="setNav(this)">Earn</div>
+  <div class="nav-item" onclick="setNav(this)">Invite</div>
+  <div class="nav-item" onclick="setNav(this)">Profile</div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-  // لائیو ٹائمر فنکشن
-  function startCountDown(id, seconds) {
-    let timer = seconds;
-    const element = document.getElementById(id);
-    setInterval(function () {
-      let h = Math.floor(timer / 3600);
-      let m = Math.floor((timer % 3600) / 60);
-      let s = Math.floor(timer % 60);
-      element.innerText = 
-        (h < 10 ? "0" + h : h) + ":" + 
-        (m < 10 ? "0" + m : m) + ":" + 
-        (s < 10 ? "0" + s : s);
-      if (--timer < 0) timer = 0;
-    }, 1000);
-  }
+let balance = 0;
 
-  window.onload = function () {
-    startCountDown('time1', 8130); // 2:15:30
-    startCountDown('time2', 5445); // 1:30:45
-  };
+// TIMER
+function startTimer(id, seconds) {
+  let timer = seconds;
+  const el = document.getElementById(id);
 
-  function collect(id) {
-    alert("Profit collected from " + id + "!");
-  }
+  setInterval(() => {
+    let h = Math.floor(timer / 3600);
+    let m = Math.floor((timer % 3600) / 60);
+    let s = timer % 60;
+
+    el.innerText = `${h}:${m}:${s}`;
+
+    if (timer > 0) timer--;
+  }, 1000);
+}
+
+// START
+startTimer("time1", 20);
+startTimer("time2", 10);
+
+// COLLECT
+function collect(amount, id) {
+  balance += amount;
+  document.getElementById("balance").innerText = "$" + balance.toFixed(2);
+  showToast("Collected $" + amount);
+}
+
+// TOAST
+function showToast(msg) {
+  let t = document.getElementById("toast");
+  t.innerText = msg;
+  t.style.display = "block";
+  setTimeout(()=> t.style.display="none",2000);
+}
+
+// NAV
+function setNav(el) {
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
+  el.classList.add("active");
+}
 </script>
 
 </body>
