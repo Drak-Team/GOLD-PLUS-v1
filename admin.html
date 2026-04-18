@@ -1,3 +1,28 @@
+<script>
+    // آپ کا خفیہ ایڈمن پن
+    const ADMIN_PIN = "231426"; 
+
+    function checkAdmin() {
+        // سیشن چیک کریں تاکہ بار بار پن نہ مانگے جب تک براؤزر کھلا ہے
+        const access = sessionStorage.getItem("admin_access");
+        
+        if (access !== "granted") {
+            const enteredPin = prompt("Gold Plus Admin\nPlease enter your Secret PIN:");
+            
+            if (enteredPin === ADMIN_PIN) {
+                sessionStorage.setItem("admin_access", "granted");
+                alert("Access Granted. Welcome Ahmad Nafees!");
+            } else {
+                alert("Incorrect PIN! Access Denied.");
+                // غلط پن کی صورت میں واپس مین پیج پر بھیج دے گا
+                window.location.href = "index.html"; 
+            }
+        }
+    }
+
+    // جیسے ہی پیج لوڈ ہوگا، یہ فنکشن چلے گا
+    window.onload = checkAdmin;
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>
