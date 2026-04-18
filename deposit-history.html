@@ -19,11 +19,13 @@
             background: radial-gradient(circle at top, #1a0b2e, #0f051d);
             color: white;
             padding-bottom: 20px;
+            min-height: 100vh;
         }
 
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; }
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid var(--glass-border); }
         .header h2 { color: var(--primary-gold); font-size: 20px; margin: 0; }
-        .header a { color: white; text-decoration: none; font-size: 20px; }
+        .header a { color: white; text-decoration: none; font-size: 20px; transition: 0.3s; }
+        .header a:active { transform: scale(0.8); }
 
         .container { padding: 15px; }
 
@@ -37,28 +39,36 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            animation: slideUp 0.4s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .info h4 { margin: 0; font-size: 14px; color: #fff; }
         .info span { font-size: 11px; color: #888; display: block; margin-top: 4px; }
         
         .status-box { text-align: right; }
-        .amount { display: block; font-weight: bold; color: var(--primary-gold); font-size: 16px; }
+        .amount { display: block; font-weight: bold; color: var(--primary-gold); font-size: 16px; margin-bottom: 5px; }
         
         /* Status Badges */
         .badge {
             font-size: 10px;
-            padding: 2px 8px;
-            border-radius: 5px;
+            padding: 3px 10px;
+            border-radius: 6px;
             font-weight: bold;
             text-transform: uppercase;
+            display: inline-block;
         }
-        .pending { background: #f39c12; color: #000; }
-        .approved { background: #2ecc71; color: #000; }
-        .rejected { background: #e74c3c; color: #fff; }
+        .badge.pending { background: #f39c12; color: #000; box-shadow: 0 0 10px rgba(243, 156, 18, 0.2); }
+        .badge.approved { background: #2ecc71; color: #000; box-shadow: 0 0 10px rgba(46, 204, 113, 0.2); }
+        .badge.rejected { background: #e74c3c; color: #fff; }
 
-        .no-data { text-align: center; margin-top: 50px; color: #666; }
-        .no-data i { font-size: 50px; display: block; margin-bottom: 10px; }
+        .no-data { text-align: center; margin-top: 80px; color: #666; }
+        .no-data i { font-size: 60px; display: block; margin-bottom: 15px; color: var(--glass-border); }
+        .no-data p { font-size: 14px; }
     </style>
 </head>
 <body>
@@ -69,34 +79,44 @@
 </div>
 
 <div class="container" id="historyContainer">
-    <div class="history-item">
-        <div class="info">
-            <h4>JazzCash Deposit</h4>
-            <span>TID: 982736451234</span>
-            <span>Date: 18 April, 2026</span>
-        </div>
-        <div class="status-box">
-            <span class="amount">+$50.00</span>
-            <span class="badge pending">Pending</span>
-        </div>
     </div>
-
-    <div class="history-item">
-        <div class="info">
-            <h4>JazzCash Deposit</h4>
-            <span>TID: 881234567890</span>
-            <span>Date: 15 April, 2026</span>
-        </div>
-        <div class="status-box">
-            <span class="amount">+$20.00</span>
-            <span class="badge approved">Approved</span>
-        </div>
-    </div>
-</div>
 
 <script>
-    // یہاں ہم فائر بیس سے ڈیٹا لوڈ کرنے کا فنکشن ڈالیں گے
-    // فی الحال یہ ڈیزائن دکھانے کے لیے اسٹیٹک ہے
+    // ڈیٹا لوڈ کرنے کا آٹو سسٹم
+    window.onload = function() {
+        const container = document.getElementById('historyContainer');
+        
+        // لوکل اسٹوریج سے ڈیٹا نکالنا (جو ہم نے deposit.html سے بھیجا تھا)
+        const history = JSON.parse(localStorage.getItem('depositHistory')) || [];
+
+        if (history.length === 0) {
+            container.innerHTML = `
+                <div class="no-data">
+                    <i class="fas fa-receipt"></i>
+                    <p>No deposit history found yet.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // ڈیٹا کو پیج پر دکھانا
+        container.innerHTML = ''; 
+        history.forEach(item => {
+            container.innerHTML += `
+                <div class="history-item">
+                    <div class="info">
+                        <h4>JazzCash Deposit</h4>
+                        <span>TID: ${item.tid}</span>
+                        <span>Date: ${item.date}</span>
+                    </div>
+                    <div class="status-box">
+                        <span class="amount">+$${parseFloat(item.amount).toFixed(2)}</span>
+                        <span class="badge ${item.status.toLowerCase()}">${item.status}</span>
+                    </div>
+                </div>
+            `;
+        });
+    };
 </script>
 
 </body>
