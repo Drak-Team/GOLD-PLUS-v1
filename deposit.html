@@ -1,137 +1,31 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Deposit</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root {
-            --primary-gold: #f1c40f;
-            --bg-dark: #0f051d;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
-            color: white;
-            padding-bottom: 50px;
-        }
-
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
-        .header i { color: var(--primary-gold); font-size: 22px; }
-        .header h2 { margin: 0; font-size: 18px; }
-
-        .container { padding: 20px; }
-
-        /* Payment Methods */
-        .payment-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        .method-icon { width: 60px; height: 60px; border-radius: 50%; margin-bottom: 10px; border: 2px solid var(--primary-gold); }
-
-        .account-details {
-            background: rgba(255,255,255,0.03);
-            border-radius: 15px;
-            padding: 15px;
-            margin: 15px 0;
-            border: 1px dashed var(--primary-gold);
-        }
-        .copy-btn {
-            background: var(--primary-gold);
-            color: #000; border: none; padding: 5px 15px;
-            border-radius: 10px; font-weight: bold; font-size: 12px; cursor: pointer;
-        }
-
-        /* Form Styling */
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 8px; }
-        .input-group input {
-            width: 100%; padding: 12px; border-radius: 12px;
-            border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);
-            color: white; box-sizing: border-box;
-        }
-
-        .upload-box {
-            border: 2px dashed #444; border-radius: 15px;
-            padding: 20px; text-align: center; cursor: pointer;
-            margin-bottom: 20px; transition: 0.3s;
-        }
-        .upload-box:hover { border-color: var(--primary-gold); background: rgba(241, 196, 15, 0.05); }
-
-        .submit-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000; border: none; width: 100%; padding: 15px;
-            border-radius: 18px; font-weight: bold; font-size: 16px;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
-        }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <i class="fas fa-arrow-left" onclick="history.back()"></i>
-    <h2>Deposit Balance</h2>
-</div>
-
-<div class="container">
-    <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/ff/EasyPaisa_Logo.png/640px-EasyPaisa_Logo.png" class="method-icon" alt="EasyPaisa">
-        <h4>EasyPaisa Payment</h4>
-        <p style="font-size: 11px; color: #aaa;">Please send the exact amount to the account below.</p>
+<div class="deposit-container" style="padding: 20px;">
+    <h3 style="color: var(--primary-gold); text-align: center;">Deposit Funds</h3>
+    
+    <div class="payment-card" style="background: var(--card-bg); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px; margin-bottom: 20px;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/JazzCash_logo.png" width="40" style="border-radius: 5px;">
+            <h4 style="margin: 0;">JazzCash Transfer</h4>
+        </div>
         
-        <div class="account-details">
-            <div style="font-size: 14px; margin-bottom: 5px;">Account Name: <b>Ahmad Nafees</b></div>
-            <div style="font-size: 18px; color: var(--primary-gold);">0300-1234567</div>
-            <button class="copy-btn" onclick="copyNum('03001234567')">Copy Number</button>
+        <p style="font-size: 13px; color: #aaa;">Please send your deposit amount to this account:</p>
+        
+        <div style="background: rgba(0,0,0,0.3); padding: 15px; border-radius: 12px; border: 1px dashed var(--primary-gold); text-align: center;">
+            <span style="font-size: 12px; color: var(--primary-gold); display: block;">Account Number:</span>
+            <b style="font-size: 20px; letter-spacing: 1px; color: #fff;">03037264598</b>
+            <hr style="border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0;">
+            <span style="font-size: 12px; color: var(--primary-gold); display: block;">Account Holder Name:</span>
+            <b style="font-size: 16px; color: #fff;">Ahmad Nafees Anjum</b>
         </div>
     </div>
 
-    <div class="input-group">
-        <label>Enter Deposited Amount (PKR)</label>
-        <input type="number" id="amount" placeholder="e.g. 600">
+    <div class="upload-box" style="background: var(--card-bg); border: 1px solid var(--glass-border); padding: 20px; border-radius: 20px;">
+        <h4 style="margin-top: 0; font-size: 14px;">Upload Payment Proof</h4>
+        <p style="font-size: 11px; color: #888;">Enter Transaction ID and attach screenshot</p>
+        
+        <input type="text" placeholder="Enter Transaction ID (TID)" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.2); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; margin-bottom: 15px; box-sizing: border-box;">
+        
+        <input type="file" id="proof" accept="image/*" style="font-size: 12px; margin-bottom: 20px;">
+        
+        <button class="action-btn" style="width: 100%; background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px; border-radius: 15px; font-weight: bold; cursor: pointer;">SUBMIT DEPOSIT REQUEST</button>
     </div>
-
-    <div class="input-group">
-        <label>Transaction ID (TID)</label>
-        <input type="text" id="tid" placeholder="11-digit Transaction ID">
-    </div>
-
-    <label style="display: block; font-size: 12px; color: #aaa; margin-bottom: 8px;">Upload Payment Screenshot</label>
-    <div class="upload-box" onclick="document.getElementById('file').click()">
-        <i class="fas fa-cloud-upload-alt" style="font-size: 30px; color: var(--primary-gold); margin-bottom: 10px;"></i>
-        <p style="font-size: 12px; margin: 0;">Click to upload proof</p>
-        <input type="file" id="file" hidden>
-    </div>
-
-    <button class="submit-btn" onclick="submitDeposit()">Submit Deposit</button>
 </div>
-
-<script>
-    function copyNum(num) {
-        navigator.clipboard.writeText(num);
-        alert("Number Copied: " + num);
-    }
-
-    function submitDeposit() {
-        const amt = document.getElementById('amount').value;
-        const tid = document.getElementById('tid').value;
-        if(amt && tid) {
-            alert(`Your request for Rs. ${amt} has been submitted. Please wait 1-12 hours for manual approval.`);
-            window.location.href = 'dashboard.html';
-        } else {
-            alert("Please fill all details correctly.");
-        }
-    }
-</script>
-
-</body>
-</html>
