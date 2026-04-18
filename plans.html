@@ -52,9 +52,10 @@
             color: #000;
             font-size: 10px;
             font-weight: bold;
-            padding: 5px 15px;
+            padding: 6px 15px;
             border-bottom-left-radius: 15px;
             text-transform: uppercase;
+            box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
         }
 
         .plan-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
@@ -94,7 +95,6 @@
             cursor: pointer; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.2);
         }
 
-        /* Calculator Style */
         .calc-box {
             background: rgba(241, 196, 15, 0.05);
             border: 1px solid rgba(241, 196, 15, 0.2);
@@ -127,86 +127,65 @@
     <p class="section-desc">Fixed Exchange Rate: 1$ = 300 PKR</p>
 
     <div class="plan-card">
-        <div class="plan-badge">Free Trail</div>
+        <div class="plan-badge" style="background: #7f8c8d; color: #fff;">Limited</div>
         <div class="plan-header">
             <div class="plan-icon-box"><i class="fas fa-gift"></i></div>
             <div class="plan-title">
                 <h3>Free Miner</h3>
-                <span>Investment: Rs. 0 <small>($0.00)</small></span>
+                <span>Investment: Rs. 0</span>
             </div>
         </div>
         <div class="details-grid">
-            <div class="detail-box">
-                <label>Daily Profit</label>
-                <div class="profit-text">Rs. 10 <span class="small-usd">($0.03)</span></div>
-            </div>
-            <div class="detail-box">
-                <label>Validity</label>
-                <div>30 Days</div>
-            </div>
+            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 10</div></div>
+            <div class="detail-box"><label>Validity</label><div>30 Days</div></div>
         </div>
         <button class="invest-btn" onclick="activateFree()">Activate Free Plan</button>
     </div>
 
     <div class="plan-card">
+        <div class="plan-badge" style="background: #e67e22; color: #fff;">🔥 Popular</div>
         <div class="plan-header">
             <div class="plan-icon-box"><i class="fas fa-star"></i></div>
             <div class="plan-title">
                 <h3>Bronze Miner</h3>
-                <span>Investment: Rs. 600 <small>($2.00)</small></span>
+                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 800</del> Rs. 600</span>
             </div>
         </div>
         <div class="details-grid">
-            <div class="detail-box">
-                <label>Daily Profit</label>
-                <div class="profit-text">Rs. 50 <span class="small-usd">($0.16)</span></div>
-            </div>
-            <div class="detail-box">
-                <label>Total Return</label>
-                <div>Rs. 1500 <span class="small-usd">($5.00)</span></div>
-            </div>
+            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 50 <span class="small-usd">($0.16)</span></div></div>
+            <div class="detail-box"><label>Total Return</label><div>Rs. 1500 <span class="small-usd">($5.00)</span></div></div>
         </div>
         <button class="invest-btn" onclick="goToDeposit('Bronze', 600)">Buy Bronze Plan</button>
     </div>
 
     <div class="plan-card">
+        <div class="plan-badge" style="background: #3498db; color: #fff;">⭐ Best Value</div>
         <div class="plan-header">
             <div class="plan-icon-box"><i class="fas fa-gem"></i></div>
             <div class="plan-title">
                 <h3>Silver Miner</h3>
-                <span>Investment: Rs. 1500 <small>($5.00)</small></span>
+                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 2000</del> Rs. 1500</span>
             </div>
         </div>
         <div class="details-grid">
-            <div class="detail-box">
-                <label>Daily Profit</label>
-                <div class="profit-text">Rs. 130 <span class="small-usd">($0.43)</span></div>
-            </div>
-            <div class="detail-box">
-                <label>Total Return</label>
-                <div>Rs. 3900 <span class="small-usd">($13.00)</span></div>
-            </div>
+            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 130 <span class="small-usd">($0.43)</span></div></div>
+            <div class="detail-box"><label>Total Return</label><div>Rs. 3900 <span class="small-usd">($13.00)</span></div></div>
         </div>
         <button class="invest-btn" onclick="goToDeposit('Silver', 1500)">Buy Silver Plan</button>
     </div>
 
-    <div class="plan-card">
+    <div class="plan-card" style="border: 1px solid var(--primary-gold);">
+        <div class="plan-badge" style="background: var(--primary-gold); color: #000; box-shadow: 0 0 15px rgba(241,196,15,0.4);">💰 Most Profitable</div>
         <div class="plan-header">
             <div class="plan-icon-box"><i class="fas fa-crown"></i></div>
             <div class="plan-title">
                 <h3>Gold Miner</h3>
-                <span>Investment: Rs. 3000 <small>($10.00)</small></span>
+                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 4000</del> Rs. 3000</span>
             </div>
         </div>
         <div class="details-grid">
-            <div class="detail-box">
-                <label>Daily Profit</label>
-                <div class="profit-text">Rs. 280 <span class="small-usd">($0.93)</span></div>
-            </div>
-            <div class="detail-box">
-                <label>Total Return</label>
-                <div>Rs. 8400 <span class="small-usd">($28.00)</span></div>
-            </div>
+            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 280 <span class="small-usd">($0.93)</span></div></div>
+            <div class="detail-box"><label>Total Return</label><div>Rs. 8400 <span class="small-usd">($28.00)</span></div></div>
         </div>
         <button class="invest-btn" onclick="goToDeposit('Gold', 3000)">Buy Gold Plan</button>
     </div>
@@ -215,14 +194,8 @@
         <h4 style="color: var(--primary-gold); margin-top: 0;"><i class="fas fa-calculator"></i> Profit Calculator</h4>
         <input type="number" id="calcInp" class="calc-input" placeholder="Enter Dollars ($)" oninput="runCalc()">
         <div class="details-grid" style="margin-top: 10px;">
-            <div class="detail-box">
-                <label>Daily (PKR)</label>
-                <div id="resDaily" style="color: #00ff64;">0 PKR</div>
-            </div>
-            <div class="detail-box">
-                <label>Monthly (PKR)</label>
-                <div id="resMonthly" style="color: #00ff64;">0 PKR</div>
-            </div>
+            <div id="resDaily" class="detail-box" style="color: #00ff64;">0 PKR</div>
+            <div id="resMonthly" class="detail-box" style="color: #00ff64;">0 PKR</div>
         </div>
     </div>
 </div>
@@ -241,7 +214,7 @@
     }
 
     function activateFree() {
-        alert("Free Miner Activated! Start earning 10 PKR daily.");
+        alert("Free Miner Activated!");
         window.location.href = 'dashboard.html';
     }
 
@@ -249,13 +222,9 @@
         const usd = document.getElementById('calcInp').value;
         const rate = 300;
         if(usd > 0) {
-            const dailyUsd = usd * 0.10; // 10% Profit
-            const monthlyUsd = dailyUsd * 30;
-            document.getElementById('resDaily').innerText = Math.floor(dailyUsd * rate) + " PKR";
-            document.getElementById('resMonthly').innerText = Math.floor(monthlyUsd * rate) + " PKR";
-        } else {
-            document.getElementById('resDaily').innerText = "0 PKR";
-            document.getElementById('resMonthly').innerText = "0 PKR";
+            const dailyP = usd * 0.10 * rate;
+            document.getElementById('resDaily').innerText = Math.floor(dailyP) + " PKR Daily";
+            document.getElementById('resMonthly').innerText = Math.floor(dailyP * 30) + " PKR Monthly";
         }
     }
 </script>
