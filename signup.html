@@ -184,3 +184,13 @@
 
 </body>
 </html>
+<script>
+    window.onload = function() {
+        const params = new URLSearchParams(window.location.search);
+        const refCode = params.get('ref');
+        if (refCode) {
+            document.getElementById('ref').value = refCode;
+            document.getElementById('ref').readOnly = true;
+        }
+    }
+</script>
