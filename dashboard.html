@@ -6,7 +6,7 @@
     <title>Gold Plus - VIP Cloud Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); }
+        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 80px; }
         
         .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
@@ -35,6 +35,9 @@
         .ws-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 999; text-decoration: none; animation: pulse 2s infinite; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
 
+        /* Payout Toast Style */
+        #payout-toast { position: fixed; bottom: 85px; left: 15px; background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); border-left: 5px solid var(--primary-gold); padding: 12px 18px; border-radius: 15px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); min-width: 220px; transition: all 0.5s ease; }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-btn.active { color: #f1c40f; }
@@ -49,6 +52,12 @@
         <div>Total Assets <b id="mainBalance">$0.00</b></div>
         <div>Active Plan <b id="activePlan">Free</b></div>
     </div>
+</div>
+
+<div style="padding: 10px 20px 0;">
+    <p style="font-size: 10px; color: #ff4444; margin: 0; animation: pulse 1.5s infinite; text-align: center;">
+        <i class="fas fa-arrow-up"></i> Upgrade to VIP-1 to 10x your mining speed!
+    </p>
 </div>
 
 <div class="machines-grid">
@@ -101,6 +110,18 @@
     </div>
 </div>
 
+<div id="payout-toast">
+    <div style="display: flex; align-items: center; gap: 12px;">
+        <div style="background: rgba(241, 196, 15, 0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+            <i class="fas fa-check-circle" style="color: var(--primary-gold); font-size: 20px;"></i>
+        </div>
+        <div>
+            <small style="color: #aaa; display: block; font-size: 9px; text-transform: uppercase;">Recent Payout</small>
+            <span id="payout-msg" style="font-size: 11px; color: #fff; font-weight: 500;"></span>
+        </div>
+    </div>
+</div>
+
 <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="ws-float" target="_blank">
     <i class="fab fa-whatsapp"></i>
 </a>
@@ -134,6 +155,7 @@
         const phone = localStorage.getItem('userPhone');
         if (!phone) window.location.href = 'index.html';
         else syncData(phone);
+        startGreedyPopup(); // لالچ والا فنکشن یہاں سے شروع ہوگا
     };
 
     function syncData(phone) {
@@ -165,6 +187,7 @@
 
             planList.forEach(pName => {
                 const card = document.getElementById('machine_' + pName);
+                if(!card) return;
                 const timerText = card.querySelector('.t-sync');
                 const ball = card.querySelector('.coin-ball');
 
@@ -192,7 +215,6 @@
                 }
             });
         };
-
         setInterval(updateUI, 1000);
         updateUI();
     }
@@ -201,13 +223,34 @@
         const phone = localStorage.getItem('userPhone');
         const plan = userData.plan || "Free";
         const earn = plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
-        
         await update(ref(db, 'users/' + phone), {
             balance: (userData.balance || 0) + earn,
             lastClaim: new Date().getTime()
         });
         alert("Profit Claimed: $" + earn);
     };
+
+    // --- GREEDY POPUP LOGIC ---
+    function startGreedyPopup() {
+        const allNames = ["Ahmad", "Zeeshan", "Irfan", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Nabeel", "Arsalan", "Tayyab", "Faisal", "Umair", "Waqas", "Zohaib", "Shahid", "Adeel", "Muneeb", "Haris", "Salman", "Asif", "Farhan", "Rizwan", "Tanveer", "Shoaib", "Junaid", "Saqib", "Umar", "Ali", "Haider", "Zain", "Babar", "Imran", "Kashif", "Nasir", "Yasir", "Atif", "Fahad", "Shabbir", "Nouman", "Hassan", "Tahir", "Qasim", "Rehan", "Sarmad", "Waseem", "Majid", "Shakeel", "Arshad", "Saad", "Talha", "Daniyal", "Faraz", "Mudassir", "Afzal", "Ijaz", "Saif", "Asad", "Wajid"];
+        const cities = ["Faisalabad", "Lahore", "Karachi", "Multan", "Sialkot", "Peshawar", "Gujranwala"];
+        const amounts = [600, 1200, 3000, 1500, 5000, 850, 4200, 900, 2500, 7000];
+
+        function showNext() {
+            const name = allNames[Math.floor(Math.random() * allNames.length)];
+            const city = cities[Math.floor(Math.random() * cities.length)];
+            const amount = amounts[Math.floor(Math.random() * amounts.length)];
+            
+            document.getElementById('payout-msg').innerHTML = `<b style="color:#f1c40f">${name}</b> from ${city} <br>Withdrawal <b style="color:#00ff64">Rs. ${amount.toLocaleString()}</b>`;
+            const toast = document.getElementById('payout-toast');
+            toast.style.display = 'block';
+            setTimeout(() => { toast.style.display = 'none'; }, 5000);
+            
+            const nextTime = Math.floor(Math.random() * (25000 - 15000) + 15000);
+            setTimeout(showNext, nextTime);
+        }
+        setTimeout(showNext, 10000);
+    }
 </script>
 
 </body>
