@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Withdraw</title>
+    <title>Withdraw - Gold Plus</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -18,64 +18,45 @@
             font-family: 'Segoe UI', sans-serif;
             background: radial-gradient(circle at top, #1a0b2e, #0f051d);
             color: white;
-            padding-bottom: 50px;
+            padding-bottom: 30px;
         }
 
         .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
         .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
-        .header h2 { margin: 0; font-size: 18px; }
 
         .container { padding: 20px; }
 
-        /* Balance Info Card */
-        .balance-summary {
-            background: var(--card-bg);
+        /* Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, #25163d, #1a0b2e);
             border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
+            border-radius: 25px;
+            padding: 25px;
             text-align: center;
             margin-bottom: 25px;
-            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .balance-summary span { font-size: 12px; color: #aaa; text-transform: uppercase; }
-        .balance-summary h3 { font-size: 32px; margin: 10px 0; color: var(--primary-gold); }
+        .wallet-card span { font-size: 12px; color: #aaa; text-transform: uppercase; }
+        .wallet-card h2 { font-size: 32px; margin: 10px 0; color: var(--primary-gold); }
 
         /* Form Styling */
-        .withdraw-form {
-            background: var(--card-bg);
-            border-radius: 20px;
-            padding: 20px;
-            border: 1px solid var(--glass-border);
-        }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 8px; }
-        .input-group select, .input-group input {
-            width: 100%; padding: 14px; border-radius: 12px;
-            border: 1px solid var(--glass-border); background: rgba(0,0,0,0.4);
+        .input-group { margin-bottom: 18px; }
+        .input-group label { display: block; font-size: 13px; color: #aaa; margin-bottom: 8px; }
+        .input-group input, .input-group select {
+            width: 100%; padding: 15px; border-radius: 15px;
+            border: 1px solid var(--glass-border); background: rgba(0,0,0,0.3);
             color: white; box-sizing: border-box; outline: none;
         }
-        .input-group select option { background: #1a0b2e; }
 
-        /* Rules Box */
-        .rules-box {
-            background: rgba(241, 196, 15, 0.05);
-            border-radius: 15px;
-            padding: 15px;
-            margin-top: 25px;
-            border: 1px dashed rgba(241, 196, 15, 0.3);
-        }
-        .rules-box h4 { margin: 0 0 10px 0; font-size: 13px; color: var(--primary-gold); }
-        .rules-box ul { padding: 0; margin: 0; list-style: none; }
-        .rules-box li { font-size: 11px; color: #ccc; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
-        .rules-box li i { font-size: 8px; }
-
-        .submit-btn {
+        .withdraw-btn {
             background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000; border: none; width: 100%; padding: 15px;
+            color: #000; border: none; width: 100%; padding: 16px;
             border-radius: 18px; font-weight: bold; font-size: 16px;
             box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
             cursor: pointer; margin-top: 10px;
         }
+        
+        .note { font-size: 11px; color: #666; text-align: center; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -86,67 +67,107 @@
 </div>
 
 <div class="container">
-    <div class="balance-summary">
-        <span>Current Assets</span>
-        <h3>$0.00</h3>
-        <p style="font-size: 11px; color: #00ff64; margin: 0;">Withdrawal processing: 1-12 Hours</p>
+    <div class="wallet-card">
+        <span>Available Balance</span>
+        <h2 id="currentBalance">$0.00</h2>
     </div>
 
-    <div class="withdraw-form">
-        <div class="input-group">
-            <label>Select Method</label>
-            <select id="method">
-                <option value="easypaisa">EasyPaisa</option>
-                <option value="jazzcash">JazzCash</option>
-            </select>
-        </div>
-
-        <div class="input-group">
-            <label>Account Number</label>
-            <input type="number" id="acc_num" placeholder="03XXXXXXXXX">
-        </div>
-
-        <div class="input-group">
-            <label>Account Holder Name</label>
-            <input type="text" id="acc_name" placeholder="Full Name">
-        </div>
-
-        <div class="input-group">
-            <label>Amount to Withdraw ($)</label>
-            <input type="number" id="amount" placeholder="Minimum $1.00">
-        </div>
-
-        <button class="submit-btn" onclick="processWithdraw()">Confirm Withdraw</button>
+    <div class="input-group">
+        <label>Select Method</label>
+        <select id="method">
+            <option value="EasyPaisa">EasyPaisa</option>
+            <option value="JazzCash">JazzCash</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+        </select>
     </div>
 
-    <div class="rules-box">
-        <h4><i class="fas fa-info-circle"></i> Withdrawal Rules</h4>
-        <ul>
-            <li><i class="fas fa-circle"></i> Minimum withdrawal amount is $1.00.</li>
-            <li><i class="fas fa-circle"></i> 5% service tax will be applied on each transaction.</li>
-            <li><i class="fas fa-circle"></i> Payments are processed between 10 AM to 10 PM.</li>
-            <li><i class="fas fa-circle"></i> One withdrawal per day is allowed.</li>
-        </ul>
+    <div class="input-group">
+        <label>Account Number</label>
+        <input type="number" id="accountNum" placeholder="e.g. 03001234567">
     </div>
+
+    <div class="input-group">
+        <label>Account Holder Name</label>
+        <input type="text" id="accountName" placeholder="Full Name">
+    </div>
+
+    <div class="input-group">
+        <label>Withdraw Amount ($)</label>
+        <input type="number" id="withdrawAmount" placeholder="Minimum $5">
+    </div>
+
+    <button class="withdraw-btn" id="requestBtn">Confirm Withdrawal</button>
+    <p class="note">Withdrawal requests take 2-24 hours to process.</p>
 </div>
 
-<script>
-    function processWithdraw() {
-        const num = document.getElementById('acc_num').value;
-        const name = document.getElementById('acc_name').value;
-        const amt = document.getElementById('amount').value;
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getAuth } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        if(num && name && amt) {
-            if(amt < 1) {
-                alert("Minimum withdrawal is $1.00");
-                return;
-            }
-            alert(`Withdrawal request for $${amt} submitted! It will be credited to ${name}'s account after verification.`);
-            window.location.href = 'dashboard.html';
-        } else {
-            alert("Please fill all details correctly.");
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    let currentBalance = 0;
+
+    // یوزر کا کرنٹ بیلنس چیک کرنا
+    auth.onAuthStateChanged((user) => {
+        if (user) {
+            const balanceRef = ref(db, 'users/' + user.uid + '/balance');
+            onValue(balanceRef, (snapshot) => {
+                currentBalance = snapshot.val() || 0;
+                document.getElementById('currentBalance').innerText = "$" + currentBalance;
+            });
         }
-    }
+    });
+
+    document.getElementById('requestBtn').onclick = async () => {
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const method = document.getElementById('method').value;
+        const accNum = document.getElementById('accountNum').value;
+        const accName = document.getElementById('accountName').value;
+        const user = auth.currentUser;
+
+        if (!amount || amount < 5) {
+            alert("Minimum withdrawal is $5");
+            return;
+        }
+
+        if (amount > currentBalance) {
+            alert("Insufficient Balance!");
+            return;
+        }
+
+        if (accNum && accName) {
+            // ودڈرا کی ریکویسٹ فائر بیس میں سیو کرنا
+            const withdrawRef = ref(db, 'withdrawals/' + user.uid);
+            const newRequestRef = push(withdrawRef);
+            
+            await set(newRequestRef, {
+                amount: amount,
+                method: method,
+                accountNumber: accNum,
+                accountName: accName,
+                status: "Pending",
+                date: new Date().toLocaleString()
+            });
+
+            alert("Withdraw Request Submitted!");
+            window.location.href = 'profile.html';
+        } else {
+            alert("Please fill all details.");
+        }
+    };
 </script>
 
 </body>
