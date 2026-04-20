@@ -31,15 +31,16 @@
         .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; }
         .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; }
 
+        /* Floating & Toast UI */
         .ws-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 999; text-decoration: none; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
-
-        #payout-toast { position: fixed; bottom: 85px; left: 15px; background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); border-left: 5px solid var(--primary-gold); padding: 12px 18px; border-radius: 15px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.5); backdrop-filter: blur(10px); min-width: 220px; transition: all 0.5s ease; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
+        #payout-toast { position: fixed; bottom: 85px; left: 15px; background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); border-left: 5px solid var(--primary-gold); padding: 12px 18px; border-radius: 15px; display: none; z-index: 10001; backdrop-filter: blur(10px); min-width: 220px; transition: all 0.5s ease; }
+        
+        /* Fixed Nav Bar with EARN Button */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 10000; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 22px; display: block; margin-bottom: 5px; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -55,12 +56,6 @@
 <marquee style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; font-size: 10px; padding: 6px 0; border-bottom: 1px solid rgba(241, 196, 15, 0.1);">
     🚀 Notice: Invite 5 friends and get a $1.00 bonus instantly! | 💳 Minimum withdrawal is only Rs. 500. | 🛡️ Secure Cloud Mining in progress...
 </marquee>
-
-<div style="padding: 10px 20px 0;">
-    <p style="font-size: 10px; color: #ff4444; margin: 0; animation: pulse 1.5s infinite; text-align: center;">
-        <i class="fas fa-arrow-up"></i> Upgrade to VIP-1 to 10x your mining speed!
-    </p>
-</div>
 
 <div class="machines-grid">
     <div class="machine-card" id="machine_Free">
@@ -112,24 +107,12 @@
     </div>
 </div>
 
-<div style="padding: 25px 20px; text-align: center; opacity: 0.5;">
-    <p style="font-size: 10px; color: #aaa; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 2px;">Official Partners</p>
-    <div style="display: flex; justify-content: space-around; align-items: center; filter: grayscale(100%);">
-        <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" style="width: 20px;">
-        <img src="https://cryptologos.cc/logos/tether-usdt-logo.png" style="width: 20px;">
-        <img src="https://cryptologos.cc/logos/tron-trx-logo.png" style="width: 20px;">
-        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" style="width: 20px;">
-    </div>
-</div>
-
 <div id="payout-toast">
     <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="background: rgba(241, 196, 15, 0.2); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-            <i class="fas fa-check-circle" style="color: var(--primary-gold); font-size: 20px;"></i>
-        </div>
+        <i class="fas fa-check-circle" style="color: var(--primary-gold); font-size: 20px;"></i>
         <div>
             <small style="color: #aaa; display: block; font-size: 9px; text-transform: uppercase;">Recent Payout</small>
-            <span id="payout-msg" style="font-size: 11px; color: #fff; font-weight: 500;"></span>
+            <span id="payout-msg" style="font-size: 11px; color: #fff;"></span>
         </div>
     </div>
 </div>
@@ -139,8 +122,9 @@
 </a>
 
 <nav class="nav-bar">
-    <a href="#" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
+    <a href="dashboard.html" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
     <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
@@ -195,7 +179,8 @@
 
         const updateUI = () => {
             const now = new Date().getTime();
-            const timeLeft = (lastClaim + (24 * 60 * 60 * 1000)) - now;
+            const lastTime = lastClaim || 0;
+            const timeLeft = (lastTime + (24 * 60 * 60 * 1000)) - now;
 
             planList.forEach(pName => {
                 const card = document.getElementById('machine_' + pName);
@@ -217,12 +202,11 @@
                         timerText.innerText = `${h}h ${m}m ${s}s`;
                         ball.style.animation = "spin 4s linear infinite";
                         btn.disabled = true;
-                        btn.innerText = `MINING: ${h}h ${m}m ${s}s`;
+                        btn.innerText = `MINING...`;
                     }
                 } else {
                     timerText.innerText = "Locked";
                     timerText.style.color = "#555";
-                    ball.style.animation = "none";
                     ball.style.opacity = "0.3";
                 }
             });
@@ -243,9 +227,9 @@
     };
 
     function startGreedyPopup() {
-        const allNames = ["Ahmad", "Zeeshan", "Irfan", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Nabeel", "Arsalan", "Tayyab", "Faisal", "Umair", "Waqas", "Zohaib", "Shahid", "Adeel", "Muneeb", "Haris", "Salman", "Asif", "Farhan", "Rizwan", "Tanveer", "Shoaib", "Junaid", "Saqib", "Umar", "Ali", "Haider", "Zain", "Babar", "Imran", "Kashif", "Nasir", "Yasir", "Atif", "Fahad", "Shabbir", "Nouman", "Hassan", "Tahir", "Qasim", "Rehan", "Sarmad", "Waseem", "Majid", "Shakeel", "Arshad", "Saad", "Talha", "Daniyal", "Faraz", "Mudassir", "Afzal", "Ijaz", "Saif", "Asad", "Wajid"];
-        const cities = ["Faisalabad", "Lahore", "Karachi", "Multan", "Sialkot", "Peshawar", "Gujranwala"];
-        const amounts = [600, 1200, 3000, 1500, 5000, 850, 4200, 900, 2500, 7000];
+        const allNames = ["Ahmad", "Zeeshan", "Irfan", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Nabeel"];
+        const cities = ["Faisalabad", "Lahore", "Karachi", "Multan", "Sialkot"];
+        const amounts = [600, 1200, 3000, 1500, 5000];
 
         function showNext() {
             const name = allNames[Math.floor(Math.random() * allNames.length)];
@@ -253,15 +237,13 @@
             const amount = amounts[Math.floor(Math.random() * amounts.length)];
             const msgElement = document.getElementById('payout-msg');
             if(msgElement) {
-                msgElement.innerHTML = `<b style="color:#f1c40f">${name}</b> from ${city} <br>Withdrawal <b style="color:#00ff64">Rs. ${amount.toLocaleString()}</b>`;
-                const toast = document.getElementById('payout-toast');
-                toast.style.display = 'block';
-                setTimeout(() => { toast.style.display = 'none'; }, 5000);
+                msgElement.innerHTML = `<b>${name}</b> from ${city} <br>Withdrawal <b style="color:#00ff64">Rs. ${amount}</b>`;
+                document.getElementById('payout-toast').style.display = 'block';
+                setTimeout(() => { document.getElementById('payout-toast').style.display = 'none'; }, 5000);
             }
-            const nextTime = Math.floor(Math.random() * (25000 - 15000) + 15000);
-            setTimeout(showNext, nextTime);
+            setTimeout(showNext, Math.floor(Math.random() * 10000) + 15000);
         }
-        setTimeout(showNext, 10000);
+        setTimeout(showNext, 5000);
     }
 </script>
 
