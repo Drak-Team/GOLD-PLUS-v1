@@ -12,16 +12,52 @@
         .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); }
         .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
 
-        /* Wheel Design */
+        /* Wheel Container */
         .spin-container { margin-top: 50px; position: relative; display: inline-block; }
-        .wheel { width: 300px; height: 300px; border: 8px solid #333; border-radius: 50%; transition: transform 4s cubic-bezier(0.1, 0, 0.2, 1); box-shadow: 0 0 30px rgba(241, 196, 15, 0.2); }
-        .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 45px; z-index: 10; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5)); }
+        
+        /* New CSS Based Wheel (No Image Needed) */
+        .wheel { 
+            width: 300px; 
+            height: 300px; 
+            border: 10px solid #333; 
+            border-radius: 50%; 
+            transition: transform 4s cubic-bezier(0.1, 0, 0.2, 1); 
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.3);
+            background: conic-gradient(
+                #f1c40f 0deg 45deg, 
+                #e67e22 45deg 90deg, 
+                #f1c40f 90deg 135deg, 
+                #e67e22 135deg 180deg,
+                #f1c40f 180deg 225deg,
+                #e67e22 225deg 270deg,
+                #f1c40f 270deg 315deg,
+                #e67e22 315deg 360deg
+            );
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-        .spin-btn { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px 40px; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 30px; cursor: pointer; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.4); }
-        .spin-btn:disabled { background: #444; color: #888; cursor: not-allowed; box-shadow: none; }
+        /* Pointer Design */
+        .pointer { 
+            position: absolute; 
+            top: -15px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            width: 0; 
+            height: 0; 
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #ff4757; /* Red Pointer */
+            z-index: 100;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+        }
+
+        .spin-btn { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px 50px; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 40px; cursor: pointer; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.4); text-transform: uppercase; }
+        .spin-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
 
         .info-box { background: rgba(255,255,255,0.05); margin: 30px 20px; padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
-        #availableSpins { color: #f1c40f; font-size: 20px; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -32,8 +68,10 @@
 </div>
 
 <div class="spin-container">
-    <img src="https://i.ibb.co/XW7Kz6p/pointer.png" class="pointer">
-    <img src="https://i.ibb.co/HT6V6vB/wheel-gold.png" id="wheel" class="wheel">
+    <div class="pointer"></div>
+    <div id="wheel" class="wheel">
+        <div style="width: 40px; height: 40px; background: #333; border: 4px solid gold; border-radius: 50%; z-index: 10;"></div>
+    </div>
 </div>
 
 <div>
@@ -41,8 +79,8 @@
 </div>
 
 <div class="info-box">
-    <span>Available Spins: <span id="availableSpins">0</span></span>
-    <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Invite 1 active friend to get 1 free spin!</p>
+    <span>Available Spins: <b id="availableSpins" style="color: gold;">0</b></span>
+    <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Refer friends to earn more free spins!</p>
 </div>
 
 <script type="module">
@@ -63,7 +101,8 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    const prizes = [0.10, 100, 0.50, 10, 0.20, 50, 0.15, 5]; // Wheel values
+    // Prize list matching the wheel segments
+    const prizes = [0.10, 0.50, 2.00, 0.20, 5.00, 0.15, 1.00, 0.05];
     let isSpinning = false;
 
     window.onload = async function() {
@@ -78,42 +117,37 @@
         if(isSpinning) return;
         const userRef = ref(db, 'users/' + userPhone);
         const snap = await get(userRef);
-        let currentSpins = snap.val().spins || 0;
+        let currentSpins = (snap.exists()) ? (snap.val().spins || 0) : 0;
 
         if(currentSpins < 1) {
-            alert("Oops! No spins left. Refer friends to earn more.");
+            alert("No spins left! Invite friends to get more.");
             return;
         }
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
 
-        const wheel = document.getElementById('wheel');
-        const randomDeg = Math.floor(Math.random() * 360) + 3600; 
-        wheel.style.transform = `rotate(${randomDeg}deg)`;
-
-        // Spin count -1 in database
+        // Subtract spin first
         await runTransaction(userRef, (user) => {
             if(user) user.spins = (user.spins || 0) - 1;
             return user;
         });
 
+        const wheel = document.getElementById('wheel');
+        const randomDeg = Math.floor(Math.random() * 360) + 7200; // 20 full rotations + random
+        wheel.style.transform = `rotate(${randomDeg}deg)`;
+
         setTimeout(async () => {
             const actualDeg = randomDeg % 360;
-            const prizeIndex = Math.floor(actualDeg / (360 / prizes.length));
+            const prizeIndex = Math.floor((360 - actualDeg) / 45) % 8;
             const winAmount = prizes[prizeIndex];
 
             // Add money to balance
             await runTransaction(ref(db, `users/${userPhone}/balance`), (b) => (b || 0) + winAmount);
             
-            if(winAmount >= 10) {
-                alert("🎊 CONGRATULATIONS! 🎊\nYou won a Mega Prize: $" + winAmount);
-            } else {
-                alert("You won: $" + winAmount);
-            }
-
+            alert("🎉 You Won: $" + winAmount.toFixed(2));
             location.reload();
-        }, 4100);
+        }, 4000);
     };
 </script>
 
