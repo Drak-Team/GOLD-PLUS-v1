@@ -8,80 +8,65 @@
     <style>
         :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; text-align: center; overflow-x: hidden; }
-        
         .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); }
         .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
 
-        /* Wheel Container */
         .spin-container { margin-top: 50px; position: relative; display: inline-block; }
         
-        /* New CSS Based Wheel (No Image Needed) */
+        /* Wheel with Text Labels */
         .wheel { 
-            width: 300px; 
-            height: 300px; 
-            border: 10px solid #333; 
-            border-radius: 50%; 
-            transition: transform 4s cubic-bezier(0.1, 0, 0.2, 1); 
-            box-shadow: 0 0 30px rgba(241, 196, 15, 0.3);
+            width: 320px; height: 320px; border: 10px solid #333; border-radius: 50%; 
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); 
+            box-shadow: 0 0 40px rgba(241, 196, 15, 0.3);
             background: conic-gradient(
-                #f1c40f 0deg 45deg, 
-                #e67e22 45deg 90deg, 
-                #f1c40f 90deg 135deg, 
-                #e67e22 135deg 180deg,
-                #f1c40f 180deg 225deg,
-                #e67e22 225deg 270deg,
-                #f1c40f 270deg 315deg,
-                #e67e22 315deg 360deg
+                #f1c40f 0deg 45deg, #e67e22 45deg 90deg, 
+                #f1c40f 90deg 135deg, #e67e22 135deg 180deg,
+                #f1c40f 180deg 225deg, #e67e22 225deg 270deg,
+                #f1c40f 270deg 315deg, #e67e22 315deg 360deg
             );
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; overflow: hidden;
         }
 
-        /* Pointer Design */
+        /* Prizes Text on Wheel */
+        .segment-label {
+            position: absolute; width: 100%; height: 100%;
+            text-align: center; font-weight: bold; font-size: 14px; color: #000;
+            padding-top: 20px; transform-origin: 50% 50%;
+        }
+
         .pointer { 
-            position: absolute; 
-            top: -15px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            width: 0; 
-            height: 0; 
-            border-left: 20px solid transparent;
-            border-right: 20px solid transparent;
-            border-top: 40px solid #ff4757; /* Red Pointer */
-            z-index: 100;
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); 
+            width: 0; height: 0; border-left: 20px solid transparent;
+            border-right: 20px solid transparent; border-top: 40px solid #ff4757; 
+            z-index: 100; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
         }
 
-        .spin-btn { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px 50px; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 40px; cursor: pointer; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.4); text-transform: uppercase; }
-        .spin-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
-
+        .spin-btn { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px 60px; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 40px; cursor: pointer; box-shadow: 0 5px 25px rgba(241, 196, 15, 0.5); }
+        .spin-btn:disabled { background: #444; color: #888; }
         .info-box { background: rgba(255,255,255,0.05); margin: 30px 20px; padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <i class="fas fa-arrow-left" onclick="location.href='refer.html'"></i>
-    <h2>Lucky Spin Wheel</h2>
-</div>
+<div class="header"><i class="fas fa-arrow-left" onclick="location.href='refer.html'"></i><h2>Lucky Spin Wheel</h2></div>
 
 <div class="spin-container">
     <div class="pointer"></div>
     <div id="wheel" class="wheel">
-        <div style="width: 40px; height: 40px; background: #333; border: 4px solid gold; border-radius: 50%; z-index: 10;"></div>
+        <div class="segment-label" style="transform: rotate(22.5deg)">$0.10</div>
+        <div class="segment-label" style="transform: rotate(67.5deg)">$100</div>
+        <div class="segment-label" style="transform: rotate(112.5deg)">$0.50</div>
+        <div class="segment-label" style="transform: rotate(157.5deg)">$10</div>
+        <div class="segment-label" style="transform: rotate(202.5deg)">$0.20</div>
+        <div class="segment-label" style="transform: rotate(247.5deg)">$50</div>
+        <div class="segment-label" style="transform: rotate(292.5deg)">$0.15</div>
+        <div class="segment-label" style="transform: rotate(337.5deg)">$1</div>
+        <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width: 40px; height: 40px; background: #333; border: 4px solid gold; border-radius: 50%; z-index: 10;"></div>
     </div>
 </div>
 
-<div>
-    <button class="spin-btn" id="spinBtn" onclick="startSpin()">SPIN NOW</button>
-</div>
-
-<div class="info-box">
-    <span>Available Spins: <b id="availableSpins" style="color: gold;">0</b></span>
-    <p style="font-size: 12px; color: #aaa; margin-top: 10px;">Refer friends to earn more free spins!</p>
-</div>
+<div><button class="spin-btn" id="spinBtn" onclick="startSpin()">SPIN NOW</button></div>
+<div class="info-box">Available Spins: <b id="availableSpins" style="color: gold;">0</b></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -101,55 +86,45 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    // Prize list matching the wheel segments
-    const prizes = [0.10, 0.50, 2.00, 0.20, 5.00, 0.15, 1.00, 0.05];
+    // Prizes matching the visual segments
+    const prizes = [0.10, 100, 0.50, 10, 0.20, 50, 0.15, 1];
     let isSpinning = false;
 
     window.onload = async function() {
-        if(!userPhone) return;
         const snap = await get(ref(db, 'users/' + userPhone));
-        if(snap.exists()){
-            document.getElementById('availableSpins').innerText = snap.val().spins || 0;
-        }
+        if(snap.exists()) document.getElementById('availableSpins').innerText = snap.val().spins || 0;
     };
 
     window.startSpin = async function() {
         if(isSpinning) return;
         const userRef = ref(db, 'users/' + userPhone);
         const snap = await get(userRef);
-        let currentSpins = (snap.exists()) ? (snap.val().spins || 0) : 0;
+        let currentSpins = snap.val()?.spins || 0;
 
-        if(currentSpins < 1) {
-            alert("No spins left! Invite friends to get more.");
-            return;
-        }
+        if(currentSpins < 1) return alert("No spins left! Refer friends.");
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
 
-        // Subtract spin first
-        await runTransaction(userRef, (user) => {
-            if(user) user.spins = (user.spins || 0) - 1;
-            return user;
-        });
+        await runTransaction(userRef, (u) => { if(u) u.spins -= 1; return u; });
 
         const wheel = document.getElementById('wheel');
-        const randomDeg = Math.floor(Math.random() * 360) + 7200; // 20 full rotations + random
-        wheel.style.transform = `rotate(${randomDeg}deg)`;
+        
+        // --- NEAR MISS LOGIC ---
+        // $100 is at segment 1 (45-90 deg). 
+        // We stop at 44 degrees or 91 degrees so it looks VERY close.
+        const extraRounds = 3600; // 10 rounds
+        const nearMissTarget = 44 + extraRounds; 
+        
+        wheel.style.transform = `rotate(${nearMissTarget}deg)`;
 
         setTimeout(async () => {
-            const actualDeg = randomDeg % 360;
-            const prizeIndex = Math.floor((360 - actualDeg) / 45) % 8;
-            const winAmount = prizes[prizeIndex];
-
-            // Add money to balance
+            const winAmount = 0.10; // User always gets small prize on near miss
             await runTransaction(ref(db, `users/${userPhone}/balance`), (b) => (b || 0) + winAmount);
-            
-            alert("🎉 You Won: $" + winAmount.toFixed(2));
+            alert("So Close! You almost won $100. \nWon: $0.10 \nInvite more friends for another try!");
             location.reload();
-        }, 4000);
+        }, 5200);
     };
 </script>
-
 </body>
 </html>
