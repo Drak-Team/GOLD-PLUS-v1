@@ -130,14 +130,16 @@
 </nav>
 
 <script>
-    // پیج لوڈ ہوتے ہی یوزر کا ریفرل لنک بنانا
+    // پیج لوڈ ہوتے ہی یوزر کا صحیح ریفرل لنک بنانا (GitHub کے لیے فکس کیا گیا)
     window.onload = function() {
         const userPhone = localStorage.getItem('userPhone');
         if (userPhone) {
-            // یہ خود بخود آپ کی ویب سائٹ کا ایڈریس اور ریفرل کوڈ جوڑ دے گا
-            const siteUrl = window.location.origin;
-            const referLink = siteUrl + "/signup.html?ref=" + userPhone;
-            document.getElementById('refLink').innerText = referLink;
+            // گٹ ہب فولڈر کے ساتھ صحیح یو آر ایل بنانا
+            let currentPath = window.location.pathname;
+            let basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+            const fullUrl = window.location.origin + basePath + "/signup.html?ref=" + userPhone;
+            
+            document.getElementById('refLink').innerText = fullUrl;
         } else {
             document.getElementById('refLink').innerText = "Please login to see link";
         }
@@ -147,11 +149,15 @@
         const link = document.getElementById('refLink').innerText;
         if(link.includes("Loading") || link.includes("Please login")) return;
 
-        navigator.clipboard.writeText(link).then(() => {
-            alert("Referral Link Copied!");
-        }).catch(err => {
-            console.error('Copy failed: ', err);
-        });
+        // پروفیشنل کاپی میتھڈ جو ہر فون پر کام کرے گا
+        const tempInput = document.createElement("input");
+        tempInput.value = link;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand("copy");
+        document.body.removeChild(tempInput);
+        
+        alert("Referral Link Copied!");
     }
 </script>
 
