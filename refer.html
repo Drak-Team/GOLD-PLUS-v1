@@ -6,84 +6,29 @@
     <title>Gold Plus - Refer & Earn</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-gold: #f1c40f;
-            --bg-dark: #0f051d;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
-            color: white;
-            padding-bottom: 100px;
-        }
-
+        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --card-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 100px; }
         .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
         .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
         .header h2 { margin: 0; font-size: 18px; }
-
         .container { padding: 20px; text-align: center; }
-
-        .invite-banner {
-            background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.1));
-            border-radius: 30px;
-            padding: 30px 20px;
-            border: 1px solid var(--glass-border);
-            margin-bottom: 25px;
-        }
+        .invite-banner { background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.1)); border-radius: 30px; padding: 30px 20px; border: 1px solid var(--glass-border); margin-bottom: 25px; }
         .invite-banner i { font-size: 50px; color: var(--primary-gold); margin-bottom: 15px; filter: drop-shadow(0 0 10px gold); }
-        .invite-banner h3 { margin: 0; font-size: 22px; }
-        .invite-banner p { font-size: 13px; color: #ccc; margin: 10px 0 0; }
+        .referral-box { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 25px; }
+        .link-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: var(--primary-gold); font-size: 13px; word-break: break-all; margin-bottom: 15px; }
+        .share-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 18px; font-weight: bold; cursor: pointer; }
+        
+        /* Task Styling */
+        .task-title { text-align: left; font-size: 16px; color: var(--primary-gold); margin: 20px 0 10px; padding-left: 5px; font-weight: bold; }
+        .task-list { display: flex; flex-direction: column; gap: 12px; }
+        .task-item { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; align-items: center; }
+        .task-info { text-align: left; }
+        .task-info span { display: block; font-size: 14px; font-weight: bold; }
+        .task-info small { color: #aaa; font-size: 11px; }
+        .claim-btn { background: #333; color: #777; border: none; padding: 8px 15px; border-radius: 8px; font-size: 12px; font-weight: bold; cursor: not-allowed; }
+        .claim-btn.active { background: #00ff64; color: #000; cursor: pointer; box-shadow: 0 0 10px rgba(0,255,100,0.4); }
 
-        .referral-box {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        .referral-box label { display: block; font-size: 11px; color: #aaa; text-transform: uppercase; margin-bottom: 10px; }
-        .link-input {
-            background: rgba(0,0,0,0.3);
-            border: 1px solid var(--glass-border);
-            padding: 12px;
-            border-radius: 12px;
-            color: var(--primary-gold);
-            font-size: 13px;
-            word-break: break-all;
-            margin-bottom: 15px;
-            min-height: 20px;
-        }
-
-        .commission-title { text-align: left; font-size: 14px; color: var(--primary-gold); margin-bottom: 15px; padding-left: 5px; }
-        .comm-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 30px; }
-        .comm-card {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid var(--glass-border);
-            border-radius: 15px;
-            padding: 15px 5px;
-        }
-        .comm-card span { display: block; font-size: 10px; color: #aaa; }
-        .comm-card b { font-size: 16px; color: #00ff64; }
-
-        .share-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000; border: none; width: 100%; padding: 15px;
-            border-radius: 18px; font-weight: bold; font-size: 16px;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
-            cursor: pointer;
-        }
-
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; width: 100%;
-            background: #110720;
-            display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid var(--glass-border);
-        }
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
         .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -98,27 +43,36 @@
 
 <div class="container">
     <div class="invite-banner">
-        <i class="fas fa-paper-plane"></i>
-        <h3>Invite Your Friends</h3>
-        <p>Earn up to 25% commission on your friend's daily mining profits!</p>
+        <i class="fas fa-users"></i>
+        <h3>Invite & Win Big</h3>
+        <p>Your Active Invites: <b id="activeCount" style="color: #00ff64;">0</b></p>
     </div>
 
     <div class="referral-box">
-        <label>Your Referral Link</label>
-        <div class="link-input" id="refLink">Loading your link...</div>
-        <button class="share-btn" onclick="copyLink()">
-            <i class="fas fa-copy"></i> Copy Link
-        </button>
+        <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 10px;">YOUR REFERRAL LINK</label>
+        <div class="link-input" id="refLink">Loading...</div>
+        <button class="share-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy Link</button>
     </div>
 
-    <div class="commission-title">Team Reward System</div>
-    <div class="comm-grid">
-        <div class="comm-card"><span>Level 1</span><b>15%</b></div>
-        <div class="comm-card"><span>Level 2</span><b>7%</b></div>
-        <div class="comm-card"><span>Level 3</span><b>3%</b></div>
+    <div class="task-title">Team Achievement Rewards</div>
+    <div class="task-list">
+        <div class="task-item">
+            <div class="task-info"><span>Invite 5 Active Members</span><small>Reward: $1.00 Bonus</small></div>
+            <button class="claim-btn" id="task1" onclick="claimReward(5, 1, 'task1')">CLAIM</button>
+        </div>
+        <div class="task-item">
+            <div class="task-info"><span>Invite 10 Active Members</span><small>Reward: $10.00 Bonus</small></div>
+            <button class="claim-btn" id="task2" onclick="claimReward(10, 10, 'task2')">CLAIM</button>
+        </div>
+        <div class="task-item">
+            <div class="task-info"><span>Invite 20 Active Members</span><small>Reward: $30.00 Bonus</small></div>
+            <button class="claim-btn" id="task3" onclick="claimReward(20, 30, 'task3')">CLAIM</button>
+        </div>
+        <div class="task-item">
+            <div class="task-info"><span>Invite 40 Active Members</span><small>Reward: $60.00 Bonus</small></div>
+            <button class="claim-btn" id="task4" onclick="claimReward(40, 60, 'task4')">CLAIM</button>
+        </div>
     </div>
-
-    <p style="font-size: 11px; color: #666;">Rewards are automatically added to your assets once your team claims their mining profit.</p>
 </div>
 
 <nav class="bottom-nav">
@@ -129,36 +83,98 @@
     <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
 </nav>
 
-<script>
-    // پیج لوڈ ہوتے ہی یوزر کا صحیح ریفرل لنک بنانا (GitHub کے لیے فکس کیا گیا)
-    window.onload = function() {
-        const userPhone = localStorage.getItem('userPhone');
-        if (userPhone) {
-            // گٹ ہب فولڈر کے ساتھ صحیح یو آر ایل بنانا
-            let currentPath = window.location.pathname;
-            let basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
-            const fullUrl = window.location.origin + basePath + "/signup.html?ref=" + userPhone;
-            
-            document.getElementById('refLink').innerText = fullUrl;
-        } else {
-            document.getElementById('refLink').innerText = "Please login to see link";
-        }
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+      authDomain: "gold-plus-v1.firebaseapp.com",
+      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+      projectId: "gold-plus-v1",
+      storageBucket: "gold-plus-v1.firebasestorage.app",
+      messagingSenderId: "474592887487",
+      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    function copyLink() {
-        const link = document.getElementById('refLink').innerText;
-        if(link.includes("Loading") || link.includes("Please login")) return;
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const userPhone = localStorage.getItem('userPhone');
 
-        // پروفیشنل کاپی میتھڈ جو ہر فون پر کام کرے گا
-        const tempInput = document.createElement("input");
-        tempInput.value = link;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
+    window.onload = async function() {
+        if (!userPhone) return;
+
+        // 1. ریفرل لنک بنائیں
+        let currentPath = window.location.pathname;
+        let basePath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+        document.getElementById('refLink').innerText = window.location.origin + basePath + "/signup.html?ref=" + userPhone;
+
+        // 2. ایکٹو ممبرز گنیں
+        const usersRef = ref(db, 'users');
+        const snapshot = await get(usersRef);
+        let activeCount = 0;
+
+        if (snapshot.exists()) {
+            snapshot.forEach((child) => {
+                const user = child.val();
+                if (user.referBy === userPhone && user.status === "active") {
+                    activeCount++;
+                }
+            });
+        }
+        document.getElementById('activeCount').innerText = activeCount;
+
+        // 3. چیک کریں کہ کون سا ٹاسک کلیم ہو سکتا ہے
+        updateTaskButtons(activeCount);
+    };
+
+    async function updateTaskButtons(count) {
+        const userRef = ref(db, 'users/' + userPhone + '/claimedTasks');
+        const snapshot = await get(userRef);
+        const claimed = snapshot.val() || {};
+
+        if (count >= 5 && !claimed.task1) activateBtn('task1');
+        if (count >= 10 && !claimed.task2) activateBtn('task2');
+        if (count >= 20 && !claimed.task3) activateBtn('task3');
+        if (count >= 40 && !claimed.task4) activateBtn('task4');
         
-        alert("Referral Link Copied!");
+        // اگر کلیم ہو چکا ہے تو ٹیکسٹ بدل دیں
+        for(let t in claimed) {
+            const el = document.getElementById(t);
+            if(el) { el.innerText = "CLAIMED"; el.disabled = true; el.style.background = "#222"; }
+        }
     }
+
+    function activateBtn(id) {
+        const btn = document.getElementById(id);
+        btn.classList.add('active');
+        btn.style.cursor = "pointer";
+    }
+
+    window.claimReward = async function(needed, reward, taskId) {
+        const btn = document.getElementById(taskId);
+        if (!btn.classList.contains('active')) return;
+
+        try {
+            // بیلنس بڑھائیں
+            await runTransaction(ref(db, `users/${userPhone}/balance`), (curr) => (curr || 0) + reward);
+            // ٹاسک کو 'کلیمڈ' مارک کریں
+            await runTransaction(ref(db, `users/${userPhone}/claimedTasks/${taskId}`), () => true);
+
+            alert(`Congratulations! $${reward} added to your balance.`);
+            location.reload();
+        } catch (e) { alert("Error claiming reward."); }
+    };
+
+    window.copyLink = function() {
+        const link = document.getElementById('refLink').innerText;
+        const temp = document.createElement("input");
+        document.body.appendChild(temp);
+        temp.value = link; temp.select();
+        document.execCommand("copy");
+        document.body.removeChild(temp);
+        alert("Referral Link Copied!");
+    };
 </script>
 
 </body>
