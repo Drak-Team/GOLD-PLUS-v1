@@ -6,131 +6,51 @@
     <title>Gold Plus - Deposit</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-gold: #f1c40f;
-            --bg-dark: #0f051d;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', sans-serif;
-            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
-            color: white;
-            padding-bottom: 20px;
-        }
-
-        .header { padding: 20px; text-align: center; position: relative; }
-        .header h2 { color: var(--primary-gold); margin: 0; font-size: 22px; }
+        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --card-bg: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f051d; color: white; padding-bottom: 30px; }
+        
+        .header { padding: 20px; text-align: center; }
+        .header h2 { color: var(--primary-gold); margin: 0; }
 
         .container { padding: 15px; }
 
-        /* JazzCash Card */
+        /* Method Selector */
+        .method-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { background: var(--card-bg); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; font-size: 14px; }
+        .tab.active { background: var(--primary-gold); color: #000; font-weight: bold; }
+
+        /* Payment Card */
         .payment-card {
             background: var(--card-bg);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 20px;
             padding: 20px;
             margin-bottom: 20px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
-
-        .method-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
-
-        .method-title img { width: 50px; height: auto; border-radius: 8px; }
 
         .account-details {
             background: rgba(0,0,0,0.3);
             border: 1px dashed var(--primary-gold);
             padding: 15px;
             border-radius: 15px;
-            position: relative;
-        }
-
-        .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; letter-spacing: 1px; }
-        .account-details b { display: block; font-size: 24px; color: #fff; margin: 8px 0; letter-spacing: 2px; }
-        
-        .copy-btn {
-            background: var(--primary-gold);
-            color: #000;
-            border: none;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-size: 12px;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 5px;
-            text-transform: uppercase;
-            transition: 0.2s;
-        }
-        .copy-btn:active { transform: scale(0.9); }
-
-        /* Upload Section */
-        .upload-section {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
-            padding: 20px;
-            border-radius: 20px;
-        }
-
-        .input-group { margin-bottom: 15px; text-align: left; }
-        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 8px; }
-        
-        input[type="text"], input[type="number"] {
-            width: 100%;
-            padding: 14px;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
-            color: #fff;
-            box-sizing: border-box;
-            outline: none;
-            font-size: 15px;
-        }
-
-        .file-input-wrapper {
             margin-top: 10px;
-            border: 2px dashed #444;
-            padding: 25px;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .file-input-wrapper:hover { border-color: var(--primary-gold); background: rgba(241, 196, 15, 0.05); }
-
-        .submit-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000;
-            border: none;
-            width: 100%;
-            padding: 16px;
-            border-radius: 15px;
-            font-weight: bold;
-            font-size: 16px;
-            margin-top: 20px;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
         }
 
-        .submit-btn:disabled { opacity: 0.5; }
+        .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; }
+        .account-details b { display: block; font-size: 20px; color: #fff; margin: 5px 0; word-break: break-all; }
+        
+        .copy-btn { background: var(--primary-gold); border: none; padding: 6px 15px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer; }
 
-        .back-link {
-            display: block;
-            margin-top: 25px;
-            color: #888;
-            text-decoration: none;
-            font-size: 13px;
-            text-align: center;
-        }
+        .info-bar { background: rgba(241, 196, 15, 0.1); border-left: 4px solid var(--primary-gold); padding: 10px; font-size: 12px; margin-bottom: 20px; border-radius: 5px; }
+
+        /* Form */
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
+        input { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; box-sizing: border-box; outline: none; }
+
+        .file-input-wrapper { border: 2px dashed #444; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; }
+        .submit-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; font-size: 16px; margin-top: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -140,99 +60,95 @@
 </div>
 
 <div class="container">
+    <div class="info-bar">
+        Minimum Deposit: <b>$1 (Rs. 300)</b> <br>
+        Rate: <b>$1 = Rs. 300</b>
+    </div>
+
+    <div class="method-tabs">
+        <div class="tab active" onclick="switchMethod('JazzCash', '03037264598', 'Ahmad Nafees Anjum', this)">JazzCash</div>
+        <div class="tab" onclick="switchMethod('Easypaisa', '03037264598', 'Ahmad Nafees Anjum', this)">Easypaisa</div>
+        <div class="tab" onclick="switchMethod('USDT TRC20', 'TGY6p8u... (Your Wallet)', 'Crypto Network', this)">USDT TRC20</div>
+    </div>
+
     <div class="payment-card">
-        <div class="method-title">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/25/JazzCash_logo.png" alt="JazzCash">
-            <h4>JazzCash Transfer</h4>
-        </div>
-        
+        <h4 id="methodName" style="margin:0 0 10px 0;">JazzCash Transfer</h4>
         <div class="account-details">
-            <span>Account Number</span>
+            <span>Account Details</span>
             <b id="accNumber">03037264598</b>
-            <p style="margin: 0; color: #ddd; font-size: 15px; font-weight: 500;">Ahmad Nafees Anjum</p>
-            <button class="copy-btn" onclick="copyNumber()"> <i class="fas fa-copy"></i> Copy Number</button>
+            <p id="accHolder" style="margin: 0; color: #ddd; font-size: 14px;">Ahmad Nafees Anjum</p>
+            <button class="copy-btn" onclick="copyNumber()"> <i class="fas fa-copy"></i> Copy</button>
         </div>
     </div>
 
-    <div class="upload-section">
-        <div class="input-group">
-            <label>Amount to Deposit ($)</label>
-            <input type="number" id="depositAmount" placeholder="Example: 50">
-        </div>
-
-        <div class="input-group">
-            <label>Transaction ID (TID)</label>
-            <input type="text" id="tid" placeholder="Enter 12-digit TID">
-        </div>
-        
-        <div class="input-group">
-            <label>Payment Screenshot</label>
-            <div class="file-input-wrapper" onclick="document.getElementById('proof').click()">
-                <i class="fas fa-cloud-upload-alt" style="font-size: 30px; color: var(--primary-gold); margin-bottom: 10px; display: block;"></i>
-                <p id="fileName" style="font-size: 13px; margin: 0; color: #888;">Tap to upload proof</p>
-                <input type="file" id="proof" accept="image/*" style="display: none;" onchange="updateFileName()">
-            </div>
-        </div>
-
-        <button class="submit-btn" onclick="handleSubmit()" id="submitBtn">SUBMIT DEPOSIT REQUEST</button>
+    <div class="input-group">
+        <label>Amount in Dollars ($)</label>
+        <input type="number" id="depositAmount" placeholder="Min $1" oninput="updatePKR()">
+        <small id="pkrNote" style="color: #2ecc71; font-size: 11px;"></small>
     </div>
 
-    <a href="dashboard.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    <div class="input-group">
+        <label>Transaction ID (TID) / Hash</label>
+        <input type="text" id="tid" placeholder="Enter TID or Hash">
+    </div>
+    
+    <div class="input-group">
+        <label>Upload Screenshot</label>
+        <div class="file-input-wrapper" onclick="document.getElementById('proof').click()">
+            <i class="fas fa-camera" style="color: var(--primary-gold);"></i>
+            <p id="fileName" style="font-size: 12px; margin: 5px 0;">Select Proof</p>
+            <input type="file" id="proof" accept="image/*" style="display: none;" onchange="updateFileName()">
+        </div>
+    </div>
+
+    <button class="submit-btn" onclick="handleSubmit()" id="submitBtn">SUBMIT REQUEST</button>
+    <a href="dashboard.html" style="display:block; text-align:center; color:#888; font-size:12px; margin-top:20px; text-decoration:none;">Back to Home</a>
 </div>
 
 <script>
-    // نمبر کاپی کرنے کا فنکشن
-    function copyNumber() {
-        const num = document.getElementById('accNumber').innerText;
-        const tempInput = document.createElement("input");
-        tempInput.value = num;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand("copy");
-        document.body.removeChild(tempInput);
-        alert("Number Copied: " + num);
+    function switchMethod(name, num, holder, el) {
+        document.getElementById('methodName').innerText = name + " Transfer";
+        document.getElementById('accNumber').innerText = num;
+        document.getElementById('accHolder').innerText = holder;
+        
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
     }
 
-    // فائل کا نام دکھانے کے لیے
-    function updateFileName() {
-        const fileInput = document.getElementById('proof');
-        const fileNameDisplay = document.getElementById('fileName');
-        if (fileInput.files.length > 0) {
-            fileNameDisplay.innerText = "Selected: " + fileInput.files[0].name;
-            fileNameDisplay.style.color = "#2ecc71";
+    function updatePKR() {
+        const usd = document.getElementById('depositAmount').value;
+        if(usd > 0) {
+            document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
         }
     }
 
-    // آٹو ٹیسٹ اور سبمٹ لاجک
-    function handleSubmit() {
-        const tid = document.getElementById('tid').value;
-        const amount = document.getElementById('depositAmount').value;
+    function copyNumber() {
+        const num = document.getElementById('accNumber').innerText;
+        navigator.clipboard.writeText(num);
+        alert("Copied: " + num);
+    }
+
+    function updateFileName() {
         const file = document.getElementById('proof').files[0];
-        const btn = document.getElementById('submitBtn');
+        if (file) document.getElementById('fileName').innerText = file.name;
+    }
 
-        if (!amount || amount <= 0) { alert("Please enter amount."); return; }
-        if (!tid || tid.length < 5) { alert("Please enter valid TID."); return; }
-        if (!file) { alert("Please upload screenshot."); return; }
+    function handleSubmit() {
+        const amount = document.getElementById('depositAmount').value;
+        const tid = document.getElementById('tid').value;
+        const proof = document.getElementById('proof').files[0];
 
-        btn.disabled = true;
-        btn.innerText = "Processing...";
+        if (amount < 1) { alert("Minimum deposit is $1"); return; }
+        if (!tid || !proof) { alert("Please fill all details and upload proof"); return; }
 
-        // لوکل اسٹوریج میں ہسٹری سیو کرنا (آٹو ٹیسٹ کے لیے)
-        const depositRecord = {
-            tid: tid,
-            amount: amount,
-            date: new Date().toLocaleDateString(),
-            status: "Pending"
-        };
+        document.getElementById('submitBtn').innerText = "Submitting...";
+        document.getElementById('submitBtn').disabled = true;
 
-        let history = JSON.parse(localStorage.getItem('depositHistory')) || [];
-        history.unshift(depositRecord);
-        localStorage.setItem('depositHistory', JSON.stringify(history));
-
+        // یہاں آپ اپنی فائر بیس لاجک ایڈ کر سکتے ہیں
         setTimeout(() => {
-            alert("Deposit request submitted successfully!");
-            window.location.href = "deposit-history.html";
-        }, 1500);
+            alert("Request sent successfully! Admin will verify soon.");
+            window.location.href = "dashboard.html";
+        }, 2000);
     }
 </script>
 
