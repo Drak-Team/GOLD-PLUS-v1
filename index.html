@@ -1,56 +1,163 @@
-// ... (باقی اسٹائل وہی رہے گا)
-
-<div class="input-group">
-    <input type="text" id="username" placeholder="Enter Username (Unique ID)">
-</div>
-<div class="input-group">
-    <input type="password" id="pass" placeholder="Enter Password">
-</div>
-
-<button id="loginBtn">ACCESS ACCOUNT</button>
-
-// ... (فائر بیس کنفگریشن وہی رہے گی)
-
-<script type="module">
-    // ... (امپورٹ والے حصے وہی رہیں گے)
-
-    document.getElementById('loginBtn').onclick = async () => {
-        const username = document.getElementById('username').value.trim().toLowerCase();
-        const pass = document.getElementById('pass').value;
-        const btn = document.getElementById('loginBtn');
-
-        if(!username || !pass) return alert("Please enter both Username and Password!");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Luxury Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #f1c40f; --light-gold: #f9e29c; --dark: #050505; }
         
-        btn.innerText = "Verifying Account...";
-        btn.disabled = true;
+        body { 
+            margin: 0; padding: 0;
+            font-family: 'Poppins', sans-serif; 
+            display: flex; justify-content: center; align-items: center; 
+            height: 100vh; overflow: hidden;
+            background: radial-gradient(circle at top, #1a0b2e, #050505);
+        }
 
-        try {
-            // اب ہم فون کے بجائے 'username' کے فولڈر میں چیک کریں گے
-            const userRef = ref(db, 'users/' + username);
-            const snapshot = await get(userRef);
+        .login-box { 
+            background: rgba(255, 255, 255, 0.04); 
+            padding: 45px 35px; border-radius: 35px; 
+            width: 320px; text-align: center; 
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            position: relative; z-index: 10;
+        }
 
-            if (snapshot.exists()) {
-                const userData = snapshot.val();
-                if (userData.password === pass) {
-                    // کامیابی! اب ہم لوکل اسٹوریج میں 'userPhone' کی جگہ یوزر نیم ہی رکھیں گے
-                    localStorage.clear();
-                    localStorage.setItem('userPhone', username); // یہ کی (Key) ہم نے ہر جگہ استعمال کی ہے
-                    localStorage.setItem('isLoggedIn', 'true');
-                    window.location.href = "dashboard.html";
+        .logo-container {
+            width: 80px; height: 80px;
+            background: radial-gradient(circle, #222 0%, #000 100%);
+            border: 2px solid var(--gold);
+            border-radius: 50%; margin: 0 auto 20px;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+            animation: pulse 2.5s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .logo-container i { font-size: 40px; color: var(--gold); }
+
+        h2 { color: #fff; font-weight: 300; letter-spacing: 1px; margin-bottom: 30px; font-size: 22px; }
+        h2 b { color: var(--gold); }
+
+        .input-group { margin-bottom: 15px; position: relative; }
+        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 14px; }
+        
+        input { 
+            width: 100%; padding: 14px 14px 14px 45px; 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 12px; background: rgba(0,0,0,0.5); 
+            color: #fff; box-sizing: border-box; outline: none;
+            transition: 0.3s; font-size: 14px;
+        }
+        input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
+
+        button { 
+            width: 100%; padding: 15px; 
+            background: linear-gradient(90deg, #f1c40f, #e67e22); 
+            border: none; color: #000; font-weight: bold; 
+            border-radius: 12px; cursor: pointer; margin-top: 15px;
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
+
+        .footer-text { margin-top: 25px; font-size: 13px; color: #aaa; }
+        .footer-text a { color: var(--gold); text-decoration: none; font-weight: bold; }
+
+        .particle { position: absolute; background: var(--gold); border-radius: 50%; opacity: 0.2; animation: float 10s infinite linear; }
+        @keyframes float { 0% { transform: translateY(100vh); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-10vh); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <div class="particle" style="width: 5px; height: 5px; left: 10%; animation-duration: 8s;"></div>
+    <div class="particle" style="width: 3px; height: 3px; left: 80%; animation-duration: 12s;"></div>
+
+    <div class="login-box">
+        <div class="logo-container">
+            <i class="fas fa-gem"></i>
+        </div>
+        
+        <h2>Welcome to <b>GOLD PLUS</b></h2>
+        
+        <div class="input-group">
+            <i class="fas fa-user"></i>
+            <input type="text" id="username" placeholder="Username (Unique ID)">
+        </div>
+        <div class="input-group">
+            <i class="fas fa-lock"></i>
+            <input type="password" id="pass" placeholder="Password">
+        </div>
+        
+        <button id="loginBtn">ACCESS ACCOUNT</button>
+        
+        <div class="footer-text">
+            Don't have an account? <a href="signup.html">CREATE ONE</a>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+            authDomain: "gold-plus-v1.firebaseapp.com",
+            databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+            projectId: "gold-plus-v1",
+            storageBucket: "gold-plus-v1.firebasestorage.app",
+            messagingSenderId: "474592887487",
+            appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        document.getElementById('loginBtn').onclick = async () => {
+            const username = document.getElementById('username').value.trim().toLowerCase();
+            const pass = document.getElementById('pass').value;
+            const btn = document.getElementById('loginBtn');
+
+            if(!username || !pass) return alert("Please enter both Username and Password!");
+            
+            btn.innerText = "Verifying...";
+            btn.disabled = true;
+
+            try {
+                const userRef = ref(db, 'users/' + username);
+                const snapshot = await get(userRef);
+
+                if (snapshot.exists()) {
+                    const userData = snapshot.val();
+                    if (userData.password === pass) {
+                        localStorage.clear();
+                        localStorage.setItem('userPhone', username);
+                        localStorage.setItem('isLoggedIn', 'true');
+                        window.location.href = "dashboard.html";
+                    } else {
+                        alert("Wrong Password!");
+                        btn.innerText = "ACCESS ACCOUNT";
+                        btn.disabled = false;
+                    }
                 } else {
-                    alert("Wrong Password! Please try again.");
+                    alert("Username not found!");
                     btn.innerText = "ACCESS ACCOUNT";
                     btn.disabled = false;
                 }
-            } else {
-                alert("Account not found! Make sure you entered the correct Username.");
+            } catch (e) { 
+                alert("Error: " + e.message); 
                 btn.innerText = "ACCESS ACCOUNT";
                 btn.disabled = false;
             }
-        } catch (e) { 
-            alert("Connection error: " + e.message); 
-            btn.innerText = "ACCESS ACCOUNT";
-            btn.disabled = false;
-        }
-    };
-</script>
+        };
+    </script>
+</body>
+</html>
