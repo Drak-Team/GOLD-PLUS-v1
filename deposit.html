@@ -8,47 +8,21 @@
     <style>
         :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --card-bg: rgba(255, 255, 255, 0.05); }
         body { margin: 0; font-family: 'Segoe UI', sans-serif; background: #0f051d; color: white; padding-bottom: 30px; }
-        
         .header { padding: 20px; text-align: center; }
         .header h2 { color: var(--primary-gold); margin: 0; }
-
         .container { padding: 15px; }
-
-        /* Method Selector */
         .method-tabs { display: flex; gap: 10px; margin-bottom: 20px; overflow-x: auto; padding-bottom: 5px; }
         .tab { background: var(--card-bg); padding: 10px 20px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); cursor: pointer; white-space: nowrap; font-size: 14px; }
         .tab.active { background: var(--primary-gold); color: #000; font-weight: bold; }
-
-        /* Payment Card */
-        .payment-card {
-            background: var(--card-bg);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .account-details {
-            background: rgba(0,0,0,0.3);
-            border: 1px dashed var(--primary-gold);
-            padding: 15px;
-            border-radius: 15px;
-            margin-top: 10px;
-        }
-
+        .payment-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: center; }
+        .account-details { background: rgba(0,0,0,0.3); border: 1px dashed var(--primary-gold); padding: 15px; border-radius: 15px; margin-top: 10px; }
         .account-details span { font-size: 11px; color: var(--primary-gold); text-transform: uppercase; }
         .account-details b { display: block; font-size: 20px; color: #fff; margin: 5px 0; word-break: break-all; }
-        
         .copy-btn { background: var(--primary-gold); border: none; padding: 6px 15px; border-radius: 5px; font-size: 11px; font-weight: bold; cursor: pointer; }
-
         .info-bar { background: rgba(241, 196, 15, 0.1); border-left: 4px solid var(--primary-gold); padding: 10px; font-size: 12px; margin-bottom: 20px; border-radius: 5px; }
-
-        /* Form */
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; font-size: 12px; color: #aaa; margin-bottom: 5px; }
         input { width: 100%; padding: 14px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: #fff; box-sizing: border-box; outline: none; }
-
         .file-input-wrapper { border: 2px dashed #444; padding: 20px; border-radius: 15px; text-align: center; cursor: pointer; }
         .submit-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; font-size: 16px; margin-top: 15px; cursor: pointer; }
     </style>
@@ -68,7 +42,7 @@
     <div class="method-tabs">
         <div class="tab active" onclick="switchMethod('JazzCash', '03037264598', 'Ahmad Nafees Anjum', this)">JazzCash</div>
         <div class="tab" onclick="switchMethod('Easypaisa', '03037264598', 'Ahmad Nafees Anjum', this)">Easypaisa</div>
-        <div class="tab" onclick="switchMethod('USDT TRC20', 'TGY6p8u... (Your Wallet)', 'Crypto Network', this)">USDT TRC20</div>
+        <div class="tab" onclick="switchMethod('USDT TRC20', 'TGY6p8u...', 'Crypto Network', this)">USDT TRC20</div>
     </div>
 
     <div class="payment-card">
@@ -101,55 +75,84 @@
         </div>
     </div>
 
-    <button class="submit-btn" onclick="handleSubmit()" id="submitBtn">SUBMIT REQUEST</button>
+    <button class="submit-btn" id="submitBtn">SUBMIT REQUEST</button>
     <a href="dashboard.html" style="display:block; text-align:center; color:#888; font-size:12px; margin-top:20px; text-decoration:none;">Back to Home</a>
 </div>
 
-<script>
-    function switchMethod(name, num, holder, el) {
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+      authDomain: "gold-plus-v1.firebaseapp.com",
+      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+      projectId: "gold-plus-v1",
+      storageBucket: "gold-plus-v1.firebasestorage.app",
+      messagingSenderId: "474592887487",
+      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const phone = localStorage.getItem('userPhone');
+
+    let currentMethod = "JazzCash";
+
+    window.switchMethod = (name, num, holder, el) => {
+        currentMethod = name;
         document.getElementById('methodName').innerText = name + " Transfer";
         document.getElementById('accNumber').innerText = num;
         document.getElementById('accHolder').innerText = holder;
-        
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         el.classList.add('active');
-    }
+    };
 
-    function updatePKR() {
+    window.updatePKR = () => {
         const usd = document.getElementById('depositAmount').value;
-        if(usd > 0) {
-            document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
-        }
-    }
+        if(usd > 0) document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
+    };
 
-    function copyNumber() {
+    window.copyNumber = () => {
         const num = document.getElementById('accNumber').innerText;
         navigator.clipboard.writeText(num);
         alert("Copied: " + num);
-    }
+    };
 
-    function updateFileName() {
+    window.updateFileName = () => {
         const file = document.getElementById('proof').files[0];
         if (file) document.getElementById('fileName').innerText = file.name;
-    }
+    };
 
-    function handleSubmit() {
+    document.getElementById('submitBtn').onclick = () => {
         const amount = document.getElementById('depositAmount').value;
         const tid = document.getElementById('tid').value;
         const proof = document.getElementById('proof').files[0];
 
+        if (!phone) { alert("Session expired, please login again."); return; }
         if (amount < 1) { alert("Minimum deposit is $1"); return; }
-        if (!tid || !proof) { alert("Please fill all details and upload proof"); return; }
+        if (!tid) { alert("Please enter Transaction ID"); return; }
 
         document.getElementById('submitBtn').innerText = "Submitting...";
         document.getElementById('submitBtn').disabled = true;
 
-        // یہاں آپ اپنی فائر بیس لاجک ایڈ کر سکتے ہیں
-        setTimeout(() => {
-            alert("Request sent successfully! Admin will verify soon.");
+        const newDepositRef = push(ref(db, 'users/' + phone + '/deposits'));
+        
+        set(newDepositRef, {
+            amount: amount,
+            tid: tid,
+            method: currentMethod,
+            status: "Pending",
+            date: new Date().toLocaleString()
+        }).then(() => {
+            alert("Deposit request submitted! It will show in history soon.");
             window.location.href = "dashboard.html";
-        }, 2000);
-    }
+        }).catch((e) => {
+            alert("Error: " + e.message);
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('submitBtn').innerText = "SUBMIT REQUEST";
+        });
+    };
 </script>
 
 </body>
