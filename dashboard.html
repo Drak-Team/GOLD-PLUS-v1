@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 110px; overflow-x: hidden; }
         
         .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
         .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
@@ -19,13 +19,14 @@
         .sum-card small { font-size: 9px; color: #aaa; text-transform: uppercase; }
         .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; margin-top: 2px; }
 
+        /* VIZYA HISTORY BUTTONS */
         .history-links { display: flex; gap: 10px; padding: 0 20px 20px; }
-        .h-btn { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; text-align: center; font-size: 11px; color: #fff; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
+        .h-btn { flex: 1; background: rgba(241, 196, 15, 0.1); padding: 14px; border-radius: 12px; text-align: center; font-size: 12px; color: #fff; border: 1px solid var(--primary-gold); text-decoration: none; display: block; font-weight: bold; box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
         .h-btn i { color: var(--primary-gold); margin-right: 5px; }
 
-        /* LIVE WITHDRAWAL TICKER */
-        .withdraw-ticker { background: rgba(241, 196, 15, 0.1); padding: 8px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
-        .ticker-move { display: inline-block; animation: ticker 40s linear infinite; color: #00ff64; font-weight: bold; }
+        /* FAST LIVE WITHDRAWAL TICKER */
+        .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
+        .ticker-move { display: inline-block; animation: ticker 25s linear infinite; color: #00ff64; font-weight: bold; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
@@ -36,20 +37,22 @@
         .status-active { color: #00ff00; }
 
         .get-all-box { padding: 0 20px 10px; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; text-transform: uppercase; }
-        .btn-waiting { background: #333; color: #666; cursor: not-allowed; }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(241,196,15,0.3); }
+        .btn-waiting { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
 
-        /* WHATSAPP BUTTON */
-        .wa-box { padding: 0 20px 20px; }
-        .wa-btn { background: #25d366; color: white; width: 100%; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        /* CONTACT BUTTONS */
+        .contact-area { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .contact-btn { padding: 12px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; gap: 8px; color: white; }
+        .wa-btn { background: #25d366; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
+        .tg-btn { background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.2); }
 
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .grid-card i { color: var(--primary-gold); font-size: 20px; margin-bottom: 10px; }
+        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); }
+        .grid-card i { color: var(--primary-gold); font-size: 22px; margin-bottom: 8px; display: block; }
         .grid-card h5 { margin: 0; font-size: 13px; color: #f1c40f; }
         .grid-card p { margin: 5px 0 0; font-size: 18px; color: #fff; font-weight: bold; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 100; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
         .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -71,12 +74,12 @@
 </div>
 
 <div class="history-links">
-    <a href="deposit.html" class="h-btn"><i class="fas fa-list"></i> Dep. History</a>
-    <a href="withdraw.html" class="h-btn"><i class="fas fa-history"></i> With. History</a>
+    <a href="deposit_history.html" class="h-btn"><i class="fas fa-file-invoice-dollar"></i> Deposit History</a>
+    <a href="withdraw_history.html" class="h-btn"><i class="fas fa-history"></i> Withdraw History</a>
 </div>
 
 <div class="withdraw-ticker">
-    <div class="ticker-move" id="tickerContent">Loading latest withdrawals...</div>
+    <div class="ticker-move" id="tickerContent">Syncing Global Transactions...</div>
 </div>
 
 <div class="machines-grid">
@@ -91,15 +94,18 @@
     <button class="get-all-btn btn-waiting" id="claimBtn" disabled>CLAIM PROFIT</button>
 </div>
 
-<div class="wa-box">
-    <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" class="wa-btn">
-        <i class="fab fa-whatsapp"></i> JOIN OFFICIAL GROUP
+<div class="contact-area">
+    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="contact-btn wa-btn">
+        <i class="fab fa-whatsapp"></i> WhatsApp
+    </a>
+    <a href="https://t.me/mranjm143" class="contact-btn tg-btn">
+        <i class="fab fa-telegram-plane"></i> Telegram
     </a>
 </div>
 
 <div class="main-grid">
-    <div class="grid-card"><i class="fas fa-users-cog"></i><h5>My Team</h5><p id="teamCount">+0 Members</p></div>
-    <div class="grid-card"><i class="fas fa-chart-line"></i><h5>Daily Earn</h5><p id="dailyRate">$0.50</p></div>
+    <div class="grid-card"><i class="fas fa-users"></i><h5>My Team</h5><p id="teamCount">+0 Members</p></div>
+    <div class="grid-card"><i class="fas fa-hand-holding-dollar"></i><h5>Daily Earn</h5><p id="dailyRate">$0.50</p></div>
 </div>
 
 <nav class="nav-bar">
@@ -129,14 +135,14 @@
     const username = localStorage.getItem('userPhone');
     let userData = null;
 
-    // AUTO WITHDRAW NAMES GENERATOR (60 Names)
     const generateTicker = () => {
-        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Sajid", "Kamran", "Umar", "Bilal", "Hamza", "Rizwan", "Usama", "Waqas", "Noman", "Asif", "Zeeshan", "Adeel", "Faisal", "Junaid", "Tahir", "Yasir"];
+        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Sajid", "Kamran", "Umar", "Bilal", "Hamza", "Rizwan", "Usama", "Waqas", "Noman", "Asif", "Zeeshan", "Adeel", "Faisal", "Junaid", "Tahir", "Yasir", "Babar", "Arsalan", "Saqib"];
         let text = "";
         for(let i=0; i<60; i++) {
             let name = names[Math.floor(Math.random() * names.length)];
-            let amt = (Math.random() * (500 - 10) + 10).toFixed(2);
-            text += ` • ${name}*** withdrew $${amt} SUCCESS  `;
+            let amt = (Math.random() * (450 - 20) + 20).toFixed(2);
+            // SPELLING FIXED: Withdrawn
+            text += ` • ${name}*** withdrawn $${amt} SUCCESS  `;
         }
         document.getElementById('tickerContent').innerText = text + text;
     };
