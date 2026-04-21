@@ -19,14 +19,13 @@
         .sum-card small { font-size: 9px; color: #aaa; text-transform: uppercase; }
         .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; margin-top: 2px; }
 
-        /* VIZYA HISTORY BUTTONS */
         .history-links { display: flex; gap: 10px; padding: 0 20px 20px; }
         .h-btn { flex: 1; background: rgba(241, 196, 15, 0.1); padding: 14px; border-radius: 12px; text-align: center; font-size: 12px; color: #fff; border: 1px solid var(--primary-gold); text-decoration: none; display: block; font-weight: bold; box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
         .h-btn i { color: var(--primary-gold); margin-right: 5px; }
 
-        /* FAST LIVE WITHDRAWAL TICKER */
+        /* NORMAL SPEED TICKER (40s) */
         .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
-        .ticker-move { display: inline-block; animation: ticker 25s linear infinite; color: #00ff64; font-weight: bold; }
+        .ticker-move { display: inline-block; animation: ticker 40s linear infinite; color: #00ff64; font-weight: bold; }
         @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
@@ -40,14 +39,15 @@
         .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; text-transform: uppercase; box-shadow: 0 5px 15px rgba(241,196,15,0.3); }
         .btn-waiting { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
 
-        /* CONTACT BUTTONS */
         .contact-area { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .contact-btn { padding: 12px; border-radius: 12px; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 12px; gap: 8px; color: white; }
-        .wa-btn { background: #25d366; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.2); }
-        .tg-btn { background: #0088cc; box-shadow: 0 4px 10px rgba(0, 136, 204, 0.2); }
+        .wa-btn { background: #25d366; }
+        .tg-btn { background: #0088cc; }
 
+        /* GRID CARDS WITH LINKS */
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); }
+        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); text-decoration: none; display: block; color: inherit; transition: 0.3s; }
+        .grid-card:active { transform: scale(0.95); }
         .grid-card i { color: var(--primary-gold); font-size: 22px; margin-bottom: 8px; display: block; }
         .grid-card h5 { margin: 0; font-size: 13px; color: #f1c40f; }
         .grid-card p { margin: 5px 0 0; font-size: 18px; color: #fff; font-weight: bold; }
@@ -95,17 +95,21 @@
 </div>
 
 <div class="contact-area">
-    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="contact-btn wa-btn">
-        <i class="fab fa-whatsapp"></i> WhatsApp
-    </a>
-    <a href="https://t.me/mranjm143" class="contact-btn tg-btn">
-        <i class="fab fa-telegram-plane"></i> Telegram
-    </a>
+    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="contact-btn wa-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <a href="https://t.me/mranjm143" class="contact-btn tg-btn"><i class="fab fa-telegram-plane"></i> Telegram</a>
 </div>
 
 <div class="main-grid">
-    <div class="grid-card"><i class="fas fa-users"></i><h5>My Team</h5><p id="teamCount">+0 Members</p></div>
-    <div class="grid-card"><i class="fas fa-hand-holding-dollar"></i><h5>Daily Earn</h5><p id="dailyRate">$0.50</p></div>
+    <a href="refer.html" class="grid-card">
+        <i class="fas fa-users"></i>
+        <h5>My Team</h5>
+        <p id="teamCount">0 Members</p>
+    </a>
+    <a href="tasks.html" class="grid-card">
+        <i class="fas fa-tasks"></i>
+        <h5>Daily Task</h5>
+        <p id="dailyRate">View Tasks</p>
+    </a>
 </div>
 
 <nav class="nav-bar">
@@ -141,7 +145,6 @@
         for(let i=0; i<60; i++) {
             let name = names[Math.floor(Math.random() * names.length)];
             let amt = (Math.random() * (450 - 20) + 20).toFixed(2);
-            // SPELLING FIXED: Withdrawn
             text += ` • ${name}*** withdrawn $${amt} SUCCESS  `;
         }
         document.getElementById('tickerContent').innerText = text + text;
@@ -160,10 +163,13 @@
                 document.getElementById('sumEarned').innerText = "$" + (userData.totalEarned || 0).toFixed(2);
                 document.getElementById('sumDeposit').innerText = "$" + (userData.totalDeposit || 0).toFixed(2);
                 document.getElementById('userNameLabel').innerText = "Hello, " + (userData.username || "Member");
-                const plan = userData.plan || "Free";
-                document.getElementById('activePlan').innerText = plan;
-                document.getElementById('dailyRate').innerText = "$" + (userData.dailyEarning || 0.50).toFixed(2);
-                updateMachineUI(plan);
+                document.getElementById('activePlan').innerText = userData.plan || "Free";
+                
+                // DISPLAY REAL REFERRAL COUNT
+                const refCount = userData.referrals ? Object.keys(userData.referrals).length : 0;
+                document.getElementById('teamCount').innerText = refCount + " Members";
+                
+                updateMachineUI(userData.plan || "Free");
                 startTimer();
             }
         });
@@ -183,6 +189,7 @@
     function startTimer() {
         const cooldown = 24 * 60 * 60 * 1000;
         const tick = () => {
+            if (!userData) return;
             const last = userData.lastClaim || 0;
             const remain = cooldown - (Date.now() - last);
             const btn = document.getElementById('claimBtn');
