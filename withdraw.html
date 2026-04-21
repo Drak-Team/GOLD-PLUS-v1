@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.07); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 80px; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 80px; overflow-x: hidden; }
         
         .header { padding: 30px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); text-align: center; border-radius: 0 0 30px 30px; }
         .balance-card { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; margin: -30px 20px 20px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
@@ -19,14 +19,14 @@
         .input-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--gold); }
         
         select, input { width: 100%; padding: 14px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; font-size: 15px; outline: none; box-sizing: border-box; }
-        select option { background: #1a0b2e; color: white; }
-
-        .info-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; font-size: 12px; color: #ccc; margin-bottom: 25px; }
+        
+        .info-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; font-size: 12px; color: #ccc; margin-bottom: 25px; line-height: 1.6; }
         .info-box b { color: var(--gold); }
 
-        .request-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3); }
-        
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .request-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3); transition: 0.3s; }
+        .request-btn:active { transform: scale(0.95); }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 100; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
         .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -63,7 +63,7 @@
 
     <div class="input-group">
         <label>Withdraw Amount ($)</label>
-        <input type="number" id="withdrawAmount" placeholder="Enter amount in USD" step="0.01">
+        <input type="number" id="withdrawAmount" placeholder="Min $1.00" step="0.01">
         <small id="calcNote" style="color: #00ff64; font-size: 11px; margin-top: 5px; display: block;"></small>
     </div>
 
@@ -88,10 +88,11 @@
     <a href="profile.html" class="nav-btn active"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, push, set, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<script>
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         authDomain: "gold-plus-v1.firebaseapp.com",
@@ -102,25 +103,30 @@
         appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
     const username = localStorage.getItem('userPhone');
     let currentBalance = 0;
 
-    async function loadBalance() {
+    // Load Balance
+    function loadBalance() {
         if (!username) {
+            alert("Session expired. Please Login.");
             window.location.href = "login.html";
             return;
         }
-        const snapshot = await get(ref(db, 'users/' + username));
-        if (snapshot.exists()) {
-            currentBalance = snapshot.val().balance || 0;
-            document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
-            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
-        }
+        db.ref('users/' + username).once('value', (snapshot) => {
+            if (snapshot.exists()) {
+                currentBalance = snapshot.val().balance || 0;
+                document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
+                document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
+            }
+        });
     }
     loadBalance();
 
+    // Auto Rate Calculator
     document.getElementById('withdrawAmount').addEventListener('input', (e) => {
         const val = e.target.value;
         if(val > 0) {
@@ -131,14 +137,14 @@
         }
     });
 
-    document.getElementById('requestBtn').onclick = async () => {
+    // Handle Withdrawal Request
+    document.getElementById('requestBtn').onclick = function() {
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
         const method = document.getElementById('method').value;
         const accNum = document.getElementById('accountNum').value;
         const accName = document.getElementById('accountName').value;
         const btn = document.getElementById('requestBtn');
 
-        // لمٹ چیک (300 روپے = $1.00)
         if (!amount || amount < 1.00) {
             alert("Minimum withdrawal is $1.00 (Rs. 300)");
             return;
@@ -157,16 +163,16 @@
         btn.innerText = "Processing...";
         btn.disabled = true;
 
-        try {
-            const userRef = ref(db, 'users/' + username + '/balance');
-            const result = await runTransaction(userRef, (current) => {
-                if (current >= amount) return current - amount;
-                return;
-            });
-
-            if (result.committed) {
-                const newReq = push(ref(db, 'withdrawals'));
-                await set(newReq, {
+        // Transactional Update
+        const userRef = db.ref('users/' + username + '/balance');
+        userRef.transaction((current) => {
+            if (current >= amount) return current - amount;
+            return; // Cancel if balance low
+        }, (error, committed) => {
+            if (committed) {
+                // Save Request
+                const newReq = db.ref('withdrawals').push();
+                newReq.set({
                     username: username,
                     amountUSD: amount,
                     amountPKR: amount * 300,
@@ -174,20 +180,18 @@
                     account: accNum,
                     name: accName,
                     status: "Pending",
+                    timestamp: Date.now(),
                     date: new Date().toLocaleString()
+                }).then(() => {
+                    alert("Withdrawal Request Submitted Successfully!");
+                    window.location.href = 'profile.html';
                 });
-
-                alert("Withdrawal Request Sent! Please wait 1-24 hours.");
-                window.location.href = 'profile.html';
             } else {
-                alert("Error: Balance Mismatch!");
+                alert("Error! Please try again later.");
                 btn.innerText = "CONFIRM WITHDRAWAL";
                 btn.disabled = false;
             }
-        } catch (e) {
-            alert("System Error: " + e.message);
-            btn.disabled = false;
-        }
+        });
     };
 </script>
 </body>
