@@ -1,86 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Refer & Earn</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --card-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 100px; }
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
-        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
-        .container { padding: 20px; text-align: center; }
-        
-        .invite-banner { background: linear-gradient(135deg, rgba(241, 196, 15, 0.2), rgba(230, 126, 34, 0.1)); border-radius: 30px; padding: 25px; border: 1px solid var(--glass-border); margin-bottom: 20px; }
-        .invite-banner i { font-size: 40px; color: var(--primary-gold); margin-bottom: 10px; }
-
-        /* Spin Button */
-        .spin-box { background: var(--gold-grad); background: #f1c40f; color: #000; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-
-        .referral-box { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 25px; }
-        .link-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: var(--primary-gold); font-size: 13px; word-break: break-all; margin-bottom: 15px; text-align: left; }
-        .share-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 18px; font-weight: bold; cursor: pointer; }
-        
-        .task-item { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 15px; padding: 15px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .task-info { text-align: left; }
-        .claim-btn { background: #333; color: #777; border: none; padding: 8px 15px; border-radius: 8px; font-size: 12px; font-weight: bold; }
-        .claim-btn.active { background: #00ff64; color: #000; cursor: pointer; }
-
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); }
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
-        .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <i class="fas fa-arrow-left" onclick="window.location.href='dashboard.html'"></i>
-    <h2>Invite Friends</h2>
-</div>
-
-<div class="container">
-    <div class="invite-banner">
-        <i class="fas fa-gift"></i>
-        <h3>Refer & Earn</h3>
-        <p>Active Referrals: <b id="activeCount" style="color: #00ff64;">0</b></p>
-    </div>
-
-    <div class="spin-box" onclick="window.location.href='spin.html'">
-        <span><i class="fas fa-dharmachakra"></i> LUCKY SPIN WHEEL</span>
-        <i class="fas fa-chevron-right"></i>
-    </div>
-
-    <div class="referral-box">
-        <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 10px; text-align: left;">YOUR SIGNUP LINK</label>
-        <div class="link-input" id="refLink">Generating link...</div>
-        <button class="share-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy Referral Link</button>
-    </div>
-
-    <div style="text-align: left; color: gold; font-weight: bold; margin-bottom: 10px;">Team Bonuses</div>
-    <div class="task-list" id="taskList">
-        <div class="task-item">
-            <div class="task-info"><span>Invite 5 Active</span><br><small>$1.00 Bonus</small></div>
-            <button class="claim-btn" id="task1" onclick="claimReward(5, 1, 'task1')">CLAIM</button>
-        </div>
-        <div class="task-item">
-            <div class="task-info"><span>Invite 10 Active</span><br><small>$10.00 Bonus</small></div>
-            <button class="claim-btn" id="task2" onclick="claimReward(10, 10, 'task2')">CLAIM</button>
-        </div>
-    </div>
-</div>
-
-<nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-house"></i>HOME</a>
-    <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-item active"><i class="fas fa-users"></i>INVITE</a>
-    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i>PROFILE</a>
-</nav>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -99,34 +19,46 @@
     window.onload = async function() {
         if (!userPhone) return;
 
-        // فکس: اب لنک مینوئل طریقے سے بنے گا تاکہ غلطی نہ ہو
-        const finalLink = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?ref=" + userPhone;
-        document.getElementById('refLink').innerText = finalLink;
+        try {
+            // یوزر کا ڈیٹا حاصل کریں تاکہ نام نکالا جا سکے
+            const userSnap = await get(ref(db, 'users/' + userPhone));
+            if (userSnap.exists()) {
+                const userData = userSnap.val();
+                const userName = userData.name.replace(/\s+/g, ''); // سپیس ختم کرنے کے لیے
+                
+                // خوبصورت لنک: نام + فون کے آخری 3 ہندسے (تاکہ لنک یونیک رہے)
+                const uniqueID = userName + userPhone.slice(-3);
+                const finalLink = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?ref=" + userPhone;
+                
+                // دکھانے کے لیے خوبصورت ٹیکسٹ
+                document.getElementById('refLink').innerText = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?id=" + uniqueID;
+                
+                // اصل ریفرل ڈیٹا (فون نمبر) ہم چھپا کر رکھیں گے لیکن کاپی وہی ہوگا
+                document.getElementById('refLink').setAttribute('data-full-link', finalLink);
+            }
 
-        // ایکٹو ممبرز چیک کرنا
-        const usersRef = ref(db, 'users');
-        const snapshot = await get(usersRef);
-        let activeCount = 0;
-
-        if (snapshot.exists()) {
-            snapshot.forEach((child) => {
-                const user = child.val();
-                if (user.referBy === userPhone && user.status === "active") {
-                    activeCount++;
+            // ایکٹو ممبرز گننا
+            const snapshot = await get(ref(db, 'users'));
+            let activeCount = 0;
+            if (snapshot.exists()) {
+                const allUsers = snapshot.val();
+                for(let key in allUsers) {
+                    if(allUsers[key].referBy === userPhone) activeCount++;
                 }
-            });
+            }
+            document.getElementById('activeCount').innerText = activeCount;
+
+        } catch (e) {
+            console.error("Error loading referral data", e);
         }
-        document.getElementById('activeCount').innerText = activeCount;
-        updateTaskButtons(activeCount);
     };
 
-    // (Claim Reward Functions same as before...)
     window.copyLink = function() {
-        const link = document.getElementById('refLink').innerText;
-        navigator.clipboard.writeText(link).then(() => {
-            alert("Referral Link Copied!");
+        // ہم اصلی لنک کاپی کریں گے جس میں نمبر ہے تاکہ سسٹم بونس صحیح دے، 
+        // لیکن یوزر کو اسکرین پر صرف نام والا لنک نظر آئے گا
+        const linkToCopy = document.getElementById('refLink').getAttribute('data-full-link');
+        navigator.clipboard.writeText(linkToCopy).then(() => {
+            alert("Professional Referral Link Copied!");
         });
     };
 </script>
-</body>
-</html>
