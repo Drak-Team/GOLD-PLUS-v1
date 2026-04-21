@@ -9,33 +9,47 @@
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 110px; overflow-x: hidden; }
         
+        /* Header */
         .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
         .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
         .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; }
-        .mini-stats b { font-size: 24px; color: #fff; display: block; margin-top: 5px; }
+        .mini-stats b { font-size: 22px; color: #fff; display: block; }
 
+        /* Stats Grid */
         .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px; }
         .sum-card { background: var(--card-bg); padding: 12px; border-radius: 15px; border-left: 3px solid var(--primary-gold); }
         .sum-card small { font-size: 9px; color: #aaa; text-transform: uppercase; }
-        .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; margin-top: 2px; }
+        .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; }
 
-        .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 10px 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
-        .ticker-move { display: inline-block; animation: tickerHorizontal 60s linear infinite; color: #00ff64; }
+        /* Ticker */
+        .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 11px; overflow: hidden; white-space: nowrap; }
+        .ticker-move { display: inline-block; animation: tickerHorizontal 40s linear infinite; color: #00ff64; }
         @keyframes tickerHorizontal { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
 
+        /* Mining Machines */
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
-        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; }
-        .status-text { font-size: 9px; font-weight: bold; }
-        .status-active { color: #00ff00; } .status-locked { color: #ff4444; }
+        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 10px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .coin-ball { width: 40px; height: 40px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; }
+        .status-text { font-size: 8px; font-weight: bold; }
 
-        .get-all-btn { background: var(--gold-grad); border: none; width: 90%; margin: 0 5%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; }
-        .btn-waiting { background: #333 !important; color: #666 !important; }
+        /* Social Buttons (Back Again!) */
+        .contact-area { padding: 0 20px 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .contact-btn { padding: 14px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 13px; gap: 8px; color: white; }
+        .wa-btn { background: #25d366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+        .tg-btn { background: #0088cc; box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3); }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        /* Main Grid Cards */
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); text-decoration: none; color: white; }
+        .grid-card i { color: var(--primary-gold); font-size: 22px; margin-bottom: 8px; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid var(--primary-gold); }
+        /* Action Button */
+        .get-all-box { padding: 10px 20px; }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 18px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.4); }
+        .btn-waiting { background: #333 !important; color: #666 !important; box-shadow: none; }
+
+        /* Nav Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-btn.active { color: #f1c40f; }
     </style>
@@ -43,10 +57,10 @@
 <body>
 
 <div class="top-header">
-    <div class="user-welcome" id="userNameLabel">Loading...</div>
+    <div class="user-welcome" id="userNameLabel">Hello, Member</div>
     <div class="mini-stats">
-        <div>Available Assets <b id="mainBalance">$0.00</b></div>
-        <div>Active Plan <b id="activePlan">---</b></div>
+        <div>Available Balance <b id="mainBalance">$0.00</b></div>
+        <div>Plan: <b id="activePlan" style="color:var(--primary-gold)">Free</b></div>
     </div>
 </div>
 
@@ -56,7 +70,7 @@
 </div>
 
 <div class="withdraw-ticker">
-    <div class="ticker-move" id="tickerContent">🚀 Welcome to Gold Plus! Deposit now to get bonus.</div>
+    <div class="ticker-move" id="tickerContent">🚀 Welcome! Minimum deposit is $10. Enjoy fast withdrawals.</div>
 </div>
 
 <div class="machines-grid">
@@ -66,111 +80,104 @@
     <div class="machine-card"><div class="coin-ball"><i class="fas fa-link"></i></div><div class="status-text" id="s_VIP2">LOCKED</div></div>
 </div>
 
-<div class="get-all-box" style="text-align: center;">
-    <p id="timerTxt" style="color: #f1c40f; font-weight: bold;"></p>
+<div class="get-all-box">
+    <p id="timerTxt" style="text-align: center; font-size: 12px; color: #f1c40f; font-weight: bold; margin-bottom: 8px;"></p>
     <button class="get-all-btn btn-waiting" id="claimBtn" disabled>IN PROGRESS</button>
 </div>
 
+<div class="contact-area">
+    <a href="https://whatsapp.com/channel/..." class="contact-btn wa-btn"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+    <a href="https://t.me/..." class="contact-btn tg-btn"><i class="fab fa-telegram-plane"></i> Telegram</a>
+</div>
+
 <div class="main-grid">
-    <a href="refer.html" class="grid-card"><i class="fas fa-users"></i><h5>My Team</h5><p id="teamCount">0</p></a>
-    <a href="mining.html" class="grid-card"><i class="fas fa-tasks"></i><h5>Tasks</h5><p>Go</p></a>
+    <a href="refer.html" class="grid-card">
+        <i class="fas fa-users"></i>
+        <h5>My Team</h5>
+        <p id="teamCount" style="font-size: 18px; margin: 0; font-weight: bold;">0 Members</p>
+    </a>
+    <a href="mining.html" class="grid-card">
+        <i class="fas fa-tasks"></i>
+        <h5>Daily Task</h5>
+        <p style="font-size: 18px; margin: 0; font-weight: bold;">Go to Work</p>
+    </a>
 </div>
 
 <nav class="nav-bar">
     <a href="dashboard.html" class="nav-btn active"><i class="fas fa-house"></i><br>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i><br>PLANS</a>
     <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i><br>EARN</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i><br>PROFILE</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i><br>PROFILE</a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-      authDomain: "gold-plus-v1.firebaseapp.com",
-      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
-    };
-
+    const firebaseConfig = { /* آپ کی کنفیگریشن */ };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const phone = localStorage.getItem('userPhone');
 
-    // Ticker Fix
-    const startTicker = () => {
-        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Hamza"];
-        let text = "";
-        for(let i=0; i<10; i++) {
-            text += ` • ${names[Math.floor(Math.random()*5)]}*** withdrew $${(Math.random()*100).toFixed(2)} SUCCESS `;
+    // Ticker Data
+    const updateTicker = () => {
+        const names = ["Ahmad", "Sajid", "Ali", "Zahid", "Irfan"];
+        let html = "";
+        for(let i=0; i<10; i++){
+            html += ` • ${names[Math.floor(Math.random()*5)]}*** Withdraw $${(Math.random()*50).toFixed(2)} SUCCESS `;
         }
-        document.getElementById('tickerContent').innerHTML = text;
-    };
+        document.getElementById('tickerContent').innerHTML = html;
+    }
 
-    if (!phone) {
-        window.location.href = 'index.html';
-    } else {
-        startTicker();
+    if(phone){
+        updateTicker();
         onValue(ref(db, 'users/' + phone), (snap) => {
-            const data = snap.val();
-            if (data) {
-                document.getElementById('mainBalance').innerText = "$" + (data.balance || 0).toFixed(2);
-                document.getElementById('sumEarned').innerText = "$" + (data.totalEarned || 0).toFixed(2);
-                document.getElementById('sumDeposit').innerText = "$" + (data.totalDeposit || 0).toFixed(2);
-                document.getElementById('userNameLabel').innerText = "Hello, " + (data.username || "Member");
-                document.getElementById('activePlan').innerText = data.plan || "Free";
-                document.getElementById('teamCount').innerText = data.referrals ? Object.keys(data.referrals).length : 0;
+            const d = snap.val();
+            if(d){
+                document.getElementById('mainBalance').innerText = "$" + (d.balance || 0).toFixed(2);
+                document.getElementById('sumEarned').innerText = "$" + (d.totalEarned || 0).toFixed(2);
+                document.getElementById('sumDeposit').innerText = "$" + (d.totalDeposit || 0).toFixed(2);
+                document.getElementById('userNameLabel').innerText = "Hello, " + (d.username || "Member");
+                document.getElementById('activePlan').innerText = d.plan || "Free";
+                document.getElementById('teamCount').innerText = (d.referrals ? Object.keys(d.referrals).length : 0) + " Members";
                 
-                updateUI(data.plan || "Free");
-                handleTimer(data.lastClaim);
+                // Machine UI
+                ['Free', 'Starter', 'VIP1', 'VIP2'].forEach(p => {
+                    const el = document.getElementById('s_' + p);
+                    if(el) {
+                        el.innerText = (p === d.plan) ? "ACTIVE" : "LOCKED";
+                        el.style.color = (p === d.plan) ? "#00ff00" : "#ff4444";
+                    }
+                });
+
+                // Timer Logic
+                const wait = 24 * 60 * 60 * 1000;
+                const timer = setInterval(() => {
+                    const diff = wait - (Date.now() - (d.lastClaim || 0));
+                    const btn = document.getElementById('claimBtn');
+                    if(diff <= 0) {
+                        document.getElementById('timerTxt').innerText = "MINING COMPLETE!";
+                        btn.disabled = false; btn.className = "get-all-btn"; btn.innerText = "CLAIM PROFIT";
+                    } else {
+                        const h = Math.floor(diff/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
+                        document.getElementById('timerTxt').innerText = `NEXT CLAIM: ${h}h ${m}m ${s}s`;
+                        btn.disabled = true; btn.className = "get-all-btn btn-waiting"; btn.innerText = "IN PROGRESS";
+                    }
+                }, 1000);
             }
         });
-    }
-
-    function updateUI(plan) {
-        ['Free', 'Starter', 'VIP1', 'VIP2'].forEach(p => {
-            const el = document.getElementById('s_' + p);
-            if(el) {
-                el.innerText = (p === plan) ? "ACTIVE" : "LOCKED";
-                el.className = (p === plan) ? "status-text status-active" : "status-text status-locked";
-            }
-        });
-    }
-
-    function handleTimer(last) {
-        const btn = document.getElementById('claimBtn');
-        const txt = document.getElementById('timerTxt');
-        const wait = 24 * 60 * 60 * 1000;
-        
-        setInterval(() => {
-            const diff = wait - (Date.now() - (last || 0));
-            if(diff <= 0) {
-                txt.innerText = "READY TO CLAIM!";
-                btn.disabled = false; btn.className = "get-all-btn"; btn.innerText = "CLAIM PROFIT";
-            } else {
-                const h = Math.floor(diff/3600000);
-                const m = Math.floor((diff%3600000)/60000);
-                const s = Math.floor((diff%60000)/1000);
-                txt.innerText = `NEXT: ${h}h ${m}m ${s}s`;
-                btn.disabled = true; btn.className = "get-all-btn btn-waiting"; btn.innerText = "IN PROGRESS";
-            }
-        }, 1000);
     }
 
     document.getElementById('claimBtn').onclick = () => {
         runTransaction(ref(db, 'users/' + phone), (u) => {
             if(u) {
-                let earn = u.plan === "Free" ? 0.50 : 2.00; // Adjust profit
+                let earn = u.plan === "Free" ? 0.50 : 2.50; // Adjust as needed
                 u.balance = (u.balance || 0) + earn;
                 u.totalEarned = (u.totalEarned || 0) + earn;
                 u.lastClaim = Date.now();
                 return u;
             }
-        }).then(() => alert("Profit Added!"));
+        });
     };
 </script>
 </body>
