@@ -23,11 +23,15 @@
         .h-btn { flex: 1; background: rgba(241, 196, 15, 0.1); padding: 14px; border-radius: 12px; text-align: center; font-size: 12px; color: #fff; border: 1px solid var(--primary-gold); text-decoration: none; display: block; font-weight: bold; }
         .h-btn i { color: var(--primary-gold); margin-right: 5px; }
 
-        /* SLOW TICKER WITH OFFER (55s) */
-        .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
-        .ticker-move { display: inline-block; animation: ticker 55s linear infinite; color: #00ff64; font-weight: bold; }
-        .offer-tag { color: #f1c40f; text-transform: uppercase; background: rgba(241, 196, 15, 0.2); padding: 2px 8px; border-radius: 5px; margin: 0 15px; }
-        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+        /* FIXED SLOW TICKER (80s for extra slow) */
+        .withdraw-ticker { background: rgba(0, 0, 0, 0.4); padding: 10px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; position: relative; }
+        .ticker-move { display: inline-block; animation: tickerHorizontal 80s linear infinite; color: #00ff64; font-weight: bold; padding-left: 100%; }
+        .offer-tag { color: #f1c40f; text-transform: uppercase; background: rgba(241, 196, 15, 0.2); padding: 2px 8px; border-radius: 5px; margin: 0 10px; }
+        
+        @keyframes tickerHorizontal {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-100%, 0, 0); }
+        }
 
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
         .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
@@ -79,8 +83,7 @@
 
 <div class="withdraw-ticker">
     <div class="ticker-move" id="tickerContent">
-        <span class="offer-tag">Mega Offer</span> Deposit $50 & Get $5 Bonus Free! 🚀 | Syncing Transactions...
-    </div>
+        </div>
 </div>
 
 <div class="machines-grid">
@@ -139,15 +142,16 @@
     const db = getDatabase(app);
     const phone = localStorage.getItem('userPhone');
 
+    // FIXED TICKER GENERATOR
     const generateTicker = () => {
-        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Sajid", "Umar", "Hamza", "Zeeshan", "Adeel", "Faisal"];
-        let text = "<span class='offer-tag'>Limited Offer</span> Deposit $50 Get $5 Bonus Free! 🔥 ";
-        for(let i=0; i<30; i++) {
+        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Sajid", "Umar", "Hamza", "Zeeshan", "Adeel", "Faisal", "Tahir", "Junaid"];
+        let text = "<span class='offer-tag'>Mega Offer</span> Deposit $50 & Get $5 Bonus Free! 🚀 ";
+        for(let i=0; i<20; i++) {
             let name = names[Math.floor(Math.random() * names.length)];
-            let amt = (Math.random() * 300 + 10).toFixed(2);
+            let amt = (Math.random() * 300 + 20).toFixed(2);
             text += ` • ${name}*** withdrawn $${amt} SUCCESS  `;
         }
-        document.getElementById('tickerContent').innerHTML = text + text;
+        document.getElementById('tickerContent').innerHTML = text;
     };
 
     window.onload = () => { 
@@ -165,9 +169,11 @@
                 document.getElementById('userNameLabel').innerText = "Hello, " + (userData.username || "Member");
                 document.getElementById('activePlan').innerText = userData.plan || "Free";
                 
-                // TEAM COUNT FIX
-                // Agar aapke database mein 'referrals' ka folder hai:
-                const count = userData.referrals ? Object.keys(userData.referrals).length : 0;
+                // FIXED TEAM COUNT (Counting direct from referrals folder)
+                let count = 0;
+                if (userData.referrals) {
+                    count = Object.keys(userData.referrals).length;
+                }
                 document.getElementById('teamCount').innerText = count + " Members";
                 
                 updateMachineUI(userData.plan || "Free");
@@ -189,15 +195,26 @@
 
     function startTimer(lastClaim) {
         const cooldown = 24 * 60 * 60 * 1000;
-        setInterval(() => {
-            const remain = cooldown - (Date.now() - (lastClaim || 0));
+        const timerInterval = setInterval(() => {
+            const now = Date.now();
+            const remain = cooldown - (now - (lastClaim || 0));
             const btn = document.getElementById('claimBtn');
             const txt = document.getElementById('timerTxt');
+
             if (remain <= 0) {
-                txt.innerText = "MINING COMPLETE!"; btn.disabled = false; btn.className = "get-all-btn"; btn.innerText = "CLAIM PROFIT";
+                txt.innerText = "MINING COMPLETE!"; 
+                btn.disabled = false; 
+                btn.className = "get-all-btn"; 
+                btn.innerText = "CLAIM PROFIT";
+                // clearInterval(timerInterval); // Option to stop timer when done
             } else {
-                const h = Math.floor(remain / 3600000); const m = Math.floor((remain % 3600000) / 60000); const s = Math.floor((remain % 60000) / 1000);
-                txt.innerText = `NEXT CLAIM: ${h}h ${m}m ${s}s`; btn.disabled = true; btn.className = "get-all-btn btn-waiting"; btn.innerText = "IN PROGRESS";
+                const h = Math.floor(remain / 3600000); 
+                const m = Math.floor((remain % 3600000) / 60000); 
+                const s = Math.floor((remain % 60000) / 1000);
+                txt.innerText = `NEXT CLAIM: ${h}h ${m}m ${s}s`; 
+                btn.disabled = true; 
+                btn.className = "get-all-btn btn-waiting"; 
+                btn.innerText = "IN PROGRESS";
             }
         }, 1000);
     }
@@ -206,12 +223,15 @@
         runTransaction(ref(db, 'users/' + phone), (curr) => {
             if (curr) {
                 const earn = curr.plan === "Free" ? 0.50 : (curr.dailyEarning || 5.00);
-                curr.balance = (curr.balance || 0) + earn;
-                curr.totalEarned = (curr.totalEarned || 0) + earn;
-                curr.lastClaim = Date.now();
-                return curr;
+                const now = Date.now();
+                if (now - (curr.lastClaim || 0) >= 24 * 60 * 60 * 1000) {
+                    curr.balance = (curr.balance || 0) + earn;
+                    curr.totalEarned = (curr.totalEarned || 0) + earn;
+                    curr.lastClaim = now;
+                    return curr;
+                }
             }
-        }).then(() => alert("Profit Claimed!"));
+        }).then(() => alert("Profit Claimed Successfully!"));
     };
 </script>
 </body>
