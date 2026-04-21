@@ -1,129 +1,154 @@
 <style>
-    .expert-container { margin-top: 20px; text-align: left; }
-    .expert-card { 
-        background: rgba(255, 255, 255, 0.04); 
-        border: 1px solid rgba(255,255,255,0.1); 
-        border-radius: 15px; 
-        padding: 12px; 
-        margin-bottom: 10px; 
-        display: flex; 
-        align-items: center; 
+    /* Professional Copy Trading Theme */
+    .trade-card { 
+        background: rgba(255, 255, 255, 0.05); 
+        border: 1px solid rgba(255, 255, 255, 0.1); 
+        border-radius: 25px; 
+        padding: 20px; 
+        margin: 20px; 
+        backdrop-filter: blur(15px);
+    }
+
+    .section-title {
+        color: var(--primary-gold);
+        font-size: 16px;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 20px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .expert-list { display: flex; flex-direction: column; gap: 15px; }
+
+    .expert-item {
+        background: rgba(0, 0, 0, 0.3);
+        border: 1px solid rgba(241, 196, 15, 0.1);
+        border-radius: 18px;
+        padding: 15px;
+        display: flex;
+        align-items: center;
         justify-content: space-between;
+        transition: 0.3s;
     }
-    .expert-info { display: flex; align-items: center; gap: 10px; }
-    .expert-info img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary-gold); }
-    .expert-meta b { display: block; font-size: 13px; color: #fff; }
-    .expert-meta span { font-size: 10px; color: #00ff64; }
+
+    .expert-item:hover { border-color: var(--primary-gold); transform: translateY(-2px); }
+
+    .expert-profile { display: flex; align-items: center; gap: 12px; }
+
+    .expert-img-wrapper { position: relative; }
+    .expert-img-wrapper img { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--primary-gold); }
+    .status-dot { 
+        position: absolute; bottom: 2px; right: 2px; width: 10px; height: 10px; 
+        background: #00ff64; border-radius: 50%; border: 2px solid #0f051d; 
+    }
+
+    .expert-details b { display: block; font-size: 14px; color: #fff; }
+    .expert-details span { font-size: 11px; color: #00ff64; font-weight: bold; }
+
+    .copy-action-btn {
+        background: var(--gold-grad);
+        color: #000;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .trade-input-group {
+        margin-top: 25px;
+        background: rgba(0,0,0,0.4);
+        padding: 15px;
+        border-radius: 20px;
+        border: 1px dashed rgba(241, 196, 15, 0.3);
+    }
+
+    .trade-input-group label { font-size: 11px; color: #aaa; margin-bottom: 10px; display: block; }
     
-    .copy-btn-sm { 
-        background: var(--primary-gold); 
-        color: #000; 
-        border: none; 
-        padding: 6px 12px; 
-        border-radius: 8px; 
-        font-size: 11px; 
-        font-weight: bold; 
-        cursor: pointer; 
+    .amount-selector {
+        width: 100%;
+        background: transparent;
+        border: none;
+        color: var(--primary-gold);
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        outline: none;
+        font-family: monospace;
     }
-    
-    .live-badge { 
-        background: red; 
-        color: white; 
-        font-size: 8px; 
-        padding: 2px 5px; 
-        border-radius: 4px; 
-        margin-left: 5px; 
-        animation: blink 1s infinite;
+
+    .main-trade-btn {
+        background: var(--gold-grad);
+        color: #000;
+        width: 100%;
+        padding: 16px;
+        border-radius: 15px;
+        font-weight: 800;
+        border: none;
+        margin-top: 15px;
+        box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
     }
-    @keyframes blink { 50% { opacity: 0.3; } }
 </style>
 
 <div class="trade-card">
-    <div class="trade-title">
-        <i class="fas fa-users-gear"></i> TOP COPY TRADERS <span class="live-badge">LIVE</span>
+    <div class="section-title">
+        <i class="fas fa-crown"></i> Elite Copy Traders <span class="live-badge">LIVE</span>
     </div>
-    
-    <div id="expertList" class="expert-container">
+
+    <div class="expert-list" id="expertList">
         </div>
 
-    <div style="margin-top: 20px;">
-        <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 5px;">CUSTOM TRADE AMOUNT ($5 - $300)</label>
-        <input type="number" id="customTrade" value="5" min="5" max="300" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid #333; color: gold; border-radius: 10px; text-align: center; font-weight: bold;">
-        <button class="action-btn" onclick="startCustomTrade()" style="margin-top: 15px; background: var(--gold-grad);">START COPY TRADING</button>
+    <div class="trade-input-group">
+        <label>ENTER TRADE AMOUNT ($5 - $300)</label>
+        <div style="display: flex; align-items: center; justify-content: center;">
+            <span style="font-size: 24px; color: var(--primary-gold);">$</span>
+            <input type="number" id="customTrade" class="amount-selector" value="5" min="5" max="300">
+        </div>
+        <button class="main-trade-btn" onclick="startCustomTrade()">
+            <i class="fas fa-bolt"></i> START COPY TRADING
+        </button>
     </div>
 </div>
 
-<script type="module">
-    // Firebase Config (Puraana wala hi use karein)
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    // Fake Profiles Data
-    const experts = [
-        { name: "Alex Crypto", img: "https://i.pravatar.cc/150?u=1", roi: "450%" },
-        { name: "Zain Master", img: "https://i.pravatar.cc/150?u=2", roi: "312%" },
-        { name: "Sarah Trade", img: "https://i.pravatar.cc/150?u=3", roi: "580%" },
-        { name: "Pro Scalper", img: "https://i.pravatar.cc/150?u=4", roi: "290%" }
+<script>
+    const fakeExperts = [
+        { name: "Crypto King", roi: "+542.8%", img: "https://i.pravatar.cc/150?u=a1" },
+        { name: "Elite Scalper", roi: "+310.4%", img: "https://i.pravatar.cc/150?u=a2" },
+        { name: "Global Trade", roi: "+425.1%", img: "https://i.pravatar.cc/150?u=a3" }
     ];
 
-    function loadExperts() {
-        const list = document.getElementById('expertList');
-        list.innerHTML = '';
-        experts.forEach(ex => {
-            // Har 4 ghante baad ROI change karne ka logic (Random)
-            const randomROI = (Math.random() * (600 - 200) + 200).toFixed(1);
-            list.innerHTML += `
-                <div class="expert-card">
-                    <div class="expert-info">
+    function renderExperts() {
+        const container = document.getElementById('expertList');
+        container.innerHTML = fakeExperts.map(ex => `
+            <div class="expert-item">
+                <div class="expert-profile">
+                    <div class="expert-img-wrapper">
                         <img src="${ex.img}">
-                        <div class="expert-meta">
-                            <b>${ex.name}</b>
-                            <span>ROI: +${randomROI}%</span>
-                        </div>
+                        <div class="status-dot"></div>
                     </div>
-                    <button class="copy-btn-sm" onclick="setTradeAmount(25)">Copy</button>
+                    <div class="expert-details">
+                        <b>${ex.name}</b>
+                        <span>ROI: ${ex.roi}</span>
+                    </div>
                 </div>
-            `;
+                <button class="copy-action-btn" onclick="document.getElementById('customTrade').value=50">Copy</button>
+            </div>
+        `).join('');
+    }
+    
+    // پرافٹ اپڈیٹ کرنے کا فنکشن (ہر 4 گھنٹے بعد خودکار)
+    function updateProfits() {
+        fakeExperts.forEach(ex => {
+            const newRoi = (Math.random() * (600 - 200) + 200).toFixed(1);
+            ex.roi = "+" + newRoi + "%";
         });
+        renderExperts();
     }
 
-    window.setTradeAmount = (amt) => {
-        document.getElementById('customTrade').value = amt;
-        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    };
-
-    window.startCustomTrade = async () => {
-        const phone = localStorage.getItem('userPhone');
-        const amt = parseFloat(document.getElementById('customTrade').value);
-
-        if (amt < 5 || amt > 300) {
-            alert("Min $5 and Max $300 allowed!");
-            return;
-        }
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        
-        const snap = await get(ref(db, 'users/' + phone));
-        const balance = snap.val().balance || 0;
-
-        if (balance < amt) {
-            alert("Insufficient Balance!");
-            return;
-        }
-
-        if(confirm(`Confirm copy trade of $${amt}?`)) {
-            await runTransaction(ref(db, 'users/' + phone), (u) => {
-                if (u) { u.balance -= amt; return u; }
-            });
-            alert("Expert started trading with your $" + amt + ". Results will be shown in 24 hours.");
-            location.reload();
-        }
-    };
-
-    window.onload = () => {
-        loadExperts();
-        // Har 4 ghante (14400000 ms) baad update karne ke liye
-        setInterval(loadExperts, 14400000); 
-    };
+    renderExperts();
+    setInterval(updateProfits, 14400000); // 4 گھنٹے
 </script>
