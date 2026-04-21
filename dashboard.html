@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 80px; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
         
-        /* Header Section */
         .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
         .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
         .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; }
@@ -24,7 +23,11 @@
         .h-btn { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; text-align: center; font-size: 11px; color: #fff; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
         .h-btn i { color: var(--primary-gold); margin-right: 5px; }
 
-        /* Original Machine Grid */
+        /* LIVE WITHDRAWAL TICKER */
+        .withdraw-ticker { background: rgba(241, 196, 15, 0.1); padding: 8px; margin: 0 20px; border-radius: 10px; border: 1px dashed var(--primary-gold); font-size: 12px; overflow: hidden; white-space: nowrap; }
+        .ticker-move { display: inline-block; animation: ticker 40s linear infinite; color: #00ff64; font-weight: bold; }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
         .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); font-size: 18px; color: #fff; }
@@ -32,16 +35,19 @@
         .status-locked { color: #ff0000; }
         .status-active { color: #00ff00; }
 
-        /* Main Claim Button */
-        .get-all-box { padding: 0 20px 20px; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241,196,15,0.3); text-transform: uppercase; }
-        .btn-waiting { background: #333; color: #666; cursor: not-allowed; box-shadow: none; }
+        .get-all-box { padding: 0 20px 10px; }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; text-transform: uppercase; }
+        .btn-waiting { background: #333; color: #666; cursor: not-allowed; }
 
-        /* Bottom Info */
+        /* WHATSAPP BUTTON */
+        .wa-box { padding: 0 20px 20px; }
+        .wa-btn { background: #25d366; color: white; width: 100%; padding: 15px; border-radius: 15px; text-decoration: none; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; gap: 10px; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3); }
+
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; }
-        .grid-card h5 { margin: 0; font-size: 14px; color: #f1c40f; }
-        .grid-card p { margin: 8px 0; font-size: 18px; color: #fff; font-weight: bold; }
+        .grid-card i { color: var(--primary-gold); font-size: 20px; margin-bottom: 10px; }
+        .grid-card h5 { margin: 0; font-size: 13px; color: #f1c40f; }
+        .grid-card p { margin: 5px 0 0; font-size: 18px; color: #fff; font-weight: bold; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
@@ -65,8 +71,12 @@
 </div>
 
 <div class="history-links">
-    <a href="deposit.html" class="h-btn"><i class="fas fa-arrow-down"></i> Deposits</a>
-    <a href="withdraw.html" class="h-btn"><i class="fas fa-arrow-up"></i> Withdraws</a>
+    <a href="deposit.html" class="h-btn"><i class="fas fa-list"></i> Dep. History</a>
+    <a href="withdraw.html" class="h-btn"><i class="fas fa-history"></i> With. History</a>
+</div>
+
+<div class="withdraw-ticker">
+    <div class="ticker-move" id="tickerContent">Loading latest withdrawals...</div>
 </div>
 
 <div class="machines-grid">
@@ -81,9 +91,15 @@
     <button class="get-all-btn btn-waiting" id="claimBtn" disabled>CLAIM PROFIT</button>
 </div>
 
+<div class="wa-box">
+    <a href="https://chat.whatsapp.com/YOUR_GROUP_LINK" class="wa-btn">
+        <i class="fab fa-whatsapp"></i> JOIN OFFICIAL GROUP
+    </a>
+</div>
+
 <div class="main-grid">
-    <div class="grid-card"><h5>My Team</h5><p id="teamCount">+0 Members</p></div>
-    <div class="grid-card"><h5>Daily Rate</h5><p id="dailyRate">$0.50</p></div>
+    <div class="grid-card"><i class="fas fa-users-cog"></i><h5>My Team</h5><p id="teamCount">+0 Members</p></div>
+    <div class="grid-card"><i class="fas fa-chart-line"></i><h5>Daily Earn</h5><p id="dailyRate">$0.50</p></div>
 </div>
 
 <nav class="nav-bar">
@@ -113,7 +129,22 @@
     const username = localStorage.getItem('userPhone');
     let userData = null;
 
-    window.onload = () => { if (!username) window.location.href = 'index.html'; else syncData(); };
+    // AUTO WITHDRAW NAMES GENERATOR (60 Names)
+    const generateTicker = () => {
+        const names = ["Ahmad", "Ali", "Zahid", "Irfan", "Sajid", "Kamran", "Umar", "Bilal", "Hamza", "Rizwan", "Usama", "Waqas", "Noman", "Asif", "Zeeshan", "Adeel", "Faisal", "Junaid", "Tahir", "Yasir"];
+        let text = "";
+        for(let i=0; i<60; i++) {
+            let name = names[Math.floor(Math.random() * names.length)];
+            let amt = (Math.random() * (500 - 10) + 10).toFixed(2);
+            text += ` • ${name}*** withdrew $${amt} SUCCESS  `;
+        }
+        document.getElementById('tickerContent').innerText = text + text;
+    };
+
+    window.onload = () => { 
+        if (!username) window.location.href = 'index.html'; 
+        else { syncData(); generateTicker(); }
+    };
 
     function syncData() {
         onValue(ref(db, 'users/' + username), (snap) => {
@@ -126,8 +157,6 @@
                 const plan = userData.plan || "Free";
                 document.getElementById('activePlan').innerText = plan;
                 document.getElementById('dailyRate').innerText = "$" + (userData.dailyEarning || 0.50).toFixed(2);
-                
-                // Update Machines
                 updateMachineUI(plan);
                 startTimer();
             }
@@ -138,12 +167,9 @@
         const plans = ['Free', 'Starter', 'VIP1', 'VIP2'];
         plans.forEach(p => {
             const el = document.getElementById('s_' + p);
-            if (p === activePlan) {
-                el.innerText = "ACTIVE";
-                el.className = "status-text status-active";
-            } else {
-                el.innerText = "LOCKED";
-                el.className = "status-text status-locked";
+            if (el) {
+                if (p === activePlan) { el.innerText = "ACTIVE"; el.className = "status-text status-active"; }
+                else { el.innerText = "LOCKED"; el.className = "status-text status-locked"; }
             }
         });
     }
@@ -155,20 +181,11 @@
             const remain = cooldown - (Date.now() - last);
             const btn = document.getElementById('claimBtn');
             const txt = document.getElementById('timerTxt');
-
             if (remain <= 0) {
-                txt.innerText = "MINING COMPLETE!";
-                btn.disabled = false;
-                btn.className = "get-all-btn";
-                btn.innerText = "CLAIM PROFIT";
+                txt.innerText = "MINING COMPLETE!"; btn.disabled = false; btn.className = "get-all-btn"; btn.innerText = "CLAIM PROFIT";
             } else {
-                const h = Math.floor(remain / 3600000);
-                const m = Math.floor((remain % 3600000) / 60000);
-                const s = Math.floor((remain % 60000) / 1000);
-                txt.innerText = `NEXT CLAIM IN: ${h}h ${m}m ${s}s`;
-                btn.disabled = true;
-                btn.className = "get-all-btn btn-waiting";
-                btn.innerText = "IN PROGRESS";
+                const h = Math.floor(remain / 3600000); const m = Math.floor((remain % 3600000) / 60000); const s = Math.floor((remain % 60000) / 1000);
+                txt.innerText = `NEXT CLAIM IN: ${h}h ${m}m ${s}s`; btn.disabled = true; btn.className = "get-all-btn btn-waiting"; btn.innerText = "IN PROGRESS";
             }
         };
         setInterval(tick, 1000); tick();
