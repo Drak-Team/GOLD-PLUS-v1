@@ -3,231 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Investment Plans</title>
+    <title>Gold Plus - Hot Investment Plans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-gold: #f1c40f;
-            --bg-dark: #0f051d;
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
-            color: white;
-            padding-bottom: 100px;
-        }
-
-        .header {
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(0,0,0,0.2);
-        }
-        .header i { color: var(--primary-gold); font-size: 24px; filter: drop-shadow(0 0 5px gold); }
-        .header h2 { margin: 0; font-size: 20px; letter-spacing: 1px; }
+        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.05); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 100px; }
+        
+        .header { padding: 25px; text-align: center; background: rgba(0,0,0,0.3); border-bottom: 2px solid var(--gold); border-radius: 0 0 40px 40px; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.2); }
+        .header h2 { margin: 0; color: var(--gold); font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
 
         .container { padding: 15px; }
-        .section-desc { font-size: 12px; color: #aaa; margin-bottom: 20px; padding-left: 5px; }
 
+        /* Offer Section Header */
+        .section-title { color: #ff4444; font-size: 14px; font-weight: bold; margin: 20px 0 10px 5px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .section-title i { font-size: 18px; }
+
+        /* Greedy Plan Cards */
         .plan-card {
-            background: var(--card-bg);
-            border: 1px solid var(--glass-border);
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 25px;
             padding: 20px;
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(10px);
+            transition: 0.3s;
         }
+        .plan-card.premium { border: 1px solid var(--gold); background: rgba(241, 196, 15, 0.03); }
+        
+        .robot-img { position: absolute; right: -10px; top: 10px; width: 100px; opacity: 0.4; pointer-events: none; }
 
-        .plan-badge {
-            position: absolute;
-            top: 0; right: 0;
-            background: var(--primary-gold);
-            color: #000;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 6px 15px;
-            border-bottom-left-radius: 15px;
-            text-transform: uppercase;
-            box-shadow: -2px 2px 10px rgba(0,0,0,0.3);
-        }
+        .plan-badge { position: absolute; top: 0; right: 0; background: #ff4444; color: #fff; font-size: 10px; font-weight: bold; padding: 6px 15px; border-bottom-left-radius: 15px; }
+        .plan-badge.offer { background: #00ff64; color: #000; }
 
-        .plan-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
-        .plan-icon-box {
-            background: rgba(255,255,255,0.05);
-            width: 50px; height: 50px;
-            border-radius: 15px;
-            display: flex; align-items: center; justify-content: center;
-            border: 1px solid rgba(241, 196, 15, 0.3);
-        }
-        .plan-icon-box i { font-size: 24px; color: var(--primary-gold); }
+        .plan-info h3 { margin: 0; font-size: 20px; color: #fff; }
+        .plan-info .price { color: var(--gold); font-size: 18px; font-weight: bold; margin: 5px 0; display: block; }
 
-        .plan-title h3 { margin: 0; font-size: 18px; }
-        .plan-title span { color: var(--primary-gold); font-weight: bold; font-size: 13px; }
+        .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .stat-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box label { display: block; font-size: 9px; color: #aaa; text-transform: uppercase; }
+        .stat-box span { font-size: 14px; font-weight: bold; color: #00ff64; }
 
-        .details-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .detail-box {
-            background: rgba(255,255,255,0.03);
-            padding: 12px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.05);
-        }
-        .detail-box label { display: block; font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; }
-        .detail-box div { font-size: 14px; font-weight: bold; }
-        .profit-text { color: #00ff64; }
-        .small-usd { font-size: 10px; color: #f1c40f; display: block; margin-top: 2px; }
+        .invest-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3); }
 
-        .invest-btn {
-            background: linear-gradient(90deg, #f1c40f, #e67e22);
-            color: #000; border: none; width: 100%; padding: 14px;
-            border-radius: 18px; font-weight: bold; font-size: 15px;
-            cursor: pointer; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.2);
-        }
+        /* Coming Soon Card */
+        .coming-soon { background: rgba(255,255,255,0.02); border: 1px dashed #444; padding: 30px; text-align: center; border-radius: 25px; color: #666; font-size: 18px; font-weight: bold; }
 
-        .calc-box {
-            background: rgba(241, 196, 15, 0.05);
-            border: 1px solid rgba(241, 196, 15, 0.2);
-            border-radius: 25px; padding: 20px; margin-top: 30px; text-align: center;
-        }
-        .calc-input {
-            width: 85%; background: #0a0414; border: 1px solid #f1c40f;
-            color: #fff; padding: 12px; border-radius: 12px; text-align: center;
-            font-size: 18px; margin-bottom: 15px; outline: none;
-        }
-
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%;
-            background: #110720; display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid var(--glass-border);
-        }
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
-        .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .nav-btn { color: #555; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn.active { color: var(--gold); }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <i class="fas fa-coins"></i>
     <h2>Investment Plans</h2>
 </div>
 
 <div class="container">
-    <p class="section-desc">Fixed Exchange Rate: 1$ = 300 PKR</p>
-
+    
     <div class="plan-card">
-        <div class="plan-badge" style="background: #7f8c8d; color: #fff;">Limited</div>
-        <div class="plan-header">
-            <div class="plan-icon-box"><i class="fas fa-gift"></i></div>
-            <div class="plan-title">
-                <h3>Free Miner</h3>
-                <span>Investment: Rs. 0</span>
-            </div>
+        <div class="plan-badge" style="background:#555;">TRIAL</div>
+        <div class="plan-info">
+            <h3>Starter Miner (Free)</h3>
+            <span class="price">$0.00 / Rs. 0</span>
         </div>
-        <div class="details-grid">
-            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 10</div></div>
-            <div class="detail-box"><label>Validity</label><div>30 Days</div></div>
+        <div class="stats">
+            <div class="stat-box"><label>Daily Income</label><span>Rs. 10 ($0.033)</span></div>
+            <div class="stat-box"><label>Validity</label><span>30 Days</span></div>
         </div>
-        <button class="invest-btn" onclick="activateFree()">Activate Free Plan</button>
+        <button class="invest-btn" style="background:#444; color:#fff;">ACTIVATE FREE</button>
     </div>
 
-    <div class="plan-card">
-        <div class="plan-badge" style="background: #e67e22; color: #fff;">🔥 Popular</div>
-        <div class="plan-header">
-            <div class="plan-icon-box"><i class="fas fa-star"></i></div>
-            <div class="plan-title">
-                <h3>Bronze Miner</h3>
-                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 800</del> Rs. 600</span>
-            </div>
+    <div class="section-title"><i class="fas fa-fire"></i> Hot Mining Packages</div>
+
+    <div class="plan-card premium">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-info">
+            <h3>Bronze AI Power</h3>
+            <span class="price">$2.00 / Rs. 600</span>
         </div>
-        <div class="details-grid">
-            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 50 <span class="small-usd">($0.16)</span></div></div>
-            <div class="detail-box"><label>Total Return</label><div>Rs. 1500 <span class="small-usd">($5.00)</span></div></div>
+        <div class="stats">
+            <div class="stat-box"><label>Daily Profit</label><span>Rs. 60 ($0.20)</span></div>
+            <div class="stat-box"><label>Total Return</label><span>Rs. 1,800</span></div>
         </div>
-        <button class="invest-btn" onclick="goToDeposit('Bronze', 600)">Buy Bronze Plan</button>
+        <button class="invest-btn">BUY FOR $2.00</button>
     </div>
 
-    <div class="plan-card">
-        <div class="plan-badge" style="background: #3498db; color: #fff;">⭐ Best Value</div>
-        <div class="plan-header">
-            <div class="plan-icon-box"><i class="fas fa-gem"></i></div>
-            <div class="plan-title">
-                <h3>Silver Miner</h3>
-                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 2000</del> Rs. 1500</span>
-            </div>
+    <div class="plan-card premium">
+        <div class="plan-info">
+            <h3>Silver AI Power</h3>
+            <span class="price">$5.00 / Rs. 1,500</span>
         </div>
-        <div class="details-grid">
-            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 130 <span class="small-usd">($0.43)</span></div></div>
-            <div class="detail-box"><label>Total Return</label><div>Rs. 3900 <span class="small-usd">($13.00)</span></div></div>
+        <div class="stats">
+            <div class="stat-box"><label>Daily Profit</label><span>Rs. 180 ($0.60)</span></div>
+            <div class="stat-box"><label>Total Return</label><span>Rs. 5,400</span></div>
         </div>
-        <button class="invest-btn" onclick="goToDeposit('Silver', 1500)">Buy Silver Plan</button>
+        <button class="invest-btn">BUY FOR $5.00</button>
     </div>
 
-    <div class="plan-card" style="border: 1px solid var(--primary-gold);">
-        <div class="plan-badge" style="background: var(--primary-gold); color: #000; box-shadow: 0 0 15px rgba(241,196,15,0.4);">💰 Most Profitable</div>
-        <div class="plan-header">
-            <div class="plan-icon-box"><i class="fas fa-crown"></i></div>
-            <div class="plan-title">
-                <h3>Gold Miner</h3>
-                <span>Investment: <del style="color:#ff4444; font-size:10px;">Rs. 4000</del> Rs. 3000</span>
-            </div>
+    <div class="section-title" style="color:#00ff64;"><i class="fas fa-robot"></i> USDT Booster Offers</div>
+
+    <div class="plan-card" style="border: 2px solid #00ff64; background: rgba(0, 255, 100, 0.05);">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" class="robot-img" alt="Robot">
+        <div class="plan-badge offer">20% BONUS PROFIT</div>
+        <div class="plan-info">
+            <h3 style="color:#00ff64;">Crypto-Robot X1</h3>
+            <span class="price">$10.00 / Rs. 3,000</span>
+            <small style="color:#aaa;">Pay with USDT to unlock extra earning</small>
         </div>
-        <div class="details-grid">
-            <div class="detail-box"><label>Daily Profit</label><div class="profit-text">Rs. 280 <span class="small-usd">($0.93)</span></div></div>
-            <div class="detail-box"><label>Total Return</label><div>Rs. 8400 <span class="small-usd">($28.00)</span></div></div>
+        <div class="stats">
+            <div class="stat-box"><label>USDT Daily</label><span style="color:#00ff64;">$1.50 (Rs. 450)</span></div>
+            <div class="stat-box"><label>Jazz/Easy Daily</label><span>$1.20 (Rs. 360)</span></div>
         </div>
-        <button class="invest-btn" onclick="goToDeposit('Gold', 3000)">Buy Gold Plan</button>
+        <button class="invest-btn" style="background: linear-gradient(90deg, #00ff64, #00bd4b);">DEPOSIT VIA USDT</button>
     </div>
 
-    <div class="calc-box">
-        <h4 style="color: var(--primary-gold); margin-top: 0;"><i class="fas fa-calculator"></i> Profit Calculator</h4>
-        <input type="number" id="calcInp" class="calc-input" placeholder="Enter Dollars ($)" oninput="runCalc()">
-        <div class="details-grid" style="margin-top: 10px;">
-            <div id="resDaily" class="detail-box" style="color: #00ff64;">0 PKR</div>
-            <div id="resMonthly" class="detail-box" style="color: #00ff64;">0 PKR</div>
+    <div class="plan-card" style="border: 2px solid #00ff64; background: rgba(0, 255, 100, 0.05);">
+        <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" class="robot-img" alt="Robot">
+        <div class="plan-badge offer">HIGH ROI</div>
+        <div class="plan-info">
+            <h3 style="color:#00ff64;">Crypto-Robot Pro</h3>
+            <span class="price">$20.00 / Rs. 6,000</span>
         </div>
+        <div class="stats">
+            <div class="stat-box"><label>USDT Daily</label><span style="color:#00ff64;">$3.50 (Rs. 1050)</span></div>
+            <div class="stat-box"><label>Validity</label><span>30 Days</span></div>
+        </div>
+        <button class="invest-btn" style="background: linear-gradient(90deg, #00ff64, #00bd4b);">DEPOSIT VIA USDT</button>
     </div>
+
+    <div class="coming-soon">
+        <i class="fas fa-lock"></i><br>
+        VIP PLANS COMING SOON
+    </div>
+
 </div>
 
-<nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i>HOME</a>
-    <a href="plans.html" class="nav-item active"><i class="fas fa-gem"></i>INVEST</a>
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
-    <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>PROFILE</a>
+<nav class="nav-bar">
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="plans.html" class="nav-btn active"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn"><i class="fas fa-microchip"></i>MINING</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
 </nav>
-
-<script>
-    function goToDeposit(plan, price) {
-        window.location.href = `deposit.html?plan=${plan}&price=${price}`;
-    }
-
-    function activateFree() {
-        alert("Free Miner Activated!");
-        window.location.href = 'dashboard.html';
-    }
-
-    function runCalc() {
-        const usd = document.getElementById('calcInp').value;
-        const rate = 300;
-        if(usd > 0) {
-            const dailyP = usd * 0.10 * rate;
-            document.getElementById('resDaily').innerText = Math.floor(dailyP) + " PKR Daily";
-            document.getElementById('resMonthly').innerText = Math.floor(dailyP * 30) + " PKR Monthly";
-        }
-    }
-</script>
 
 </body>
 </html>
