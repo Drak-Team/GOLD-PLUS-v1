@@ -1,72 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Mining & Tasks</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 90px; }
+        
+        .header { padding: 25px 20px; background: rgba(0,0,0,0.3); text-align: center; border-radius: 0 0 30px 30px; border-bottom: 1px solid rgba(241, 196, 15, 0.2); }
+        
+        /* Mining & Task Cards */
+        .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(241, 196, 15, 0.1); margin: 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); text-align: center; }
+        
+        .product-box { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed var(--primary-gold); }
+        .task-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box; }
+
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2 style="color:var(--primary-gold); margin:0;">WORK STATION</h2>
+</div>
+
+<div class="card" id="taskSection">
+    <h3><i class="fas fa-keyboard"></i> DATA ENTRY</h3>
+    <div class="product-box">
+        <small style="color:#aaa;">Product Name</small><br>
+        <span id="productName" style="font-size:18px; font-weight:bold;">Loading...</span>
+    </div>
+    <input type="number" id="priceInput" class="task-input" placeholder="Enter Price">
+    <select id="catInput" class="task-input">
+        <option value="">Select Category</option>
+        <option>Mobile</option>
+        <option>Electronics</option>
+    </select>
+    <button class="btn" id="taskBtn" onclick="submitTask()">SUBMIT TASK</button>
+    <p id="progressMsg" style="font-size:12px; margin-top:10px; color:var(--primary-gold);"></p>
+</div>
+
+<div class="card" id="miningSection" style="display:none;">
+    <div style="font-size:40px; color:var(--primary-gold); margin-bottom:15px;"><i class="fas fa-microchip fa-spin"></i></div>
+    <h3>AI MINING READY</h3>
+    <p style="font-size:12px; color:#aaa;">All tasks completed! Click below to claim daily profit.</p>
+    <button class="btn" onclick="startMining()">CLAIM DAILY EARNING</button>
+</div>
+
+<nav class="nav-bar">
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
+</nav>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { /* آپ کی وہی کنفیگریشن */ };
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const phone = localStorage.getItem('userPhone');
+    const username = localStorage.getItem('userPhone'); // آپ کے ڈیٹا بیس میں یہی کی (Key) ہے
 
-    // فرض کریں ہر یوزر کو روزانہ 10 ٹاسک کرنے ہیں
-    const TOTAL_TASKS_REQUIRED = 10; 
-    let currentTaskCount = 0;
+    let requiredTasks = 5; // جتنے ٹاسک آپ رکھنا چاہیں
+    let doneTasks = 0;
+    const products = ["iPhone 15", "Samsung S24", "MacBook", "Apple Watch"];
 
-    const products = ["iPhone 15 Pro", "MacBook Air M2", "Apple Watch Ultra", "Samsung S24"];
-
-    function loadTask(){
-        const random = products[Math.floor(Math.random()*products.length)];
-        document.getElementById("productName").innerText = random;
-        document.getElementById("price").value = "";
-        document.getElementById("category").value = "";
+    // 1. لوڈنگ لاجک (چیک کریں کہ کیا یوزر آج مائننگ کر چکا ہے؟)
+    async function checkStatus() {
+        if (!username) { window.location.href="login.html"; return; }
         
-        // ٹاسک کی تعداد دکھانا
-        document.getElementById("msg").innerText = `Progress: ${currentTaskCount} / ${TOTAL_TASKS_REQUIRED}`;
-        document.getElementById("msg").style.color = "#aaa";
-    }
-
-    window.submitTask = async function(){
-        let price = document.getElementById("price").value;
-        let cat = document.getElementById("category").value;
-        let btn = document.getElementById("taskBtn");
-        let msg = document.getElementById("msg");
-
-        if(price == "" || cat == ""){
-            alert("Please fill all fields!");
-            return;
-        }
-
-        btn.disabled = true;
-        currentTaskCount++;
-
-        if(currentTaskCount < TOTAL_TASKS_REQUIRED){
-            // ابھی ٹاسک باقی ہیں
-            msg.innerText = `✅ Task ${currentTaskCount} Verified! Next...`;
-            msg.style.color = "#00ff64";
-            setTimeout(loadTask, 1500);
-        } else {
-            // سارے ٹاسک مکمل ہو گئے، اب بیلنس ایڈ ہوگا اور مائننگ شروع ہوگی
-            msg.innerText = "🚀 All Tasks Done! Activating Mining...";
+        const snap = await get(ref(db, 'users/' + username));
+        if (snap.exists()) {
+            const user = snap.val();
+            const lastClaim = user.lastClaim || 0;
+            const now = Date.now();
             
-            try {
-                const result = await runTransaction(ref(db, 'users/' + phone), (user) => {
-                    if (user) {
-                        // پیکج کے حساب سے ڈیلی ارننگ ایڈ کریں (مثلاً $1.50)
-                        const dailyProfit = user.dailyEarning || 0.50; 
-                        user.balance = (user.balance || 0) + dailyProfit;
-                        user.lastClaim = Date.now(); // مائننگ لاک کر دیں 24 گھنٹے کے لیے
-                        return user;
-                    }
-                });
-
-                if(result.committed){
-                    alert("Congratulations! Daily profit added and AI Mining activated.");
-                    location.reload(); // پیج ریفریش تاکہ مائننگ اسٹارٹ نظر آئے
-                }
-            } catch (e) {
-                console.error(e);
+            // اگر 24 گھنٹے نہیں ہوئے تو ٹاسک چھپا دیں
+            if (now - lastClaim < 24 * 60 * 60 * 1000) {
+                document.getElementById('taskSection').innerHTML = "<h3>Already Claimed!</h3><p>Come back after 24 hours.</p>";
+            } else {
+                loadNewTask();
             }
         }
     }
 
-    loadTask();
+    function loadNewTask() {
+        document.getElementById('productName').innerText = products[Math.floor(Math.random()*products.length)];
+        document.getElementById('progressMsg').innerText = `Progress: ${doneTasks} / ${requiredTasks}`;
+    }
+
+    window.submitTask = function() {
+        const p = document.getElementById('priceInput').value;
+        const c = document.getElementById('catInput').value;
+        if(!p || !c) { alert("Fill all fields!"); return; }
+
+        doneTasks++;
+        if(doneTasks >= requiredTasks) {
+            document.getElementById('taskSection').style.display = 'none';
+            document.getElementById('miningSection').style.display = 'block';
+        } else {
+            document.getElementById('priceInput').value = "";
+            loadNewTask();
+        }
+    };
+
+    window.startMining = async function() {
+        try {
+            await runTransaction(ref(db, 'users/' + username), (user) => {
+                if (user) {
+                    const profit = user.dailyEarning || 0.50; // پیکج کے حساب سے منافع
+                    user.balance = (user.balance || 0) + profit;
+                    user.lastClaim = Date.now();
+                    return user;
+                }
+            });
+            alert("Success! Profit added to your balance.");
+            location.reload();
+        } catch (e) { alert("Error: " + e.message); }
+    };
+
+    window.onload = checkStatus;
 </script>
+</body>
+</html>
