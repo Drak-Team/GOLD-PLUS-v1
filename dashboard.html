@@ -7,87 +7,90 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0b0214; color: white; padding-bottom: 90px; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #080110; color: white; padding-bottom: 100px; overflow-x: hidden; }
         
-        .top-header { padding: 25px 20px; background: rgba(241, 196, 15, 0.05); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; text-align: center; }
-        .user-welcome { color: #f1c40f; font-size: 14px; letter-spacing: 1px; }
-        .main-balance { font-size: 32px; font-weight: 800; margin: 10px 0; text-shadow: 0 0 15px rgba(241,196,15,0.3); }
+        .top-header { padding: 30px 20px; background: linear-gradient(to bottom, rgba(241,196,15,0.1), transparent); text-align: center; }
+        .main-balance { font-size: 36px; font-weight: 900; color: #fff; text-shadow: 0 0 20px rgba(241,196,15,0.5); margin: 5px 0; }
 
-        /* Robot Mining Section */
-        .mining-area { margin: 20px; padding: 25px; background: var(--card-bg); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); position: relative; text-align: center; }
-        .robot-box { width: 120px; height: 120px; margin: 0 auto 15px; position: relative; }
-        .robot-icon { font-size: 60px; color: var(--primary-gold); animation: float 3s ease-in-out infinite; }
-        .mining-pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: rgba(241,196,15,0.1); border-radius: 50%; animation: pulse 2s infinite; }
+        /* REAL ROBOT SECTION */
+        .mining-container { margin: 15px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 35px; border: 1px solid rgba(241,196,15,0.2); position: relative; text-align: center; }
         
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
-        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
+        .robot-visual { width: 100%; max-width: 280px; height: 280px; margin: 0 auto; position: relative; border-radius: 25px; overflow: hidden; box-shadow: 0 0 30px rgba(0,0,0,0.5); border: 2px solid #222; }
+        
+        /* Mining Animation Overlay */
+        .robot-img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.8); }
+        .mining-glow { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle, rgba(241,196,15,0.2) 0%, transparent 70%); animation: flash 2s infinite; pointer-events: none; }
+        
+        @keyframes flash { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
 
-        /* Battery Style Progress */
-        .battery-container { width: 80%; background: #000; height: 25px; border-radius: 12px; margin: 15px auto; border: 2px solid #333; position: relative; overflow: hidden; }
-        .battery-fill { height: 100%; width: 0%; background: var(--gold-grad); box-shadow: 0 0 15px #f1c40f; transition: 1s; }
-        .percent-text { position: absolute; width: 100%; top: 0; left: 0; font-size: 12px; font-weight: bold; line-height: 22px; color: #fff; }
+        .active-badge { position: absolute; top: 10px; right: 10px; background: #00ff64; color: #000; padding: 4px 12px; border-radius: 10px; font-size: 10px; font-weight: bold; box-shadow: 0 0 10px #00ff64; }
 
-        .active-label { display: inline-block; padding: 5px 15px; background: rgba(0, 255, 100, 0.1); color: #00ff64; border-radius: 20px; font-size: 12px; border: 1px solid #00ff64; margin-bottom: 10px; }
+        /* BATTERY PROGRESS */
+        .battery-box { width: 90%; height: 30px; background: #000; border-radius: 15px; margin: 20px auto; border: 2px solid #333; position: relative; overflow: hidden; padding: 2px; }
+        .battery-level { height: 100%; width: 0%; background: var(--gold-grad); border-radius: 12px; box-shadow: 0 0 15px #f1c40f; transition: 1s linear; position: relative; }
+        .battery-level::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 50%; background: rgba(255,255,255,0.1); }
+        .percent-label { position: absolute; width: 100%; top: 0; left: 0; font-size: 13px; font-weight: 900; line-height: 28px; color: #fff; z-index: 2; text-shadow: 1px 1px 2px #000; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; }
-        .stat-item { background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-item small { display: block; color: #888; font-size: 10px; }
-        .stat-item b { font-size: 16px; color: var(--primary-gold); }
+        .status-txt { color: #f1c40f; font-weight: bold; letter-spacing: 1px; font-size: 14px; margin-bottom: 5px; }
+        .timer-val { font-family: 'Courier New', monospace; font-size: 18px; color: #00ff64; text-shadow: 0 0 10px rgba(0,255,100,0.3); }
 
-        .claim-btn { width: calc(100% - 40px); margin: 20px; padding: 18px; border-radius: 20px; border: none; font-weight: 800; font-size: 18px; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
-        .btn-ready { background: var(--gold-grad); color: #000; box-shadow: 0 8px 20px rgba(241,196,15,0.4); }
-        .btn-waiting { background: #222; color: #666; cursor: not-allowed; }
+        /* BUTTONS */
+        .claim-btn { width: calc(100% - 40px); margin: 10px 20px; padding: 20px; border-radius: 20px; border: none; font-weight: 800; font-size: 18px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-ready { background: var(--gold-grad); color: #000; box-shadow: 0 10px 25px rgba(241,196,15,0.4); animation: shake 0.5s infinite; }
+        .btn-locked { background: #1a1a1a; color: #444; border: 1px solid #333; cursor: not-allowed; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+        @keyframes shake { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
+
+        .quick-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 20px; margin-top: 10px; }
+        .q-card { background: var(--card-bg); padding: 15px; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.05); }
+        .q-card span { font-size: 10px; color: #888; display: block; margin-bottom: 5px; }
+        .q-card b { font-size: 16px; color: #fff; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #05010a; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid rgba(241,196,15,0.2); z-index: 1000; }
+        .nav-link { color: #555; text-decoration: none; font-size: 10px; text-align: center; flex: 1; }
+        .nav-link.active { color: #f1c40f; }
+        .nav-link i { font-size: 22px; display: block; margin-bottom: 5px; }
     </style>
 </head>
 <body>
 
 <div class="top-header">
-    <div class="user-welcome">GOLD PLUS AI TERMINAL</div>
+    <div style="font-size: 12px; color: #aaa;">TOTAL ASSETS BALANCE</div>
     <div class="main-balance" id="mainBalance">$0.00</div>
-    <div id="userNameLabel" style="font-size: 12px; opacity: 0.7;">Welcome...</div>
+    <div id="userNameLabel" style="font-size: 11px; color: var(--primary-gold);">Syncing User...</div>
 </div>
 
-<div class="mining-area">
-    <div class="active-label">SERVER STATUS: <span id="activePlan">Checking...</span></div>
+<div class="mining-container">
+    <div class="active-badge">AI ACTIVE</div>
     
-    <div class="robot-box">
-        <div class="mining-pulse"></div>
-        <i class="fas fa-robot robot-icon"></i>
+    <div class="robot-visual">
+        <img src="https://img.freepik.com/free-photo/view-futuristic-robot-working-as-construction-worker_23-2150811559.jpg" class="robot-img">
+        <div class="mining-glow"></div>
+    </div>
+
+    <div class="status-txt" style="margin-top: 15px;">GOLD MINING IN PROGRESS</div>
+    
+    <div class="battery-box">
+        <div class="battery-level" id="progressFill"></div>
+        <div class="percent-label" id="percentTxt">0%</div>
     </div>
     
-    <h4 style="margin:0; color:var(--primary-gold)">AI MINING IN PROGRESS</h4>
-    
-    <div class="battery-container">
-        <div class="battery-fill" id="progressFill"></div>
-        <div class="percent-text" id="percentTxt">0%</div>
-    </div>
-    
-    <div style="font-size: 13px; color: #00ff64; font-weight: bold;" id="timerDisplay">Syncing...</div>
+    <div class="timer-val" id="timerDisplay">00:00:00</div>
 </div>
 
-<div class="stats-grid">
-    <div class="stat-item"><small>TOTAL DEPOSIT</small><b id="sumDeposit">$0.00</b></div>
-    <div class="stat-item"><small>TOTAL EARNED</small><b id="sumEarned">$0.00</b></div>
-</div>
+<button id="claimBtn" class="claim-btn btn-locked" disabled>SYSTEM INITIALIZING</button>
 
-<button id="claimBtn" class="claim-btn btn-waiting" disabled>PLEASE WAIT</button>
-
-<div class="stats-grid" style="margin-top: 10px;">
-    <div class="stat-item" onclick="location.href='deposit.html'"><i class="fas fa-wallet" style="margin-right:8px;"></i>Deposit</div>
-    <div class="stat-item" onclick="location.href='withdraw.html'"><i class="fas fa-university" style="margin-right:8px;"></i>Withdraw</div>
+<div class="quick-stats">
+    <div class="q-card"><span>TOTAL DEPOSIT</span><b id="sumDeposit">$0.00</b></div>
+    <div class="q-card"><span>EARNINGS</span><b id="sumEarned">$0.00</b></div>
 </div>
 
 <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
-    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+    <a href="dashboard.html" class="nav-link active"><i class="fas fa-microchip"></i>CORE</a>
+    <a href="plans.html" class="nav-link"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-link"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-link"><i class="fas fa-users"></i>TEAM</a>
+    <a href="profile.html" class="nav-link"><i class="fas fa-user-cog"></i>MENU</a>
 </nav>
 
 <script type="module">
@@ -122,71 +125,65 @@
                 document.getElementById('mainBalance').innerText = "$" + (userData.balance || 0).toFixed(2);
                 document.getElementById('sumEarned').innerText = "$" + (userData.totalEarned || 0).toFixed(2);
                 document.getElementById('sumDeposit').innerText = "$" + (userData.totalDeposit || 0).toFixed(2);
-                document.getElementById('userNameLabel').innerText = "ID: " + username;
-                document.getElementById('activePlan').innerText = (userData.plan || "Free").toUpperCase();
-                startMiningLogic();
+                document.getElementById('userNameLabel').innerText = "NODE: " + username + " | PLAN: " + (userData.plan || "Free");
+                startMiningTimer();
             }
         });
     }
 
-    function startMiningLogic() {
-        const lastClaim = userData.lastClaim || 0;
+    function startMiningTimer() {
         const cooldown = 24 * 60 * 60 * 1000;
         
-        const update = () => {
+        const tick = () => {
+            const last = userData.lastClaim || 0;
             const now = Date.now();
-            const elapsed = now - lastClaim;
-            const remaining = cooldown - elapsed;
-            
-            if (remaining <= 0) {
-                // Ready to Claim
-                document.getElementById('timerDisplay').innerText = "MINING COMPLETE! READY";
+            const elapsed = now - last;
+            const remain = cooldown - elapsed;
+
+            if (remain <= 0) {
                 document.getElementById('progressFill').style.width = "100%";
-                document.getElementById('percentTxt').innerText = "100%";
-                document.getElementById('claimBtn').innerText = "CLAIM PROFIT NOW";
+                document.getElementById('percentTxt').innerText = "READY TO HARVEST";
+                document.getElementById('timerDisplay').innerText = "00:00:00";
+                document.getElementById('claimBtn').innerText = "CLAIM GOLD NOW";
                 document.getElementById('claimBtn').className = "claim-btn btn-ready";
                 document.getElementById('claimBtn').disabled = false;
             } else {
-                // Mining in Progress
-                const h = Math.floor(remaining / 3600000);
-                const m = Math.floor((remaining % 3600000) / 60000);
-                const s = Math.floor((remaining % 60000) / 1000);
+                const h = Math.floor(remain / 3600000);
+                const m = Math.floor((remain % 3600000) / 60000);
+                const s = Math.floor((remain % 60000) / 1000);
                 
-                document.getElementById('timerDisplay').innerText = `NEXT PAYOUT IN: ${h}h ${m}m ${s}s`;
+                document.getElementById('timerDisplay').innerText = 
+                    `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
                 
-                const progress = (elapsed / cooldown) * 100;
-                document.getElementById('progressFill').style.width = progress + "%";
-                document.getElementById('percentTxt').innerText = Math.floor(progress) + "%";
+                const prg = (elapsed / cooldown) * 100;
+                document.getElementById('progressFill').style.width = prg + "%";
+                document.getElementById('percentTxt').innerText = Math.floor(prg) + "%";
                 
-                document.getElementById('claimBtn').innerText = "MINING IN PROGRESS...";
-                document.getElementById('claimBtn').className = "claim-btn btn-waiting";
+                document.getElementById('claimBtn').innerText = "MINING IN PROGRESS";
+                document.getElementById('claimBtn').className = "claim-btn btn-locked";
                 document.getElementById('claimBtn').disabled = true;
             }
         };
-        
-        setInterval(update, 1000);
-        update();
+
+        setInterval(tick, 1000);
+        tick();
     }
 
-    window.processClaim = () => {
-        const earn = userData.plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
+    document.getElementById('claimBtn').onclick = () => {
+        const amt = userData.plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
         
         runTransaction(ref(db, 'users/' + username), (curr) => {
             if (curr) {
                 const now = Date.now();
                 if (now - (curr.lastClaim || 0) >= 24 * 60 * 60 * 1000) {
-                    curr.balance = (curr.balance || 0) + earn;
-                    curr.totalEarned = (curr.totalEarned || 0) + earn;
+                    curr.balance = (curr.balance || 0) + amt;
+                    curr.totalEarned = (curr.totalEarned || 0) + amt;
                     curr.lastClaim = now;
                     return curr;
                 }
             }
-        }).then(res => {
-            if (res.committed) alert("Success! $" + earn + " added to your assets.");
-        });
+        }).then(() => alert("Gold Claimed Successfully!"));
     };
-
-    document.getElementById('claimBtn').onclick = window.processClaim;
 
 </script>
 </body>
