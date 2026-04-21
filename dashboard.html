@@ -3,48 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Cloud Mining</title>
+    <title>Gold Plus - AI Mining Robot</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 80px; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0b0214; color: white; padding-bottom: 90px; overflow-x: hidden; }
         
-        .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
-        .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; }
-        .mini-stats { display: flex; justify-content: space-between; }
-        .mini-stats b { font-size: 18px; color: #fff; display: block; margin-top: 5px; }
+        .top-header { padding: 25px 20px; background: rgba(241, 196, 15, 0.05); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; text-align: center; }
+        .user-welcome { color: #f1c40f; font-size: 14px; letter-spacing: 1px; }
+        .main-balance { font-size: 32px; font-weight: 800; margin: 10px 0; text-shadow: 0 0 15px rgba(241,196,15,0.3); }
 
-        .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px; }
-        .sum-card { background: var(--card-bg); padding: 12px; border-radius: 15px; border-left: 3px solid var(--primary-gold); }
-        .sum-card small { font-size: 9px; color: #aaa; text-transform: uppercase; }
-        .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; margin-top: 2px; }
+        /* Robot Mining Section */
+        .mining-area { margin: 20px; padding: 25px; background: var(--card-bg); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); position: relative; text-align: center; }
+        .robot-box { width: 120px; height: 120px; margin: 0 auto 15px; position: relative; }
+        .robot-icon { font-size: 60px; color: var(--primary-gold); animation: float 3s ease-in-out infinite; }
+        .mining-pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: rgba(241,196,15,0.1); border-radius: 50%; animation: pulse 2s infinite; }
+        
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; } }
 
-        .history-links { display: flex; gap: 10px; padding: 0 20px 20px; }
-        .h-btn { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; text-align: center; font-size: 11px; color: #fff; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
-        .h-btn i { color: var(--primary-gold); margin-right: 5px; }
+        /* Battery Style Progress */
+        .battery-container { width: 80%; background: #000; height: 25px; border-radius: 12px; margin: 15px auto; border: 2px solid #333; position: relative; overflow: hidden; }
+        .battery-fill { height: 100%; width: 0%; background: var(--gold-grad); box-shadow: 0 0 15px #f1c40f; transition: 1s; }
+        .percent-text { position: absolute; width: 100%; top: 0; left: 0; font-size: 12px; font-weight: bold; line-height: 22px; color: #fff; }
 
-        .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
-        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; }
-        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); }
-        .timer-text { font-size: 10px; color: #00ff00; font-weight: bold; }
+        .active-label { display: inline-block; padding: 5px 15px; background: rgba(0, 255, 100, 0.1); color: #00ff64; border-radius: 20px; font-size: 12px; border: 1px solid #00ff64; margin-bottom: 10px; }
 
-        .get-all-box { padding: 0 20px 20px; text-align: center; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241,196,15,0.3); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 0 20px; }
+        .stat-item { background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-item small { display: block; color: #888; font-size: 10px; }
+        .stat-item b { font-size: 16px; color: var(--primary-gold); }
 
-        .refer-box { background: rgba(241, 196, 15, 0.05); margin: 0 20px 20px; padding: 15px; border-radius: 20px; border: 1px dashed var(--primary-gold); }
-        .copy-box { background: #000; padding: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: #888; }
+        .claim-btn { width: calc(100% - 40px); margin: 20px; padding: 18px; border-radius: 20px; border: none; font-weight: 800; font-size: 18px; letter-spacing: 1px; cursor: pointer; transition: 0.3s; }
+        .btn-ready { background: var(--gold-grad); color: #000; box-shadow: 0 8px 20px rgba(241,196,15,0.4); }
+        .btn-waiting { background: #222; color: #666; cursor: not-allowed; }
 
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; min-height: 100px; }
-        .grid-card h5 { margin: 0; font-size: 14px; color: #f1c40f; }
-        .grid-card p { margin: 8px 0; font-size: 16px; color: #fff; font-weight: bold; }
-        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; z-index: 5; position: relative; cursor: pointer; }
-        .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; }
-
-        .company-info { margin: 20px; background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid rgba(241,196,15,0.2); }
-        .cert-box { background: #fff; color: #000; padding: 15px; border-radius: 10px; text-align: center; border: 4px double #b8860b; margin-top: 15px; }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 10002; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
         .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
@@ -53,64 +47,39 @@
 <body>
 
 <div class="top-header">
-    <div class="user-welcome" id="userNameLabel">Hello, Member</div>
-    <div class="mini-stats">
-        <div>Available Assets <b id="mainBalance">$0.00</b></div>
-        <div>Active Plan <b id="activePlan">Free</b></div>
+    <div class="user-welcome">GOLD PLUS AI TERMINAL</div>
+    <div class="main-balance" id="mainBalance">$0.00</div>
+    <div id="userNameLabel" style="font-size: 12px; opacity: 0.7;">Welcome...</div>
+</div>
+
+<div class="mining-area">
+    <div class="active-label">SERVER STATUS: <span id="activePlan">Checking...</span></div>
+    
+    <div class="robot-box">
+        <div class="mining-pulse"></div>
+        <i class="fas fa-robot robot-icon"></i>
     </div>
-</div>
-
-<div class="stats-summary">
-    <div class="sum-card"><small>Total Deposit</small><div id="sumDeposit">$0.00</div></div>
-    <div class="sum-card"><small>Total Earned</small><div id="sumEarned">$0.00</div></div>
-</div>
-
-<div class="history-links">
-    <a href="deposit.html" class="h-btn"><i class="fas fa-arrow-down"></i> Deposit</a>
-    <a href="withdraw.html" class="h-btn"><i class="fas fa-arrow-up"></i> Withdraw</a>
-</div>
-
-<div class="machines-grid">
-    <div class="machine-card" id="machine_Free"><div class="coin-ball"><i class="fas fa-microchip"></i></div><div class="timer-text t-sync">Locked</div></div>
-    <div class="machine-card" id="machine_Starter"><div class="coin-ball"><i class="fas fa-bolt"></i></div><div class="timer-text t-sync">Locked</div></div>
-    <div class="machine-card" id="machine_VIP1"><div class="coin-ball"><i class="fas fa-server"></i></div><div class="timer-text t-sync">Locked</div></div>
-    <div class="machine-card" id="machine_VIP2"><div class="coin-ball"><i class="fas fa-link"></i></div><div class="timer-text t-sync">Locked</div></div>
-</div>
-
-<div class="get-all-box">
-    <button class="get-all-btn" id="claimBtn" onclick="processClaim()">CLAIM PROFIT</button>
-</div>
-
-<div class="refer-box">
-    <span style="font-size: 12px; font-weight: bold; color: var(--primary-gold);">Your Referral Link</span>
-    <div class="copy-box"><span id="myLink">Loading...</span><i class="fas fa-copy" style="color:var(--primary-gold); cursor:pointer;" onclick="copyLink()"></i></div>
-</div>
-
-<div class="main-grid">
-    <div class="grid-card">
-        <h5>My Team</h5>
-        <p id="teamCount">+0 Members</p>
-        <button class="btn-link" onclick="location.href='refer.html'">View Team</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" class="card-img">
+    
+    <h4 style="margin:0; color:var(--primary-gold)">AI MINING IN PROGRESS</h4>
+    
+    <div class="battery-container">
+        <div class="battery-fill" id="progressFill"></div>
+        <div class="percent-text" id="percentTxt">0%</div>
     </div>
-    <div class="grid-card">
-        <h5>Daily Rate</h5>
-        <p id="dailyRate">$0.50</p>
-        <button class="btn-link" onclick="location.href='mining.html'">Report</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" class="card-img">
-    </div>
+    
+    <div style="font-size: 13px; color: #00ff64; font-weight: bold;" id="timerDisplay">Syncing...</div>
 </div>
 
-<div class="company-info">
-    <h4 style="color:var(--primary-gold); margin:0 0 10px 0;">About Gold Plus AI</h4>
-    <p style="font-size: 11px; color: #aaa; line-height: 1.6; text-align: justify;">
-        Gold Plus is a certified UK-based cloud mining firm utilizing AI-driven hash rate optimization. We ensure 99.9% server uptime.
-    </p>
-    <div class="cert-box">
-        <div style="font-size: 14px; font-weight: 900; color: #b8860b;">OFFICIAL CERTIFICATE</div>
-        <img src="https://img.icons8.com/color/96/guarantee--v1.png" style="width: 50px; margin-top: 8px;">
-        <div style="font-size: 10px; font-weight: bold; margin-top: 5px;">VERIFIED PROVIDER</div>
-    </div>
+<div class="stats-grid">
+    <div class="stat-item"><small>TOTAL DEPOSIT</small><b id="sumDeposit">$0.00</b></div>
+    <div class="stat-item"><small>TOTAL EARNED</small><b id="sumEarned">$0.00</b></div>
+</div>
+
+<button id="claimBtn" class="claim-btn btn-waiting" disabled>PLEASE WAIT</button>
+
+<div class="stats-grid" style="margin-top: 10px;">
+    <div class="stat-item" onclick="location.href='deposit.html'"><i class="fas fa-wallet" style="margin-right:8px;"></i>Deposit</div>
+    <div class="stat-item" onclick="location.href='withdraw.html'"><i class="fas fa-university" style="margin-right:8px;"></i>Withdraw</div>
 </div>
 
 <nav class="nav-bar">
@@ -123,7 +92,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -139,33 +108,86 @@
     const db = getDatabase(app);
     const username = localStorage.getItem('userPhone');
 
-    window.onload = function() {
+    let userData = null;
+
+    window.onload = () => {
         if (!username) window.location.href = 'index.html';
-        else {
-            syncData(username);
-            const siteUrl = window.location.origin;
-            document.getElementById('myLink').innerText = siteUrl + "/signup.html?ref=" + username;
-        }
+        else syncData();
     };
 
-    function syncData(userKey) {
-        onValue(ref(db, 'users/' + userKey), (snapshot) => {
-            const userData = snapshot.val();
+    function syncData() {
+        onValue(ref(db, 'users/' + username), (snap) => {
+            userData = snap.val();
             if (userData) {
                 document.getElementById('mainBalance').innerText = "$" + (userData.balance || 0).toFixed(2);
                 document.getElementById('sumEarned').innerText = "$" + (userData.totalEarned || 0).toFixed(2);
                 document.getElementById('sumDeposit').innerText = "$" + (userData.totalDeposit || 0).toFixed(2);
-                document.getElementById('userNameLabel').innerText = "Hello, " + (userData.username || "Member");
-                document.getElementById('activePlan').innerText = userData.plan || "Free";
-                document.getElementById('dailyRate').innerText = "$" + (userData.dailyEarning || 0.50).toFixed(2);
+                document.getElementById('userNameLabel').innerText = "ID: " + username;
+                document.getElementById('activePlan').innerText = (userData.plan || "Free").toUpperCase();
+                startMiningLogic();
             }
         });
     }
 
-    window.copyLink = function() {
-        navigator.clipboard.writeText(document.getElementById('myLink').innerText);
-        alert("Link Copied!");
+    function startMiningLogic() {
+        const lastClaim = userData.lastClaim || 0;
+        const cooldown = 24 * 60 * 60 * 1000;
+        
+        const update = () => {
+            const now = Date.now();
+            const elapsed = now - lastClaim;
+            const remaining = cooldown - elapsed;
+            
+            if (remaining <= 0) {
+                // Ready to Claim
+                document.getElementById('timerDisplay').innerText = "MINING COMPLETE! READY";
+                document.getElementById('progressFill').style.width = "100%";
+                document.getElementById('percentTxt').innerText = "100%";
+                document.getElementById('claimBtn').innerText = "CLAIM PROFIT NOW";
+                document.getElementById('claimBtn').className = "claim-btn btn-ready";
+                document.getElementById('claimBtn').disabled = false;
+            } else {
+                // Mining in Progress
+                const h = Math.floor(remaining / 3600000);
+                const m = Math.floor((remaining % 3600000) / 60000);
+                const s = Math.floor((remaining % 60000) / 1000);
+                
+                document.getElementById('timerDisplay').innerText = `NEXT PAYOUT IN: ${h}h ${m}m ${s}s`;
+                
+                const progress = (elapsed / cooldown) * 100;
+                document.getElementById('progressFill').style.width = progress + "%";
+                document.getElementById('percentTxt').innerText = Math.floor(progress) + "%";
+                
+                document.getElementById('claimBtn').innerText = "MINING IN PROGRESS...";
+                document.getElementById('claimBtn').className = "claim-btn btn-waiting";
+                document.getElementById('claimBtn').disabled = true;
+            }
+        };
+        
+        setInterval(update, 1000);
+        update();
     }
+
+    window.processClaim = () => {
+        const earn = userData.plan === "Free" ? 0.50 : (userData.dailyEarning || 5.00);
+        
+        runTransaction(ref(db, 'users/' + username), (curr) => {
+            if (curr) {
+                const now = Date.now();
+                if (now - (curr.lastClaim || 0) >= 24 * 60 * 60 * 1000) {
+                    curr.balance = (curr.balance || 0) + earn;
+                    curr.totalEarned = (curr.totalEarned || 0) + earn;
+                    curr.lastClaim = now;
+                    return curr;
+                }
+            }
+        }).then(res => {
+            if (res.committed) alert("Success! $" + earn + " added to your assets.");
+        });
+    };
+
+    document.getElementById('claimBtn').onclick = window.processClaim;
+
 </script>
 </body>
 </html>
