@@ -14,44 +14,36 @@
         .mini-stats { display: flex; justify-content: space-between; }
         .mini-stats b { font-size: 18px; color: #fff; display: block; margin-top: 5px; }
 
-        /* New Stats Grid */
         .stats-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px; }
         .sum-card { background: var(--card-bg); padding: 12px; border-radius: 15px; border-left: 3px solid var(--primary-gold); }
         .sum-card small { font-size: 9px; color: #aaa; text-transform: uppercase; }
         .sum-card div { font-size: 14px; font-weight: bold; color: #00ff64; margin-top: 2px; }
 
+        .history-links { display: flex; gap: 10px; padding: 0 20px 20px; }
+        .h-btn { flex: 1; background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; text-align: center; font-size: 11px; color: #fff; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; display: block; }
+        .h-btn i { color: var(--primary-gold); margin-right: 5px; }
+
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
-        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); transition: 0.5s; }
-        @keyframes spin { 100% { transform: rotateY(360deg); } }
+        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); position: relative; overflow: hidden; }
+        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); }
         .timer-text { font-size: 10px; color: #00ff00; font-weight: bold; }
 
         .get-all-box { padding: 0 20px 20px; text-align: center; }
         .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241,196,15,0.3); }
 
-        /* History Links */
-        .history-links { display: flex; gap: 10px; padding: 0 20px 20px; }
-        .h-btn { flex: 1; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; text-align: center; font-size: 11px; color: #fff; border: 1px solid rgba(255,255,255,0.1); text-decoration: none; }
-        .h-btn i { color: var(--primary-gold); margin-right: 5px; }
-
-        /* Referral Box */
         .refer-box { background: rgba(241, 196, 15, 0.05); margin: 0 20px 20px; padding: 15px; border-radius: 20px; border: 1px dashed var(--primary-gold); }
         .copy-box { background: #000; padding: 10px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 11px; color: #888; }
-
-        /* Company Intro Section */
-        .company-info { margin: 20px; background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid rgba(241,196,15,0.2); }
-        .cert-box { background: #fff; color: #000; padding: 15px; border-radius: 10px; text-align: center; border: 4px double #b8860b; margin-top: 15px; }
 
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; min-height: 100px; }
         .grid-card h5 { margin: 0; font-size: 14px; color: #f1c40f; }
         .grid-card p { margin: 8px 0; font-size: 16px; color: #fff; font-weight: bold; }
-        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; z-index: 5; position: relative; }
+        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 6px 15px; border-radius: 20px; font-size: 10px; z-index: 5; position: relative; cursor: pointer; }
         .card-img { position: absolute; right: 10px; bottom: 10px; width: 45px; opacity: 0.7; }
 
-        .ws-float { position: fixed; bottom: 90px; right: 20px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 999; text-decoration: none; animation: pulse 2s infinite; }
-        #payout-toast { position: fixed; bottom: 85px; left: 15px; background: rgba(15, 5, 29, 0.95); border: 1px solid var(--primary-gold); border-left: 5px solid var(--primary-gold); padding: 12px 18px; border-radius: 15px; display: none; z-index: 10001; backdrop-filter: blur(10px); min-width: 220px; }
-        
+        .company-info { margin: 20px; background: var(--card-bg); border-radius: 20px; padding: 20px; border: 1px solid rgba(241,196,15,0.2); }
+        .cert-box { background: #fff; color: #000; padding: 15px; border-radius: 10px; text-align: center; border: 4px double #b8860b; margin-top: 15px; }
+
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 10002; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
@@ -74,27 +66,15 @@
 </div>
 
 <div class="history-links">
-    <a href="dep-history.html" class="h-btn"><i class="fas fa-arrow-down"></i> Deposits</a>
-    <a href="with-history.html" class="h-btn"><i class="fas fa-arrow-up"></i> Withdraws</a>
+    <a href="deposit.html" class="h-btn"><i class="fas fa-arrow-down"></i> Deposit</a>
+    <a href="withdraw.html" class="h-btn"><i class="fas fa-arrow-up"></i> Withdraw</a>
 </div>
 
 <div class="machines-grid">
-    <div class="machine-card" id="machine_Free">
-        <div class="coin-ball"><i class="fas fa-microchip"></i></div>
-        <div class="timer-text t-sync">Locked</div>
-    </div>
-    <div class="machine-card" id="machine_Starter">
-        <div class="coin-ball"><i class="fas fa-bolt"></i></div>
-        <div class="timer-text t-sync">Locked</div>
-    </div>
-    <div class="machine-card" id="machine_VIP1">
-        <div class="coin-ball"><i class="fas fa-server"></i></div>
-        <div class="timer-text t-sync">Locked</div>
-    </div>
-    <div class="machine-card" id="machine_VIP2">
-        <div class="coin-ball"><i class="fas fa-link"></i></div>
-        <div class="timer-text t-sync">Locked</div>
-    </div>
+    <div class="machine-card" id="machine_Free"><div class="coin-ball"><i class="fas fa-microchip"></i></div><div class="timer-text t-sync">Locked</div></div>
+    <div class="machine-card" id="machine_Starter"><div class="coin-ball"><i class="fas fa-bolt"></i></div><div class="timer-text t-sync">Locked</div></div>
+    <div class="machine-card" id="machine_VIP1"><div class="coin-ball"><i class="fas fa-server"></i></div><div class="timer-text t-sync">Locked</div></div>
+    <div class="machine-card" id="machine_VIP2"><div class="coin-ball"><i class="fas fa-link"></i></div><div class="timer-text t-sync">Locked</div></div>
 </div>
 
 <div class="get-all-box">
@@ -103,10 +83,7 @@
 
 <div class="refer-box">
     <span style="font-size: 12px; font-weight: bold; color: var(--primary-gold);">Your Referral Link</span>
-    <div class="copy-box">
-        <span id="myLink">Loading link...</span>
-        <i class="fas fa-copy" style="color:var(--primary-gold)" onclick="copyLink()"></i>
-    </div>
+    <div class="copy-box"><span id="myLink">Loading...</span><i class="fas fa-copy" style="color:var(--primary-gold); cursor:pointer;" onclick="copyLink()"></i></div>
 </div>
 
 <div class="main-grid">
@@ -119,7 +96,7 @@
     <div class="grid-card">
         <h5>Daily Rate</h5>
         <p id="dailyRate">$0.50</p>
-        <button class="btn-link">Report</button>
+        <button class="btn-link" onclick="location.href='mining.html'">Report</button>
         <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" class="card-img">
     </div>
 </div>
@@ -127,22 +104,12 @@
 <div class="company-info">
     <h4 style="color:var(--primary-gold); margin:0 0 10px 0;">About Gold Plus AI</h4>
     <p style="font-size: 11px; color: #aaa; line-height: 1.6; text-align: justify;">
-        Gold Plus is a certified UK-based cloud mining firm utilizing AI-driven hash rate optimization. We ensure 99.9% server uptime and guaranteed daily returns for our global partners.
+        Gold Plus is a certified UK-based cloud mining firm utilizing AI-driven hash rate optimization. We ensure 99.9% server uptime.
     </p>
     <div class="cert-box">
         <div style="font-size: 14px; font-weight: 900; color: #b8860b;">OFFICIAL CERTIFICATE</div>
-        <div style="font-size: 8px; margin-top: 5px;">This document verifies that <b>Gold Plus AI</b> is an authorized digital asset provider.</div>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/Gold_Seal.png" style="width: 40px; margin-top: 8px;">
-    </div>
-</div>
-
-<div id="payout-toast">
-    <div style="display: flex; align-items: center; gap: 12px;">
-        <i class="fas fa-check-circle" style="color: var(--primary-gold); font-size: 20px;"></i>
-        <div>
-            <small style="color: #aaa; display: block; font-size: 9px; text-transform: uppercase;">Recent Payout</small>
-            <span id="payout-msg" style="font-size: 11px; color: #fff;"></span>
-        </div>
+        <img src="https://img.icons8.com/color/96/guarantee--v1.png" style="width: 50px; margin-top: 8px;">
+        <div style="font-size: 10px; font-weight: bold; margin-top: 5px;">VERIFIED PROVIDER</div>
     </div>
 </div>
 
@@ -156,7 +123,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -176,7 +143,8 @@
         if (!username) window.location.href = 'index.html';
         else {
             syncData(username);
-            document.getElementById('myLink').innerText = "https://gold-plus.com/reg?ref=" + username;
+            const siteUrl = window.location.origin;
+            document.getElementById('myLink').innerText = siteUrl + "/signup.html?ref=" + username;
         }
     };
 
@@ -188,17 +156,16 @@
                 document.getElementById('sumEarned').innerText = "$" + (userData.totalEarned || 0).toFixed(2);
                 document.getElementById('sumDeposit').innerText = "$" + (userData.totalDeposit || 0).toFixed(2);
                 document.getElementById('userNameLabel').innerText = "Hello, " + (userData.username || "Member");
-                // باقی کاؤنٹ اور لاجک وہی رہے گی جو آپ کے پاس پہلے سے ہے
+                document.getElementById('activePlan').innerText = userData.plan || "Free";
+                document.getElementById('dailyRate').innerText = "$" + (userData.dailyEarning || 0.50).toFixed(2);
             }
         });
     }
 
     window.copyLink = function() {
-        const link = document.getElementById('myLink').innerText;
-        navigator.clipboard.writeText(link);
+        navigator.clipboard.writeText(document.getElementById('myLink').innerText);
         alert("Link Copied!");
     }
 </script>
-
 </body>
 </html>
