@@ -1,5 +1,8 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 <script>
-    // Firebase Configuration (Same as yours)
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         authDomain: "gold-plus-v1.firebaseapp.com",
@@ -12,33 +15,69 @@
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const phone = localStorage.getItem('userPhone'); // فون نمبر یہاں سے لیا
+    const phone = localStorage.getItem('userPhone');
     let currentBalance = 0;
 
-    // لوڈ بیلنس فنکشن
-    function loadBalance() {
+    // 1. بیلنس لوڈ کرنا
+    function initApp() {
         if (!phone) {
             alert("Please Login First!");
             window.location.href = "index.html";
             return;
         }
-        db.ref('users/' + phone).on('value', (snapshot) => {
+
+        // بیلنس پر نظر رکھنا
+        db.ref('users/' + phone + '/balance').on('value', (snapshot) => {
+            currentBalance = parseFloat(snapshot.val()) || 0;
+            document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
+            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
+        });
+
+        // ہسٹری لوڈ کرنا
+        loadWithdrawHistory();
+    }
+
+    // 2. ودڈرال ہسٹری دکھانا
+    function loadWithdrawHistory() {
+        // پہلے ایچ ٹی ایم ایل میں ایک جگہ بنا لیں ہسٹری کے لیے
+        let historyDiv = document.getElementById('withdrawHistory');
+        if(!historyDiv) {
+            const div = document.createElement('div');
+            div.id = 'withdrawHistory';
+            div.innerHTML = '<h3 style="color:#f1c40f; margin-top:30px;">Withdrawal History</h3><div id="historyList"></div>';
+            document.querySelector('.withdraw-form').appendChild(div);
+            historyDiv = document.getElementById('historyList');
+        }
+
+        db.ref('withdrawals').orderByChild('phone').equalTo(phone).on('value', (snapshot) => {
+            let html = '';
             if (snapshot.exists()) {
-                currentBalance = parseFloat(snapshot.val().balance) || 0;
-                document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
-                document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
+                snapshot.forEach((child) => {
+                    const data = child.val();
+                    const color = data.status === "Pending" ? "#f1c40f" : (data.status === "Approved" ? "#2ecc71" : "#ff3232");
+                    html += `
+                        <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:12px; margin-bottom:10px; border-left:4px solid ${color}">
+                            <div style="display:flex; justify-content:space-between">
+                                <span>$${data.amount}</span>
+                                <b style="color:${color}">${data.status}</b>
+                            </div>
+                            <small style="color:#888">${data.date}</small>
+                        </div>`;
+                });
+            } else {
+                html = '<p style="color:#666">No history found.</p>';
             }
+            document.getElementById('historyList').innerHTML = html;
         });
     }
-    loadBalance();
 
-    // کیلکولیٹر
+    // 3. کیلکولیٹر
     document.getElementById('withdrawAmount').addEventListener('input', (e) => {
         const val = e.target.value;
         document.getElementById('calcNote').innerText = val > 0 ? "You will receive: Rs. " + (val * 300) : "";
     });
 
-    // ودڈرال بٹن لاجک
+    // 4. ودڈرال ریکویسٹ بھیجنا
     document.getElementById('requestBtn').onclick = function() {
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
         const method = document.getElementById('method').value;
@@ -46,51 +85,45 @@
         const accName = document.getElementById('accountName').value;
         const btn = document.getElementById('requestBtn');
 
-        if (!amount || amount < 1.00) {
-            alert("Minimum withdrawal is $1.00 (Rs. 300)");
-            return;
-        }
-
-        if (amount > currentBalance) {
-            alert("Insufficient Balance! Your balance is $" + currentBalance.toFixed(2));
-            return;
-        }
-
-        if (!accNum || !accName) {
-            alert("Please enter account details!");
-            return;
-        }
+        if (!amount || amount < 1.00) { alert("Min withdrawal is $1"); return; }
+        if (amount > currentBalance) { alert("Low Balance!"); return; }
+        if (!accNum || !accName) { alert("Enter all details!"); return; }
 
         btn.innerText = "Processing...";
         btn.disabled = true;
 
-        // 1. پہلے بیلنس کاٹیں
-        const userRef = db.ref('users/' + phone + '/balance');
-        userRef.transaction((current) => {
-            if (current >= amount) return current - amount;
-            return; 
+        const withdrawID = Date.now();
+        const withdrawData = {
+            phone: phone,
+            amount: amount,
+            method: method,
+            accountNumber: accNum,
+            accountName: accName,
+            status: "Pending",
+            date: new Date().toLocaleString()
+        };
+
+        // ٹرانزیکشن کے ذریعے بیلنس کاٹنا
+        db.ref('users/' + phone + '/balance').transaction((curr) => {
+            if (curr >= amount) return curr - amount;
+            return;
         }, (error, committed) => {
             if (committed) {
-                // 2. پھر ودڈرال لسٹ میں ڈیٹا بھیجیں (ایڈمن کے لیے)
-                const newReq = db.ref('withdrawals').push();
-                newReq.set({
-                    phone: phone, // ایڈمن پینل کے لیے ضروری
-                    username: phone,
-                    amount: amount,
-                    method: method,
-                    accountNumber: accNum,
-                    accountName: accName,
-                    status: "Pending",
-                    date: new Date().toLocaleString()
-                }).then(() => {
-                    alert("Withdrawal request sent! Balance deducted.");
-                    window.location.href = 'profile.html';
+                // ایڈمن اور ہسٹری دونوں کے لیے ایک ہی جگہ ڈیٹا
+                db.ref('withdrawals/' + withdrawID).set(withdrawData).then(() => {
+                    alert("Success! Request Sent.");
+                    btn.innerText = "CONFIRM WITHDRAWAL";
+                    btn.disabled = false;
+                    document.getElementById('withdrawAmount').value = '';
                 });
             } else {
-                alert("Transaction Failed! Try again.");
+                alert("Failed! Try again.");
                 btn.innerText = "CONFIRM WITHDRAWAL";
                 btn.disabled = false;
             }
         });
     };
+
+    // شروع کریں
+    initApp();
 </script>
