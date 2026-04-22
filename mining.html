@@ -14,81 +14,101 @@
 
         .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(241, 196, 15, 0.15); margin: 15px; padding: 20px; border-radius: 25px; backdrop-filter: blur(15px); text-align: center; }
         
+        /* Fixed Icon Styling - No more loading issues */
         .product-box { background: rgba(0, 0, 0, 0.5); padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px dashed var(--primary-gold); }
-        .product-icon { font-size: 45px; color: var(--primary-gold); }
+        .product-icon { font-size: 50px; color: var(--primary-gold); display: block; margin: 0 auto 10px; }
 
         .task-input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; }
 
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .btn:active { transform: scale(0.95); }
         
-        /* VIP Disabled Button Look */
         .btn-vip-lock { background: rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.3) !important; cursor: not-allowed; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Battery Animation */
         .battery-box { width: 40px; height: 18px; border: 2px solid #fff; border-radius: 3px; position: relative; margin-right: 10px; display: inline-block; vertical-align: middle; }
         .battery-fill { height: 100%; background: #00ff64; width: 0%; animation: charge 2s infinite; }
         .battery-box::after { content: ''; position: absolute; right: -5px; top: 4px; width: 3px; height: 8px; background: #fff; }
         @keyframes charge { 0% { width: 10%; } 100% { width: 100%; } }
 
-        .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 12px; }
+        .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 12px; border-left: 3px solid var(--primary-gold); }
         
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <div class="free-tag">100% FREE DAILY TASK</div>
+    <div class="free-tag">100% FREE DAILY WORK</div>
     <h2 style="color:var(--primary-gold); margin:0;">VIP WORKSTATION</h2>
-    <p style="font-size:11px; color:#aaa; margin:5px 0 0;">Complete 5 tasks daily to earn your profit</p>
+    <p style="font-size:11px; color:#aaa; margin:5px 0 0;">Complete 5 tasks daily to unlock your profit</p>
 </div>
 
 <div class="card" id="taskArea">
     <div id="taskContent">
         <div class="product-box">
-            <i class="fas fa-box-open product-icon" id="pIcon"></i>
-            <div id="productName" style="font-size:18px; font-weight:bold; margin-top:10px;">Loading Product...</div>
+            <i class="fas fa-mobile-screen-button product-icon" id="pIcon"></i>
+            <div id="productName" style="font-size:18px; font-weight:bold; letter-spacing: 1px;">SMARTPHONE</div>
         </div>
-        <input type="number" id="priceInput" class="task-input" placeholder="Enter Expected Price">
+        <input type="number" id="priceInput" class="task-input" placeholder="Enter Market Price">
         <button class="btn" onclick="handleTaskSubmit()">SUBMIT & NEXT</button>
-        <p id="progText" style="margin-top:15px; color:var(--primary-gold); font-weight:bold;">Progress: 0 / 5</p>
+        <p id="progText" style="margin-top:15px; color:var(--primary-gold); font-weight:bold; font-size:18px;">Progress: 0 / 5</p>
     </div>
 
     <div id="timerArea" style="display:none;">
-        <i class="fas fa-history" style="font-size:40px; color:var(--primary-gold); margin-bottom:15px;"></i>
-        <h3 style="color:#00ff64;">LIMIT REACHED!</h3>
-        <p style="font-size:12px; color:#aaa;">Come back after 24 hours for new tasks.</p>
-        <h2 id="countdown" style="color:var(--primary-gold);">00:00:00</h2>
+        <i class="fas fa-clock-rotate-left" style="font-size:50px; color:var(--primary-gold); margin-bottom:15px;"></i>
+        <h3 style="color:#00ff64;">TODAY'S LIMIT END!</h3>
+        <p style="font-size:13px; color:#aaa;">Next tasks available in:</p>
+        <h2 id="countdown" style="color:var(--primary-gold); font-size:35px; letter-spacing:2px;">00:00:00</h2>
     </div>
 </div>
 
 <div id="rewardArea" style="display:none; padding:0 15px;">
-    <div class="card" style="border: 2px solid #00ff64;">
-        <h3 style="color:#00ff64;">TASK COMPLETE!</h3>
-        <button class="btn" style="background:#00ff64;" onclick="claimDailyEarning()">CLAIM DAILY PROFIT</button>
+    <div class="card" style="border: 2px solid #00ff64; background: rgba(0,255,100,0.05);">
+        <i class="fas fa-circle-check" style="font-size:40px; color:#00ff64; margin-bottom:10px;"></i>
+        <h3 style="margin:5px;">WORK COMPLETED!</h3>
+        <button class="btn" style="background:#00ff64;" onclick="claimDailyEarning()">CLAIM $0.50 PROFIT</button>
     </div>
 </div>
 
 <div class="card">
-    <h3 style="text-align:left; font-size:16px;"><i class="fas fa-gift"></i> VIP MILESTONES</h3>
+    <h3 style="text-align:left; font-size:16px; margin-bottom:15px;"><i class="fas fa-award"></i> VIP MILESTONES</h3>
     
     <div class="refer-row">
         <div>
             <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:13px; font-weight:bold;">5 Referrals</span>
+            <span style="font-size:12px; font-weight:bold;">5 Referrals</span>
         </div>
-        <div style="color:var(--primary-gold); font-weight:bold;">$1.00</div>
+        <div style="color:#00ff64; font-weight:bold;">$1.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
 
     <div class="refer-row">
         <div>
             <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:13px; font-weight:bold;">10 Referrals</span>
+            <span style="font-size:12px; font-weight:bold;">10 Referrals</span>
         </div>
-        <div style="color:var(--primary-gold); font-weight:bold;">$3.00</div>
+        <div style="color:#00ff64; font-weight:bold;">$3.00</div>
+        <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
+    </div>
+
+    <div class="refer-row">
+        <div>
+            <div class="battery-box"><div class="battery-fill"></div></div>
+            <span style="font-size:12px; font-weight:bold;">20 Referrals</span>
+        </div>
+        <div style="color:#00ff64; font-weight:bold;">$10.00</div>
+        <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
+    </div>
+
+    <div class="refer-row">
+        <div>
+            <div class="battery-box"><div class="battery-fill"></div></div>
+            <span style="font-size:12px; font-weight:bold;">50 Referrals</span>
+        </div>
+        <div style="color:#00ff64; font-weight:bold;">$30.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
 </div>
@@ -104,51 +124,64 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { /* آپ کی کنفیگ */ };
+    const firebaseConfig = { /* آپ کی فائربیس کنفیگ */ };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
     let count = 0;
-    const items = ["ROLEX WATCH", "IPHONE 15", "MACBOOK AIR", "SONY TV", "NIKE SHOES"];
+    const taskItems = [
+        {name: "ROLEX WATCH", icon: "fa-clock"},
+        {name: "IPHONE 15 PRO", icon: "fa-mobile-screen"},
+        {name: "MACBOOK AIR", icon: "fa-laptop"},
+        {name: "SONY HEADPHONES", icon: "fa-headphones"},
+        {name: "CANON CAMERA", icon: "fa-camera"}
+    ];
 
     async function checkStatus() {
+        if(!userPhone) return;
         const snap = await get(ref(db, 'users/' + userPhone));
         if (snap.exists()) {
             const last = snap.val().lastClaim || 0;
             if (Date.now() - last < 86400000) {
                 showTimer(last);
             } else {
-                loadItem();
+                loadTaskItem();
             }
         }
     }
 
-    function loadItem() {
-        document.getElementById('productName').innerText = items[Math.floor(Math.random()*items.length)];
+    function loadTaskItem() {
+        const item = taskItems[Math.floor(Math.random() * taskItems.length)];
+        document.getElementById('productName').innerText = item.name;
+        document.getElementById('pIcon').className = `fas ${item.icon} product-icon`;
         document.getElementById('progText').innerText = `Progress: ${count} / 5`;
     }
 
     window.handleTaskSubmit = function() {
-        if(!document.getElementById('priceInput').value) return alert("Please enter price!");
+        const val = document.getElementById('priceInput').value;
+        if(!val) { alert("Please enter price!"); return; }
+        
         count++;
         if(count >= 5) {
             document.getElementById('taskContent').style.display = 'none';
             document.getElementById('rewardArea').style.display = 'block';
         } else {
             document.getElementById('priceInput').value = "";
-            loadItem();
+            loadTaskItem();
         }
     };
 
     window.claimDailyEarning = async function() {
         const snap = await get(ref(db, 'users/' + userPhone));
-        const balance = snap.val().balance || 0;
+        const currentBalance = snap.val().balance || 0;
+        
         await update(ref(db, 'users/' + userPhone), {
-            balance: balance + 0.50,
+            balance: currentBalance + 0.50,
             lastClaim: Date.now()
         });
-        alert("Success! $0.50 added.");
+        
+        alert("Success! Daily profit added to your wallet.");
         location.reload();
     };
 
@@ -161,12 +194,12 @@
             const h = Math.floor(left/3600000);
             const m = Math.floor((left%3600000)/60000);
             const s = Math.floor((left%60000)/1000);
-            document.getElementById('countdown').innerText = `${h}h ${m}m ${s}s`;
+            document.getElementById('countdown').innerText = 
+                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         }, 1000);
     }
 
     window.onload = checkStatus;
 </script>
-
 </body>
 </html>
