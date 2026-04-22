@@ -1,8 +1,11 @@
+<div class="section-title">Deposit History</div>
+<div id="depositHistory" style="padding: 10px;">
+    <p style="text-align: center; color: #888;">Loading history...</p>
+</div>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // 1. Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
@@ -19,7 +22,7 @@
 
     let currentMethod = "JazzCash";
 
-    // 2. Helper Functions
+    // تصویر کو ٹیکسٹ میں بدلنے کا فنکشن
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -29,6 +32,7 @@
         });
     };
 
+    // میتھڈ سوئچ کرنا
     window.switchMethod = (name, num, holder, el) => {
         currentMethod = name;
         if(document.getElementById('methodName')) document.getElementById('methodName').innerText = name + " Transfer";
@@ -48,7 +52,7 @@
         if (file && document.getElementById('fileName')) document.getElementById('fileName').innerText = file.name;
     };
 
-    // 3. Main Deposit Logic (Admin + User History)
+    // ڈیٹا سبمٹ کرنا (ایڈمن اور یوزر دونوں جگہ جائے گا)
     const submitBtn = document.getElementById('submitBtn');
     if(submitBtn) {
         submitBtn.onclick = async () => {
@@ -75,12 +79,13 @@
                     date: new Date().toLocaleString()
                 };
 
-                // ایڈمن اور یوزر دونوں جگہ ڈیٹا سیو کرنا
+                // ایڈمن پینل کے لیے
                 await db.ref('deposits/' + depID).set(data);
+                // یوزر کی ہسٹری کے لیے
                 await db.ref('users/' + phone + '/deposits/' + depID).set(data);
 
-                alert("Request Submitted Successfully!");
-                location.reload(); 
+                alert("Deposit request sent!");
+                location.reload(); // پیج ری لوڈ تاکہ ہسٹری اپ ڈیٹ ہو جائے
             } catch (e) {
                 alert("Error: " + e.message);
                 submitBtn.disabled = false;
@@ -89,28 +94,31 @@
         };
     }
 
-    // 4. Load History Table
-    if(phone && document.getElementById('depositHistory')) {
+    // ہسٹری لوڈ کرنے کا فنکشن
+    if(phone) {
         db.ref('users/' + phone + '/deposits').on('value', (snap) => {
             const histDiv = document.getElementById('depositHistory');
+            if(!histDiv) return;
+            
             let html = "";
             if(snap.exists()) {
                 snap.forEach(child => {
                     const d = child.val();
                     let color = d.status === "Approved" ? "#00ff64" : (d.status === "Rejected" ? "#ff4b2b" : "#f1c40f");
+                    
                     html += `
                     <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:15px; margin-bottom:10px; border-left:4px solid ${color};">
-                        <div style="display:flex; justify-content:space-between; font-size:11px;">
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
                             <span>${d.date}</span>
                             <b style="color:${color}">${d.status}</b>
                         </div>
-                        <div style="margin:5px 0; font-weight:bold;">$${d.amount} via ${d.method}</div>
-                        <div style="font-size:10px; color:#777;">TID: ${d.tid}</div>
+                        <div style="margin-top:5px; font-weight:bold;">$${d.amount} - ${d.method}</div>
+                        <div style="font-size:10px; color:#888;">TID: ${d.tid}</div>
                     </div>`;
                 });
                 histDiv.innerHTML = html;
             } else {
-                histDiv.innerHTML = "<p style='text-align:center; color:#555;'>No deposit history found.</p>";
+                histDiv.innerHTML = "<p style='text-align:center; color:#555;'>No history found.</p>";
             }
         });
     }
