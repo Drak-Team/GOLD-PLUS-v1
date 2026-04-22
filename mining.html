@@ -14,11 +14,13 @@
 
         .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(241, 196, 15, 0.15); margin: 15px; padding: 20px; border-radius: 25px; backdrop-filter: blur(15px); text-align: center; }
         
-        /* Fixed Icon Styling - No more loading issues */
         .product-box { background: rgba(0, 0, 0, 0.5); padding: 25px; border-radius: 20px; margin-bottom: 20px; border: 1px dashed var(--primary-gold); }
         .product-icon { font-size: 50px; color: var(--primary-gold); display: block; margin: 0 auto 10px; }
 
-        .task-input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; }
+        .task-input { width: 100%; padding: 16px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.3); color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; outline: none; }
+        .task-input:focus { border-color: var(--primary-gold); }
+
+        .price-hint { font-size: 12px; color: #00ff64; margin-bottom: 15px; display: block; font-weight: bold; }
 
         .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .btn:active { transform: scale(0.95); }
@@ -35,7 +37,6 @@
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -43,7 +44,7 @@
 <div class="header">
     <div class="free-tag">100% FREE DAILY WORK</div>
     <h2 style="color:var(--primary-gold); margin:0;">VIP WORKSTATION</h2>
-    <p style="font-size:11px; color:#aaa; margin:5px 0 0;">Complete 5 tasks daily to unlock your profit</p>
+    <p style="font-size:11px; color:#aaa; margin:5px 0 0;">قیمت لکھ کر ڈیٹا انٹری مکمل کریں</p>
 </div>
 
 <div class="card" id="taskArea">
@@ -52,15 +53,19 @@
             <i class="fas fa-mobile-screen-button product-icon" id="pIcon"></i>
             <div id="productName" style="font-size:18px; font-weight:bold; letter-spacing: 1px;">SMARTPHONE</div>
         </div>
-        <input type="number" id="priceInput" class="task-input" placeholder="Enter Market Price">
+        
+        <span class="price-hint" id="priceHint">Expected Price: $500 - $1200</span>
+        
+        <input type="number" id="priceInput" class="task-input" placeholder="یہاں قیمت لکھیں">
+        
         <button class="btn" onclick="handleTaskSubmit()">SUBMIT & NEXT</button>
         <p id="progText" style="margin-top:15px; color:var(--primary-gold); font-weight:bold; font-size:18px;">Progress: 0 / 5</p>
     </div>
 
     <div id="timerArea" style="display:none;">
         <i class="fas fa-clock-rotate-left" style="font-size:50px; color:var(--primary-gold); margin-bottom:15px;"></i>
-        <h3 style="color:#00ff64;">TODAY'S LIMIT END!</h3>
-        <p style="font-size:13px; color:#aaa;">Next tasks available in:</p>
+        <h3 style="color:#00ff64;">آج کے ٹاسک مکمل!</h3>
+        <p style="font-size:13px; color:#aaa;">اگلے ٹاسک کے لیے انتظار کریں:</p>
         <h2 id="countdown" style="color:var(--primary-gold); font-size:35px; letter-spacing:2px;">00:00:00</h2>
     </div>
 </div>
@@ -68,8 +73,8 @@
 <div id="rewardArea" style="display:none; padding:0 15px;">
     <div class="card" style="border: 2px solid #00ff64; background: rgba(0,255,100,0.05);">
         <i class="fas fa-circle-check" style="font-size:40px; color:#00ff64; margin-bottom:10px;"></i>
-        <h3 style="margin:5px;">WORK COMPLETED!</h3>
-        <button class="btn" style="background:#00ff64;" onclick="claimDailyEarning()">CLAIM $0.50 PROFIT</button>
+        <h3 style="margin:5px;">تمام ٹاسک مکمل!</h3>
+        <button class="btn" style="background:#00ff64;" onclick="claimDailyEarning()">بیلنس میں پیسے جمع کریں</button>
     </div>
 </div>
 
@@ -77,37 +82,25 @@
     <h3 style="text-align:left; font-size:16px; margin-bottom:15px;"><i class="fas fa-award"></i> VIP MILESTONES</h3>
     
     <div class="refer-row">
-        <div>
-            <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:12px; font-weight:bold;">5 Referrals</span>
-        </div>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">5 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$1.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
 
     <div class="refer-row">
-        <div>
-            <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:12px; font-weight:bold;">10 Referrals</span>
-        </div>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">10 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$3.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
 
     <div class="refer-row">
-        <div>
-            <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:12px; font-weight:bold;">20 Referrals</span>
-        </div>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">20 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$10.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
 
     <div class="refer-row">
-        <div>
-            <div class="battery-box"><div class="battery-fill"></div></div>
-            <span style="font-size:12px; font-weight:bold;">50 Referrals</span>
-        </div>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">50 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$30.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
@@ -124,22 +117,31 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { /* آپ کی فائربیس کنفیگ */ };
+    const firebaseConfig = { 
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
     let count = 0;
     const taskItems = [
-        {name: "ROLEX WATCH", icon: "fa-clock"},
-        {name: "IPHONE 15 PRO", icon: "fa-mobile-screen"},
-        {name: "MACBOOK AIR", icon: "fa-laptop"},
-        {name: "SONY HEADPHONES", icon: "fa-headphones"},
-        {name: "CANON CAMERA", icon: "fa-camera"}
+        {name: "ROLEX WATCH", icon: "fa-clock", range: "Expected: $2000 - $5000"},
+        {name: "IPHONE 15 PRO", icon: "fa-mobile-screen", range: "Expected: $999 - $1200"},
+        {name: "MACBOOK AIR", icon: "fa-laptop", range: "Expected: $1200 - $1800"},
+        {name: "SONY HEADPHONES", icon: "fa-headphones", range: "Expected: $200 - $400"},
+        {name: "CANON CAMERA", icon: "fa-camera", range: "Expected: $1500 - $2500"}
     ];
 
     async function checkStatus() {
-        if(!userPhone) return;
+        if(!userPhone) { window.location.href="login.html"; return; }
         const snap = await get(ref(db, 'users/' + userPhone));
         if (snap.exists()) {
             const last = snap.val().lastClaim || 0;
@@ -152,9 +154,10 @@
     }
 
     function loadTaskItem() {
-        const item = taskItems[Math.floor(Math.random() * taskItems.length)];
+        const item = taskItems[count % taskItems.length];
         document.getElementById('productName').innerText = item.name;
         document.getElementById('pIcon').className = `fas ${item.icon} product-icon`;
+        document.getElementById('priceHint').innerText = item.range;
         document.getElementById('progText').innerText = `Progress: ${count} / 5`;
     }
 
@@ -175,13 +178,14 @@
     window.claimDailyEarning = async function() {
         const snap = await get(ref(db, 'users/' + userPhone));
         const currentBalance = snap.val().balance || 0;
+        const dailyLimit = snap.val().dailyEarning || 0.50;
         
         await update(ref(db, 'users/' + userPhone), {
-            balance: currentBalance + 0.50,
+            balance: currentBalance + dailyLimit,
             lastClaim: Date.now()
         });
         
-        alert("Success! Daily profit added to your wallet.");
+        alert("کامیابی! منافع آپ کے بیلنس میں جمع کر دیا گیا ہے۔");
         location.reload();
     };
 
