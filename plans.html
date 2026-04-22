@@ -3,55 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Premium Robot Mining</title>
+    <title>Gold Plus - VIP Crypto Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.05); --neon-green: #00ff64; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
+        :root { --gold: #f1c40f; --bg: #0f051d; --neon-green: #00ff64; --crypto-blue: #00d4ff; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 120px; }
         
-        .header { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--gold); border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); }
+        .header { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.6); border-bottom: 2px solid var(--gold); border-radius: 0 0 50px 50px; box-shadow: 0 10px 40px rgba(241, 196, 15, 0.4); }
         .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
 
         .container { padding: 15px; }
 
-        .section-title { color: var(--gold); font-size: 14px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--neon-green); padding-left: 10px; }
+        /* Crypto Offer Top Banner */
+        .crypto-promo {
+            background: linear-gradient(90deg, #1e004d, #004e92);
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid var(--crypto-blue);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+        .crypto-promo i { font-size: 35px; color: var(--crypto-blue); animation: glow 2s infinite; }
+        @keyframes glow { 0% { opacity: 0.5; } 50% { opacity: 1; } 100% { opacity: 0.5; } }
+        .crypto-promo b { color: var(--crypto-blue); font-size: 14px; }
+        .crypto-promo p { margin: 0; font-size: 11px; color: #ccc; }
 
-        /* Premium Robot Cards */
+        .section-title { color: var(--gold); font-size: 15px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--crypto-blue); padding-left: 10px; }
+
+        /* Premium Plan Card */
         .plan-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            border: 1px solid rgba(241, 196, 15, 0.15);
-            border-radius: 30px;
-            padding: 20px;
-            margin-bottom: 20px;
+            border: 1px solid rgba(241, 196, 15, 0.2);
+            border-radius: 35px;
+            padding: 22px;
+            margin-bottom: 25px;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(15px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
         }
         
-        .robot-bg { position: absolute; right: -15px; top: -10px; font-size: 100px; color: rgba(241, 196, 15, 0.04); pointer-events: none; }
+        .robot-bg { position: absolute; right: -20px; top: -15px; font-size: 110px; color: rgba(241, 196, 15, 0.05); pointer-events: none; }
 
-        .badge { position: absolute; top: 0; right: 0; background: #ff4444; color: #fff; font-size: 9px; font-weight: bold; padding: 7px 15px; border-bottom-left-radius: 15px; }
+        .usdt-bonus-tag { 
+            position: absolute; top: 0; right: 0; 
+            background: linear-gradient(90deg, #00d4ff, #004e92); 
+            color: #fff; font-size: 10px; font-weight: bold; 
+            padding: 8px 18px; border-bottom-left-radius: 20px; 
+            box-shadow: -5px 5px 15px rgba(0,0,0,0.3);
+        }
 
-        .plan-header h3 { margin: 0; font-size: 19px; color: #fff; letter-spacing: 1px; }
-        .price-tag { display: block; color: var(--gold); font-size: 22px; font-weight: 800; margin: 5px 0; }
-        .price-rs { font-size: 13px; color: #aaa; font-weight: normal; }
+        .plan-name { font-size: 21px; font-weight: bold; margin: 0; color: #fff; letter-spacing: 1px; }
+        .price-tag { display: block; color: var(--gold); font-size: 23px; font-weight: 800; margin: 8px 0; }
+        .price-rs { font-size: 14px; color: #bbb; font-weight: normal; }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .stat-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; margin-bottom: 3px; }
-        .stat-box span { font-size: 13px; font-weight: 700; color: var(--neon-green); }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .stat-box { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; margin-bottom: 5px; }
+        .stat-box span { font-size: 14px; font-weight: 700; color: var(--neon-green); }
 
-        .total-profit { background: rgba(0, 255, 100, 0.08); border: 1px dashed var(--neon-green); padding: 12px; border-radius: 15px; margin-bottom: 15px; text-align: center; }
-        .total-profit small { display: block; font-size: 9px; color: var(--neon-green); text-transform: uppercase; }
-        .total-profit b { font-size: 16px; color: #fff; }
+        .bonus-box { 
+            background: rgba(0, 212, 255, 0.1); 
+            border: 1px dashed var(--crypto-blue); 
+            padding: 12px; border-radius: 15px; 
+            margin-bottom: 20px; text-align: center;
+        }
+        .bonus-box span { display: block; font-size: 9px; color: var(--crypto-blue); text-transform: uppercase; font-weight: bold; }
+        .bonus-box b { font-size: 15px; color: #fff; }
 
-        .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 18px; font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 15px rgba(230, 126, 34, 0.2); }
-        
-        .coming-soon { text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 30px; color: #555; margin-top: 20px; font-weight: bold; }
+        .buy-btn { 
+            background: var(--gold-grad); color: #000; border: none; 
+            width: 100%; padding: 18px; border-radius: 20px; 
+            font-weight: 900; font-size: 16px; cursor: pointer; 
+            text-transform: uppercase; letter-spacing: 1px; 
+            box-shadow: 0 10px 25px rgba(230, 126, 34, 0.3);
+        }
+        .buy-btn:active { transform: scale(0.96); }
 
         /* Nav Bar */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; }
         .nav-btn i { font-size: 22px; display: block; margin-bottom: 2px; }
         .nav-btn span { font-size: 10px; }
@@ -66,39 +99,47 @@
 
 <div class="container">
 
-    <div class="section-title">Standard Mining Robots</div>
+    <div class="crypto-promo">
+        <i class="fab fa-bitcoin"></i>
+        <div>
+            <b>USDT CRYPTO BONUS!</b>
+            <p>ڈپازٹ کے لیے USDT منتخب کریں اور 15% تک اضافی کمیشن حاصل کریں۔</p>
+        </div>
+    </div>
+
+    <div class="section-title">Investment Plans</div>
 
     <script>
         const plans = [
-            {id: 2, name: "Nano Bot", rs: "600", daily: "60", monthly: "1,800"},
-            {id: 5, name: "Micro Miner", rs: "1,500", daily: "150", monthly: "4,500"},
-            {id: 10, name: "Volt Robot", rs: "3,000", daily: "300", monthly: "9,000"},
-            {id: 20, name: "Cyber Hunter", rs: "6,000", daily: "600", monthly: "18,000"},
-            {id: 30, name: "Alpha AI", rs: "9,000", daily: "900", monthly: "27,000"},
-            {id: 50, name: "Delta Power", rs: "15,000", daily: "1,500", monthly: "45,000"},
-            {id: 100, name: "Titan X", rs: "30,000", daily: "3,500", monthly: "105,000"},
-            {id: 200, name: "Omega Machine", rs: "60,000", daily: "7,500", monthly: "225,000"},
-            {id: 300, name: "Galactic Miner", rs: "90,000", daily: "12,000", monthly: "360,000"},
-            {id: 400, name: "Supreme AI", rs: "120,000", daily: "16,000", monthly: "480,000"},
-            {id: 500, name: "Emperor Robot", rs: "150,000", daily: "20,000", monthly: "600,000"}
+            {id: 2, name: "Nano AI Bot", rs: "600", daily: "60", bonus: "5%"},
+            {id: 5, name: "Micro Miner", rs: "1,500", daily: "150", bonus: "5%"},
+            {id: 10, name: "Volt Robot", rs: "3,000", daily: "300", bonus: "7%"},
+            {id: 20, name: "Cyber Hunter", rs: "6,000", daily: "600", bonus: "7%"},
+            {id: 30, name: "Alpha AI", rs: "9,000", daily: "900", bonus: "10%"},
+            {id: 50, name: "Delta Power", rs: "15,000", daily: "1,500", bonus: "10%"},
+            {id: 100, name: "Titan X", rs: "30,000", daily: "3,500", bonus: "12%"},
+            {id: 200, name: "Omega Machine", rs: "60,000", daily: "7,500", bonus: "12%"},
+            {id: 300, name: "Galactic Miner", rs: "90,000", daily: "12,000", bonus: "15%"},
+            {id: 400, name: "Supreme AI", rs: "120,000", daily: "16,000", bonus: "15%"},
+            {id: 500, name: "Emperor Robot", rs: "150,000", daily: "20,000", bonus: "15%"}
         ];
 
         plans.forEach(plan => {
             document.write(`
                 <div class="plan-card">
                     <i class="fas fa-robot robot-bg"></i>
-                    <div class="badge">30 DAYS PLAN</div>
+                    <div class="usdt-bonus-tag">USDT BONUS: ${plan.bonus}</div>
                     <div class="plan-header">
-                        <h3>${plan.name}</h3>
+                        <div class="plan-name">${plan.name}</div>
                         <span class="price-tag">$${plan.id}.00 <span class="price-rs">/ Rs. ${plan.rs}</span></span>
                     </div>
                     <div class="stats-grid">
                         <div class="stat-box"><label>Daily Earning</label><span>Rs. ${plan.daily}</span></div>
-                        <div class="stat-box"><label>Plan Validity</label><span style="color:#fff;">30 Days</span></div>
+                        <div class="stat-box"><label>Plan Life</label><span style="color:#fff;">30 Days</span></div>
                     </div>
-                    <div class="total-profit">
-                        <small>Total Monthly Profit</small>
-                        <b>Rs. ${plan.monthly}</b>
+                    <div class="bonus-box">
+                        <span>Extra USDT Commission</span>
+                        <b>Get ${plan.bonus} Instant Reward</b>
                     </div>
                     <button class="buy-btn" onclick="location.href='deposit.html?amount=${plan.id}'">Invest Now</button>
                 </div>
@@ -106,9 +147,9 @@
         });
     </script>
 
-    <div class="coming-soon">
-        <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i><br>
-        MORE VIP PLANS COMING SOON
+    <div style="text-align: center; padding: 40px; color: #555; border: 2px dashed rgba(255,255,255,0.1); border-radius: 30px;">
+        <i class="fas fa-lock" style="font-size:30px;"></i><br><br>
+        VIP $1000+ PLANS COMING SOON
     </div>
 
 </div>
