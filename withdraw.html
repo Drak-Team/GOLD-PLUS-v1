@@ -1,98 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Secure Withdrawal</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.07); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 80px; overflow-x: hidden; }
-        
-        .header { padding: 30px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); text-align: center; border-radius: 0 0 30px 30px; }
-        .balance-card { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; margin: -30px 20px 20px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
-        .balance-card h3 { margin: 0; font-size: 14px; opacity: 0.8; }
-        .balance-card h1 { margin: 5px 0; font-size: 32px; }
-
-        .withdraw-form { padding: 20px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--gold); }
-        
-        select, input { width: 100%; padding: 14px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; font-size: 15px; outline: none; box-sizing: border-box; }
-        
-        .info-box { background: rgba(241, 196, 15, 0.1); border: 1px dashed var(--gold); padding: 15px; border-radius: 15px; font-size: 12px; color: #ccc; margin-bottom: 25px; line-height: 1.6; }
-        .info-box b { color: var(--gold); }
-
-        .request-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 5px 15px rgba(230, 126, 34, 0.3); transition: 0.3s; }
-        .request-btn:active { transform: scale(0.95); }
-
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 100; }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <h2 style="margin:0; color: var(--gold);">Withdraw Funds</h2>
-    <p style="font-size: 12px; opacity: 0.6;">Secure & Instant Payouts</p>
-</div>
-
-<div class="balance-card">
-    <h3>Available Balance</h3>
-    <h1 id="currentBalance">$0.00</h1>
-    <span id="pkrValue" style="font-size: 12px; font-weight: bold;">(Rs. 0)</span>
-</div>
-
-<div class="withdraw-form">
-    <div class="info-box">
-        <i class="fas fa-info-circle"></i> <b>Notice:</b> Minimum withdrawal is <b>$1.00 (Rs. 300)</b>. <br>
-        Exchange Rate: <b>$1 = Rs. 300</b>. Withdrawal arrives in 1-24 hours.
-    </div>
-
-    <div class="input-group">
-        <label>Select Method</label>
-        <select id="method">
-            <option value="Easypaisa">Easypaisa (Pakistan)</option>
-            <option value="JazzCash">JazzCash (Pakistan)</option>
-            <option value="USDT_TRC20">USDT (TRC20) - Global</option>
-            <option value="Binance_ID">Binance ID (Pay ID)</option>
-        </select>
-    </div>
-
-    <div class="input-group">
-        <label>Withdraw Amount ($)</label>
-        <input type="number" id="withdrawAmount" placeholder="Min $1.00" step="0.01">
-        <small id="calcNote" style="color: #00ff64; font-size: 11px; margin-top: 5px; display: block;"></small>
-    </div>
-
-    <div class="input-group">
-        <label>Account Number / Wallet Address</label>
-        <input type="text" id="accountNum" placeholder="Phone number or Address">
-    </div>
-
-    <div class="input-group">
-        <label>Account Holder Name</label>
-        <input type="text" id="accountName" placeholder="Full name of account holder">
-    </div>
-
-    <button class="request-btn" id="requestBtn">CONFIRM WITHDRAWAL</button>
-</div>
-
-<nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
-    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn active"><i class="fas fa-user-gear"></i>PROFILE</a>
-</nav>
-
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-
 <script>
-    // Firebase Configuration
+    // Firebase Configuration (Same as yours)
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         authDomain: "gold-plus-v1.firebaseapp.com",
@@ -103,22 +10,21 @@
         appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
-    const username = localStorage.getItem('userPhone');
+    const phone = localStorage.getItem('userPhone'); // فون نمبر یہاں سے لیا
     let currentBalance = 0;
 
-    // Load Balance
+    // لوڈ بیلنس فنکشن
     function loadBalance() {
-        if (!username) {
-            alert("Session expired. Please Login.");
-            window.location.href = "login.html";
+        if (!phone) {
+            alert("Please Login First!");
+            window.location.href = "index.html";
             return;
         }
-        db.ref('users/' + username).once('value', (snapshot) => {
+        db.ref('users/' + phone).on('value', (snapshot) => {
             if (snapshot.exists()) {
-                currentBalance = snapshot.val().balance || 0;
+                currentBalance = parseFloat(snapshot.val().balance) || 0;
                 document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
                 document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
             }
@@ -126,18 +32,13 @@
     }
     loadBalance();
 
-    // Auto Rate Calculator
+    // کیلکولیٹر
     document.getElementById('withdrawAmount').addEventListener('input', (e) => {
         const val = e.target.value;
-        if(val > 0) {
-            const rs = val * 300;
-            document.getElementById('calcNote').innerText = "You will receive: Rs. " + Math.floor(rs).toLocaleString();
-        } else {
-            document.getElementById('calcNote').innerText = "";
-        }
+        document.getElementById('calcNote').innerText = val > 0 ? "You will receive: Rs. " + (val * 300) : "";
     });
 
-    // Handle Withdrawal Request
+    // ودڈرال بٹن لاجک
     document.getElementById('requestBtn').onclick = function() {
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
         const method = document.getElementById('method').value;
@@ -151,48 +52,45 @@
         }
 
         if (amount > currentBalance) {
-            alert("Insufficient Balance!");
+            alert("Insufficient Balance! Your balance is $" + currentBalance.toFixed(2));
             return;
         }
 
         if (!accNum || !accName) {
-            alert("Please fill all details!");
+            alert("Please enter account details!");
             return;
         }
 
         btn.innerText = "Processing...";
         btn.disabled = true;
 
-        // Transactional Update
-        const userRef = db.ref('users/' + username + '/balance');
+        // 1. پہلے بیلنس کاٹیں
+        const userRef = db.ref('users/' + phone + '/balance');
         userRef.transaction((current) => {
             if (current >= amount) return current - amount;
-            return; // Cancel if balance low
+            return; 
         }, (error, committed) => {
             if (committed) {
-                // Save Request
+                // 2. پھر ودڈرال لسٹ میں ڈیٹا بھیجیں (ایڈمن کے لیے)
                 const newReq = db.ref('withdrawals').push();
                 newReq.set({
-                    username: username,
-                    amountUSD: amount,
-                    amountPKR: amount * 300,
+                    phone: phone, // ایڈمن پینل کے لیے ضروری
+                    username: phone,
+                    amount: amount,
                     method: method,
-                    account: accNum,
-                    name: accName,
+                    accountNumber: accNum,
+                    accountName: accName,
                     status: "Pending",
-                    timestamp: Date.now(),
                     date: new Date().toLocaleString()
                 }).then(() => {
-                    alert("Withdrawal Request Submitted Successfully!");
+                    alert("Withdrawal request sent! Balance deducted.");
                     window.location.href = 'profile.html';
                 });
             } else {
-                alert("Error! Please try again later.");
+                alert("Transaction Failed! Try again.");
                 btn.innerText = "CONFIRM WITHDRAWAL";
                 btn.disabled = false;
             }
         });
     };
 </script>
-</body>
-</html>
