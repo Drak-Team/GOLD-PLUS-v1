@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Profile</title>
+    <title>Gold Plus - Profile VIP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary-gold: #f1c40f;
+            --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22);
             --bg-dark: #0f051d;
             --card-bg: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
@@ -15,91 +16,101 @@
 
         body {
             margin: 0;
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background: radial-gradient(circle at top, #1a0b2e, #0f051d);
             color: white;
             padding-bottom: 100px;
             min-height: 100vh;
         }
 
+        /* VIP Golden Header like Dashboard */
         .profile-header {
             text-align: center;
-            padding: 40px 20px;
-            background: rgba(0,0,0,0.2);
-            border-bottom-left-radius: 40px;
-            border-bottom-right-radius: 40px;
+            padding: 50px 20px;
+            background: var(--gold-grad);
+            border-bottom: 3px solid #b8860b;
+            border-radius: 0 0 50px 50px;
+            box-shadow: 0 10px 40px rgba(241, 196, 15, 0.4);
+            color: #000;
         }
 
         .avatar-box {
-            width: 80px; height: 80px;
-            background: var(--primary-gold);
+            width: 90px; height: 90px;
+            background: #000;
+            border: 4px solid #fff;
             border-radius: 50%; margin: 0 auto 15px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 35px; color: #000; font-weight: bold;
-            box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
+            font-size: 40px; color: var(--primary-gold); font-weight: 900;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
-        .user-name { font-size: 20px; font-weight: bold; margin-bottom: 5px; }
-        .user-id { font-size: 12px; color: #aaa; letter-spacing: 1px; }
+        .user-name { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
+        .user-id { font-size: 13px; color: #333; font-weight: bold; letter-spacing: 1px; }
 
         .container { padding: 20px; }
 
         .stats-row {
             display: grid; grid-template-columns: 1fr 1fr;
-            gap: 15px; margin-top: -30px; margin-bottom: 25px;
+            gap: 15px; margin-top: -40px; margin-bottom: 30px;
         }
 
         .stat-card {
-            background: #25163d; border: 1px solid var(--glass-border);
-            border-radius: 20px; padding: 15px; text-align: center;
+            background: #1a0b2e; border: 2px solid var(--primary-gold);
+            border-radius: 25px; padding: 18px; text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .stat-card i { color: var(--primary-gold); font-size: 18px; margin-bottom: 8px; }
-        .stat-card b { font-size: 16px; color: #fff; display: block; }
-        .stat-card span { font-size: 10px; color: #aaa; text-transform: uppercase; }
+        .stat-card i { color: var(--primary-gold); font-size: 22px; margin-bottom: 10px; }
+        .stat-card b { font-size: 18px; color: #fff; display: block; }
+        .stat-card span { font-size: 10px; color: #aaa; text-transform: uppercase; font-weight: bold; }
 
         .menu-container {
-            background: var(--card-bg); border-radius: 25px;
+            background: var(--card-bg); border-radius: 30px;
             padding: 10px; border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
         .menu-item {
-            display: flex; align-items: center; padding: 15px;
+            display: flex; align-items: center; padding: 18px;
             text-decoration: none; color: #fff;
             border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.3s;
         }
+        .menu-item:last-child { border-bottom: none; }
 
-        .menu-item i {
-            width: 35px; height: 35px;
-            background: rgba(255,255,255,0.05); border-radius: 10px;
+        .menu-item i:first-child {
+            width: 40px; height: 40px;
+            background: rgba(241, 196, 15, 0.1); border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            margin-right: 15px; color: var(--primary-gold);
+            margin-right: 15px; color: var(--primary-gold); font-size: 18px;
         }
 
-        .menu-item span { flex: 1; font-size: 14px; }
+        .menu-item span { flex: 1; font-size: 15px; font-weight: 500; }
+        .menu-item i:last-child { color: #444; font-size: 14px; }
 
         .logout-btn {
-            margin-top: 30px; width: 100%; padding: 15px;
-            background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.2);
-            color: #ff4444; border-radius: 18px; font-weight: bold; cursor: pointer;
+            margin-top: 30px; width: 100%; padding: 18px;
+            background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.3);
+            color: #ff4444; border-radius: 20px; font-weight: 900; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 1px;
         }
 
         .bottom-nav {
             position: fixed; bottom: 0; width: 100%;
-            background: #110720; display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid var(--glass-border); z-index: 1000;
+            background: #0a0414; display: flex; justify-content: space-around;
+            padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000;
         }
 
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
+        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; font-weight: bold; }
         .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="profile-header">
-    <div class="avatar-box" id="avatarChar">U</div>
-    <div class="user-name" id="profileName">Loading...</div>
+    <div class="avatar-box" id="avatarChar">G</div>
+    <div class="user-name" id="profileName">GOLD USER</div>
     <div class="user-id" id="profileID">ID: GP-000000</div>
 </div>
 
@@ -107,20 +118,20 @@
     <div class="stats-row">
         <div class="stat-card">
             <i class="fas fa-wallet"></i>
-            <span>Total Balance</span>
+            <span>Main Balance</span>
             <b id="totalBalance">$0.00</b>
         </div>
         <div class="stat-card">
             <i class="fas fa-users"></i>
-            <span>My Team</span>
+            <span>Team size</span>
             <b id="myTeam">0 Members</b>
         </div>
     </div>
 
     <div class="menu-container">
         <a href="edit-profile.html" class="menu-item">
-            <i class="fas fa-user-edit"></i>
-            <span>Edit Profile</span>
+            <i class="fas fa-user-shield"></i>
+            <span>Account Security</span>
             <i class="fas fa-chevron-right"></i>
         </a>
         <a href="deposit-history.html" class="menu-item">
@@ -130,17 +141,17 @@
         </a>
         <a href="withdraw-history.html" class="menu-item">
             <i class="fas fa-history"></i>
-            <span>Withdraw History</span>
+            <span>Withdrawal Logs</span>
             <i class="fas fa-chevron-right"></i>
         </a>
         <a href="refer.html" class="menu-item">
-            <i class="fas fa-user-plus"></i>
-            <span>Refer & Earn</span>
+            <i class="fas fa-gift"></i>
+            <span>Invite Rewards</span>
             <i class="fas fa-chevron-right"></i>
         </a>
-        <a href="https://wa.me/923214567890" class="menu-item">
-            <i class="fab fa-whatsapp"></i>
-            <span>Contact Support</span>
+        <a href="https://t.me/mranjum143" class="menu-item">
+            <i class="fab fa-telegram"></i>
+            <span>Official Support</span>
             <i class="fas fa-chevron-right"></i>
         </a>
     </div>
@@ -149,11 +160,11 @@
 </div>
 
 <nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i>HOME</a>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-item"><i class="fas fa-paper-plane"></i>INVITE</a>
-    <a href="profile.html" class="nav-item active"><i class="fas fa-user-circle"></i>PROFILE</a>
+    <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-item active"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
 <script type="module">
@@ -178,15 +189,18 @@
         if (!phone) {
             window.location.href = 'index.html';
         } else {
-            // ڈیٹا لائیو سنک کریں
+            // Live Data Syncing
             onValue(ref(db, 'users/' + phone), (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    document.getElementById('profileName').innerText = data.name || "User";
+                    // پکا کر لیں کہ بیلنس ہر حال میں ریڈر ہو
+                    const bal = data.balance || 0;
+                    document.getElementById('totalBalance').innerText = "$" + parseFloat(bal).toFixed(2);
+                    
+                    document.getElementById('profileName').innerText = data.name || "Gold User";
                     document.getElementById('profileID').innerText = "ID: GP-" + phone.substring(phone.length - 6);
-                    document.getElementById('totalBalance').innerText = "$" + (data.balance || 0).toFixed(2);
                     document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
-                    document.getElementById('avatarChar').innerText = (data.name || "U").charAt(0).toUpperCase();
+                    document.getElementById('avatarChar').innerText = (data.name || "G").charAt(0).toUpperCase();
                 }
             });
         }
@@ -200,45 +214,3 @@
 
 </body>
 </html>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-      authDomain: "gold-plus-v1.firebaseapp.com",
-      databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-
-    window.onload = function() {
-        const phone = localStorage.getItem('userPhone');
-        if (!phone) {
-            window.location.href = 'index.html';
-        } else {
-            // "onValue" کا مطلب ہے کہ ڈیٹا بیس میں تبدیلی ہوتے ہی یہاں بھی خود بدل جائے گا
-            onValue(ref(db, 'users/' + phone), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // پکا کر لیں کہ ڈیٹا بیس میں نام 'balance' (چھوٹے b کے ساتھ) ہی ہے
-                    const currentBalance = data.balance || 0; 
-                    document.getElementById('totalBalance').innerText = "$" + parseFloat(currentBalance).toFixed(2);
-                    document.getElementById('profileName').innerText = data.name || "User";
-                    document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
-                    document.getElementById('avatarChar').innerText = (data.name || "U").charAt(0).toUpperCase();
-                }
-            });
-        }
-    };
-
-    window.logout = () => {
-        localStorage.removeItem('userPhone');
-        window.location.href = 'index.html';
-    };
-</script>
