@@ -1,6 +1,6 @@
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue, update, push, runTransaction, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, onValue, update, runTransaction, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -15,26 +15,33 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // 1. Deposits Logic (Username Based)
+    // 1. Deposits Logic (فون نمبر کی بنیاد پر)
     onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositContainer');
+        if(!container) return;
         container.innerHTML = '';
         let count = 0;
         snapshot.forEach((childSnap) => {
             const data = childSnap.val();
-            const rid = childSnap.key; // Request ID
+            const rid = childSnap.key; 
             if(data.status === "Pending") {
                 count++;
                 container.innerHTML += `
-                    <div class="admin-card">
-                        <div class="req-info">
-                            <div><h4>${data.username}</h4><p>TID: ${data.tid}</p></div>
-                            <div class="amount">$${data.amount}</div>
+                    <div class="admin-card" style="background:#1a0b2e; border:1px solid #f1c40f; padding:15px; margin-bottom:10px; border-radius:15px;">
+                        <div class="req-info" style="display:flex; justify-content:space-between;">
+                            <div>
+                                <h4 style="margin:0; color:#f1c40f;">User: ${data.phone || data.username}</h4>
+                                <p style="font-size:12px; color:#aaa;">TID: ${data.tid}</p>
+                            </div>
+                            <div class="amount" style="font-weight:bold; color:#00ff00;">$${data.amount}</div>
                         </div>
-                        <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
-                        <div class="btn-group">
-                            <button class="approve-btn" onclick="handleDeposit('${data.username}', '${rid}', '${data.amount}')">Approve</button>
-                            <button class="reject-btn" onclick="updateStatus('deposits', '${rid}', 'Rejected')">Reject</button>
+                        <div style="margin:10px 0;">
+                            <p style="font-size:10px; color:#eee;">Payment Screenshot:</p>
+                            <img src="${data.screenshot}" style="width:100px; border-radius:10px; cursor:pointer; border:1px solid #333;" onclick="window.open(this.src)">
+                        </div>
+                        <div class="btn-group" style="display:flex; gap:10px;">
+                            <button style="background:#f1c40f; color:#000; border:none; padding:8px 15px; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="handleDeposit('${data.phone || data.username}', '${rid}', '${data.amount}')">Approve</button>
+                            <button style="background:#ff3232; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;" onclick="updateStatus('deposits', '${rid}', 'Rejected')">Reject</button>
                         </div>
                     </div>`;
             }
@@ -42,9 +49,10 @@
         document.getElementById('pendingDep').innerText = count;
     });
 
-    // 2. Withdrawals Logic (Username Based)
+    // 2. Withdrawals Logic
     onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawContainer');
+        if(!container) return;
         container.innerHTML = '';
         let count = 0;
         snapshot.forEach((childSnap) => {
@@ -53,14 +61,17 @@
             if(data.status === "Pending") {
                 count++;
                 container.innerHTML += `
-                    <div class="admin-card">
-                        <div class="req-info">
-                            <div><h4>${data.username}</h4><p>${data.method}: ${data.accountNumber}</p></div>
-                            <div class="amount">$${data.amount}</div>
+                    <div class="admin-card" style="background:#1a0b2e; border:1px solid #f1c40f; padding:15px; margin-bottom:10px; border-radius:15px;">
+                        <div class="req-info" style="display:flex; justify-content:space-between;">
+                            <div>
+                                <h4 style="margin:0; color:#f1c40f;">User: ${data.phone || data.username}</h4>
+                                <p style="font-size:12px; color:#aaa;">${data.method}: ${data.accountNumber}</p>
+                            </div>
+                            <div class="amount" style="font-weight:bold; color:#ff3232;">$${data.amount}</div>
                         </div>
-                        <div class="btn-group">
-                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">Approve</button>
-                            <button class="reject-btn" onclick="handleWithdrawReject('${data.username}', '${rid}', '${data.amount}')">Reject & Refund</button>
+                        <div class="btn-group" style="display:flex; gap:10px; margin-top:10px;">
+                            <button style="background:#f1c40f; color:#000; border:none; padding:8px 15px; border-radius:5px; font-weight:bold; cursor:pointer;" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">Approve</button>
+                            <button style="background:#ff3232; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;" onclick="handleWithdrawReject('${data.phone || data.username}', '${rid}', '${data.amount}')">Reject & Refund</button>
                         </div>
                     </div>`;
             }
@@ -68,34 +79,30 @@
         document.getElementById('pendingWith').innerText = count;
     });
 
-    // --- اہم فنکشنز ---
+    // --- فنکشنز ---
 
-    // ڈپازٹ اپروو کرنا اور یوزر کے بیلنس میں جمع کرنا
     window.handleDeposit = (userID, rid, amount) => {
+        if(!userID) return alert("User ID missing!");
         const userBalanceRef = ref(db, `users/${userID}/balance`);
         runTransaction(userBalanceRef, (current) => {
-            return (current || 0) + parseFloat(amount);
+            return (parseFloat(current) || 0) + parseFloat(amount);
         }).then(() => {
             update(ref(db, `deposits/${rid}`), { status: 'Approved' });
-            alert("Deposit Approved! $"+amount+" added to " + userID);
-        });
+            alert("Success! $" + amount + " added to " + userID);
+        }).catch(err => alert("Error: " + err.message));
     };
 
-    // ودڈرال ریجیکٹ کرنا (اور پیسے واپس یوزر کو دینا)
     window.handleWithdrawReject = (userID, rid, amount) => {
         const userBalanceRef = ref(db, `users/${userID}/balance`);
         runTransaction(userBalanceRef, (current) => {
-            return (current || 0) + parseFloat(amount);
+            return (parseFloat(current) || 0) + parseFloat(amount);
         }).then(() => {
             update(ref(db, `withdrawals/${rid}`), { status: 'Rejected' });
-            alert("Withdraw Rejected! Amount refunded to " + userID);
+            alert("Refunded! Amount added back to " + userID);
         });
     };
 
-    // اسٹیٹس اپڈیٹ کرنا
     window.updateStatus = (path, rid, status) => {
-        update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Request " + status));
+        update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Status updated to " + status));
     };
-    
-    // (Support Chat والا حصہ بھی اسی طرح یوزر نیم پر اپڈیٹ کر دیں)
 </script>
