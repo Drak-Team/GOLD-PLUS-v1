@@ -2,7 +2,7 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // Firebase Configuration
+    // 1. Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
@@ -13,16 +13,13 @@
       appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    // Initialize Firebase safely
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
 
     let currentMethod = "JazzCash";
 
-    // Image to Base64 function
+    // 2. Helper Functions
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -32,83 +29,89 @@
         });
     };
 
-    // Switch Payment Method
     window.switchMethod = (name, num, holder, el) => {
         currentMethod = name;
-        const mName = document.getElementById('methodName');
-        const aNum = document.getElementById('accNumber');
-        const aHolder = document.getElementById('accHolder');
-        
-        if(mName) mName.innerText = name + " Transfer";
-        if(aNum) aNum.innerText = num;
-        if(aHolder) aHolder.innerText = holder;
-        
+        if(document.getElementById('methodName')) document.getElementById('methodName').innerText = name + " Transfer";
+        if(document.getElementById('accNumber')) document.getElementById('accNumber').innerText = num;
+        if(document.getElementById('accHolder')) document.getElementById('accHolder').innerText = holder;
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         if(el) el.classList.add('active');
     };
 
-    // Update PKR Note
     window.updatePKR = () => {
-        const usdInput = document.getElementById('depositAmount');
-        const pkrNote = document.getElementById('pkrNote');
-        if(usdInput && pkrNote){
-            const usd = usdInput.value;
-            pkrNote.innerText = usd > 0 ? "Total to Pay: Rs. " + (usd * 300) : "";
-        }
+        const usd = document.getElementById('depositAmount').value;
+        if(document.getElementById('pkrNote')) document.getElementById('pkrNote').innerText = usd > 0 ? "Total to Pay: Rs. " + (usd * 300) : "";
     };
 
-    // Show Selected File Name
     window.updateFileName = () => {
-        const fileInput = document.getElementById('proof');
-        const fileNameDisp = document.getElementById('fileName');
-        if (fileInput && fileInput.files[0] && fileNameDisp) {
-            fileNameDisp.innerText = fileInput.files[0].name;
-        }
+        const file = document.getElementById('proof').files[0];
+        if (file && document.getElementById('fileName')) document.getElementById('fileName').innerText = file.name;
     };
 
-    // Main Submit Function
+    // 3. Main Deposit Logic (Admin + User History)
     const submitBtn = document.getElementById('submitBtn');
     if(submitBtn) {
         submitBtn.onclick = async () => {
-            const amountField = document.getElementById('depositAmount');
-            const tidField = document.getElementById('tid');
-            const fileField = document.getElementById('proof');
+            const amt = document.getElementById('depositAmount').value;
+            const tid = document.getElementById('tid').value;
+            const file = document.getElementById('proof').files[0];
 
-            if (!phone) { alert("Session expired, please login again."); return; }
-            if (!amountField || amountField.value < 1) { alert("Minimum deposit is $1"); return; }
-            if (!tidField || !tidField.value) { alert("Please enter Transaction ID"); return; }
-            if (!fileField || !fileField.files[0]) { alert("Please upload payment screenshot"); return; }
+            if (!phone) { alert("Please login again!"); return; }
+            if (amt < 1 || !tid || !file) { alert("Please fill all fields and upload screenshot!"); return; }
 
-            // UI Update
             submitBtn.innerText = "Processing...";
             submitBtn.disabled = true;
 
             try {
-                const base64Img = await getBase64(fileField.files[0]);
-                const depositID = Date.now();
-
-                const depData = {
+                const imgData = await getBase64(file);
+                const depID = Date.now();
+                const data = {
                     phone: phone,
-                    amount: amountField.value,
-                    tid: tidField.value,
+                    amount: amt,
+                    tid: tid,
                     method: currentMethod,
-                    screenshot: base64Img,
+                    screenshot: imgData,
                     status: "Pending",
                     date: new Date().toLocaleString()
                 };
 
-                // Save to Admin and User nodes
-                await db.ref('deposits/' + depositID).set(depData);
-                await db.ref('users/' + phone + '/deposits/' + depositID).set(depData);
+                // ایڈمن اور یوزر دونوں جگہ ڈیٹا سیو کرنا
+                await db.ref('deposits/' + depID).set(data);
+                await db.ref('users/' + phone + '/deposits/' + depID).set(data);
 
-                alert("Request submitted! Your deposit is under review.");
-                window.location.replace("dashboard.html");
-
+                alert("Request Submitted Successfully!");
+                location.reload(); 
             } catch (e) {
                 alert("Error: " + e.message);
                 submitBtn.disabled = false;
                 submitBtn.innerText = "SUBMIT REQUEST";
             }
         };
+    }
+
+    // 4. Load History Table
+    if(phone && document.getElementById('depositHistory')) {
+        db.ref('users/' + phone + '/deposits').on('value', (snap) => {
+            const histDiv = document.getElementById('depositHistory');
+            let html = "";
+            if(snap.exists()) {
+                snap.forEach(child => {
+                    const d = child.val();
+                    let color = d.status === "Approved" ? "#00ff64" : (d.status === "Rejected" ? "#ff4b2b" : "#f1c40f");
+                    html += `
+                    <div style="background:rgba(255,255,255,0.05); padding:12px; border-radius:15px; margin-bottom:10px; border-left:4px solid ${color};">
+                        <div style="display:flex; justify-content:space-between; font-size:11px;">
+                            <span>${d.date}</span>
+                            <b style="color:${color}">${d.status}</b>
+                        </div>
+                        <div style="margin:5px 0; font-weight:bold;">$${d.amount} via ${d.method}</div>
+                        <div style="font-size:10px; color:#777;">TID: ${d.tid}</div>
+                    </div>`;
+                });
+                histDiv.innerHTML = html;
+            } else {
+                histDiv.innerHTML = "<p style='text-align:center; color:#555;'>No deposit history found.</p>";
+            }
+        });
     }
 </script>
