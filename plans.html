@@ -3,168 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Robot Mining</title>
+    <title>Gold Plus - Professional Mining Plans</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.05); --neon-green: #00ff64; --neon-red: #ff4444; }
+        :root { --gold: #f1c40f; --bg: #0f051d; --neon-green: #00ff64; --neon-blue: #00d4ff; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 120px; }
         
         .header { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--gold); border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); }
-        .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; letter-spacing: 3px; font-weight: 900; }
-        .header p { margin: 5px 0 0; font-size: 11px; color: #aaa; letter-spacing: 1px; }
+        .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; font-weight: 900; }
 
         .container { padding: 15px; }
 
-        .section-title { color: var(--gold); font-size: 16px; font-weight: bold; margin: 25px 0 15px 5px; display: flex; align-items: center; gap: 10px; text-transform: uppercase; border-left: 4px solid var(--gold); padding-left: 10px; }
+        /* Offer Banner */
+        .promo-banner {
+            background: linear-gradient(90deg, #6311ff, #00d4ff);
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
 
-        /* VIP Plan Cards */
+        .section-title { color: var(--gold); font-size: 15px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--neon-green); padding-left: 10px; }
+
+        /* Professional Plan Cards */
         .plan-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            border: 1px solid rgba(241, 196, 15, 0.2);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 30px;
-            padding: 25px;
-            margin-bottom: 25px;
+            padding: 22px;
+            margin-bottom: 20px;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(15px);
-            transition: 0.3s;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
         }
-        .plan-card.hot { border: 1.5px solid var(--neon-green); box-shadow: 0 0 20px rgba(0, 255, 100, 0.2); }
-        .plan-card.vip { border: 1.5px solid var(--gold); background: rgba(241, 196, 15, 0.05); }
+        
+        .badge { position: absolute; top: 0; right: 0; background: #ff4444; color: #fff; font-size: 9px; font-weight: bold; padding: 7px 15px; border-bottom-left-radius: 15px; }
 
-        .robot-bg { position: absolute; right: -20px; top: -10px; font-size: 120px; color: rgba(241, 196, 15, 0.05); pointer-events: none; }
+        .plan-name { font-size: 20px; font-weight: bold; margin: 0; }
+        .price-row { display: flex; align-items: baseline; gap: 8px; margin: 8px 0; }
+        .price-usd { color: var(--gold); font-size: 24px; font-weight: 800; }
+        .price-rs { color: #aaa; font-size: 14px; }
 
-        .badge { position: absolute; top: 0; right: 0; background: var(--neon-red); color: #fff; font-size: 10px; font-weight: bold; padding: 8px 20px; border-bottom-left-radius: 20px; box-shadow: -5px 5px 15px rgba(0,0,0,0.3); }
-        .badge.green { background: var(--neon-green); color: #000; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .stat-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; }
+        .stat-box b { font-size: 14px; color: var(--neon-green); }
 
-        .plan-header { margin-bottom: 20px; }
-        .plan-header h3 { margin: 0; font-size: 22px; color: #fff; letter-spacing: 1px; }
-        .price-tag { display: block; color: var(--gold); font-size: 20px; font-weight: 800; margin-top: 5px; }
-        .price-rs { font-size: 14px; color: #ccc; font-weight: normal; }
+        .buy-btn { 
+            background: linear-gradient(90deg, #f1c40f, #e67e22); 
+            color: #000; border: none; width: 100%; padding: 18px; 
+            border-radius: 20px; font-weight: 900; font-size: 16px; 
+            cursor: pointer; text-transform: uppercase; transition: 0.3s;
+        }
+        .buy-btn:active { transform: scale(0.95); }
 
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .stat-item { background: rgba(0,0,0,0.4); padding: 12px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .stat-item label { display: block; font-size: 9px; color: #888; text-transform: uppercase; margin-bottom: 4px; }
-        .stat-item .val { font-size: 14px; font-weight: 700; color: #fff; }
-        .stat-item .profit { color: var(--neon-green); }
-
-        .monthly-box { background: rgba(0, 255, 100, 0.1); border: 1px dashed var(--neon-green); padding: 10px; border-radius: 15px; margin-bottom: 20px; text-align: center; }
-        .monthly-box span { display: block; font-size: 10px; color: var(--neon-green); text-transform: uppercase; }
-        .monthly-box b { font-size: 18px; color: #fff; }
-
-        .buy-btn { background: var(--gold-grad); background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 10px 20px rgba(230, 126, 34, 0.3); }
-        .buy-btn:active { transform: scale(0.96); }
-
-        /* Bottom Nav */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        /* Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; }
-        .nav-btn i { font-size: 22px; display: block; margin-bottom: 4px; }
-        .nav-btn span { font-size: 10px; font-weight: bold; }
         .nav-btn.active { color: var(--gold); }
+        .nav-btn i { font-size: 22px; display: block; }
+        .nav-btn span { font-size: 10px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2>GOLD PLUS ROBOTS</h2>
-    <p>100% SECURE & AUTOMATED MINING SYSTEM</p>
+    <h2>MINING PLANS</h2>
 </div>
 
 <div class="container">
-    
-    <div class="section-title"><i class="fas fa-bolt"></i> Fast Recovery Plans (10 Days)</div>
 
-    <div class="plan-card hot">
-        <div class="badge">FAST PROFIT</div>
-        <i class="fas fa-robot robot-bg"></i>
-        <div class="plan-header">
-            <h3>Iron Core Robot</h3>
-            <span class="price-tag">$10.00 <span class="price-rs">/ Rs. 3,000</span></span>
+    <div class="promo-banner">
+        <i class="fas fa-wallet" style="font-size: 30px;"></i>
+        <div>
+            <b>INSTANT DEPOSIT</b><br>
+            <small>Get 5% Bonus on USDT Deposits</small>
         </div>
-        <div class="stats-grid">
-            <div class="stat-item"><label>Daily Earning</label><span class="val profit">$1.00 (Rs. 300)</span></div>
-            <div class="stat-item"><label>Robot Life</label><span class="val">30 Days</span></div>
-        </div>
-        <div class="monthly-box">
-            <span>Estimated Monthly Profit</span>
-            <b>$30.00 / Rs. 9,000</b>
-        </div>
-        <button class="buy-btn">Invest Now</button>
     </div>
 
-    <div class="plan-card vip">
-        <div class="badge">BEST VALUE</div>
-        <i class="fas fa-microchip robot-bg"></i>
-        <div class="plan-header">
-            <h3>Bronze AI Miner</h3>
-            <span class="price-tag">$30.00 <span class="price-rs">/ Rs. 9,000</span></span>
+    <div class="section-title">Investment Packages</div>
+
+    <div class="plan-card">
+        <div class="badge" style="background:var(--neon-green); color:#000;">STARTER</div>
+        <div class="plan-name">Micro AI Bot</div>
+        <div class="price-row">
+            <span class="price-usd">$2.00</span>
+            <span class="price-rs">/ Rs. 600</span>
         </div>
         <div class="stats-grid">
-            <div class="stat-item"><label>Daily Earning</label><span class="val profit">$3.00 (Rs. 900)</span></div>
-            <div class="stat-item"><label>ROI Time</label><span class="val">10 Days</span></div>
+            <div class="stat-box"><label>Daily</label><b>Rs. 60</b></div>
+            <div class="stat-box"><label>ROI</label><b>10 Days</b></div>
         </div>
-        <div class="monthly-box">
-            <span>Estimated Monthly Profit</span>
-            <b>$90.00 / Rs. 27,000</b>
-        </div>
-        <button class="buy-btn">Invest Now</button>
+        <button class="buy-btn" onclick="goToDeposit(2)">Invest Now</button>
     </div>
 
-    <div class="section-title"><i class="fas fa-crown"></i> VIP High-Stakes Robots</div>
-
-    <div class="plan-card vip">
-        <div class="badge green">PREMIUM</div>
-        <i class="fas fa-shield-halved robot-bg"></i>
-        <div class="plan-header">
-            <h3>Silver Titan Robot</h3>
-            <span class="price-tag">$100.00 <span class="price-rs">/ Rs. 30,000</span></span>
+    <div class="plan-card">
+        <div class="badge">HOT</div>
+        <div class="plan-name">Mini Miner X</div>
+        <div class="price-row">
+            <span class="price-usd">$5.00</span>
+            <span class="price-rs">/ Rs. 1,500</span>
         </div>
         <div class="stats-grid">
-            <div class="stat-item"><label>Daily Earning</label><span class="val profit">$12.00 (Rs. 3,600)</span></div>
-            <div class="stat-item"><label>Total Return</label><span class="val">$360 (Rs. 108k)</span></div>
+            <div class="stat-box"><label>Daily</label><b>Rs. 150</b></div>
+            <div class="stat-box"><label>ROI</label><b>10 Days</b></div>
         </div>
-        <div class="monthly-box">
-            <span>Estimated Monthly Profit</span>
-            <b>$360.00 / Rs. 108,000</b>
-        </div>
-        <button class="buy-btn">Invest Now</button>
+        <button class="buy-btn" onclick="goToDeposit(5)">Invest Now</button>
     </div>
 
-    <div class="plan-card vip" style="background: rgba(241, 196, 15, 0.1);">
-        <div class="badge green">MEGA OFFER</div>
-        <i class="fas fa-gem robot-bg"></i>
-        <div class="plan-header">
-            <h3>Gold Emperor AI</h3>
-            <span class="price-tag">$500.00 <span class="price-rs">/ Rs. 150,000</span></span>
+    <div class="plan-card" style="border: 1px solid var(--neon-blue);">
+        <div class="badge" style="background:var(--neon-blue);">VIP</div>
+        <div class="plan-name">Silver Titan</div>
+        <div class="price-row">
+            <span class="price-usd">$100.00</span>
+            <span class="price-rs">/ Rs. 30,000</span>
         </div>
         <div class="stats-grid">
-            <div class="stat-item"><label>Daily Earning</label><span class="val profit">$65.00 (Rs. 19,500)</span></div>
-            <div class="stat-item"><label>Recovery</label><span class="val">8 Days Only</span></div>
+            <div class="stat-box"><label>Daily</label><b>Rs. 3,600</b></div>
+            <div class="stat-box"><label>ROI</label><b>8 Days</b></div>
         </div>
-        <div class="monthly-box">
-            <span>Estimated Monthly Profit</span>
-            <b>$1,950.00 / Rs. 585,000</b>
-        </div>
-        <button class="buy-btn">Invest Now</button>
+        <button class="buy-btn" onclick="goToDeposit(100)">Invest Now</button>
     </div>
 
-    <div class="plan-card vip" style="border: 2px solid #f1c40f;">
+    <div class="plan-card" style="border: 2px solid var(--gold);">
         <div class="badge">EXCLUSIVE</div>
-        <i class="fas fa-dragon robot-bg"></i>
-        <div class="plan-header">
-            <h3>Platinum King X</h3>
-            <span class="price-tag">$1,000.00 <span class="price-rs">/ Rs. 300,000</span></span>
+        <div class="plan-name">Platinum King</div>
+        <div class="price-row">
+            <span class="price-usd">$1,000.00</span>
+            <span class="price-rs">/ Rs. 300,000</span>
         </div>
         <div class="stats-grid">
-            <div class="stat-item"><label>Daily Earning</label><span class="val profit">$150.00 (Rs. 45,000)</span></div>
-            <div class="stat-item"><label>Total Return</label><span class="val">$4,500 (Rs. 1.3M)</span></div>
+            <div class="stat-box"><label>Daily</label><b>Rs. 45,000</b></div>
+            <div class="stat-box"><label>Bonus</label><b>$50 Back</b></div>
         </div>
-        <div class="monthly-box">
-            <span>Estimated Monthly Profit</span>
-            <b>$4,500.00 / Rs. 1,350,000</b>
-        </div>
-        <button class="buy-btn">Invest Now</button>
+        <button class="buy-btn" onclick="goToDeposit(1000)">Invest Now</button>
     </div>
 
 </div>
@@ -174,8 +149,15 @@
     <a href="plans.html" class="nav-btn active"><i class="fas fa-gem"></i><span>Plans</span></a>
     <a href="mining.html" class="nav-btn"><i class="fas fa-microchip"></i><span>Mining</span></a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i><span>Refer</span></a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i><span>Profile</span></a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i><span>Profile</span></a>
 </nav>
+
+<script>
+    function goToDeposit(amount) {
+        // Yeh line user ko direct deposit page par le jaye gi
+        window.location.href = "deposit.html?amount=" + amount;
+    }
+</script>
 
 </body>
 </html>
