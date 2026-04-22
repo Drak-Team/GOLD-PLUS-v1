@@ -13,7 +13,7 @@
       appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    // Initialize Firebase
+    // Initialize Firebase safely
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -22,7 +22,7 @@
 
     let currentMethod = "JazzCash";
 
-    // تصویر کو ٹیکسٹ (Base64) میں تبدیل کرنے کا فنکشن
+    // Image to Base64 function
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -32,69 +32,83 @@
         });
     };
 
-    // پیمنٹ میتھڈ تبدیل کرنے کا فنکشن
+    // Switch Payment Method
     window.switchMethod = (name, num, holder, el) => {
         currentMethod = name;
-        document.getElementById('methodName').innerText = name + " Transfer";
-        document.getElementById('accNumber').innerText = num;
-        document.getElementById('accHolder').innerText = holder;
+        const mName = document.getElementById('methodName');
+        const aNum = document.getElementById('accNumber');
+        const aHolder = document.getElementById('accHolder');
+        
+        if(mName) mName.innerText = name + " Transfer";
+        if(aNum) aNum.innerText = num;
+        if(aHolder) aHolder.innerText = holder;
+        
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        el.classList.add('active');
+        if(el) el.classList.add('active');
     };
 
-    // PKR کی قیمت دکھانا (1 USD = 300 PKR)
+    // Update PKR Note
     window.updatePKR = () => {
-        const usd = document.getElementById('depositAmount').value;
-        if(usd > 0) document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
-    };
-
-    // اپ لوڈ کی گئی فائل کا نام دکھانا
-    window.updateFileName = () => {
-        const file = document.getElementById('proof').files[0];
-        if (file) document.getElementById('fileName').innerText = file.name;
-    };
-
-    // بٹن دبانے پر ڈپازٹ ریکویسٹ بھیجنا
-    document.getElementById('submitBtn').onclick = async () => {
-        const amount = document.getElementById('depositAmount').value;
-        const tid = document.getElementById('tid').value;
-        const file = document.getElementById('proof').files[0];
-
-        if (!phone) { alert("Session expired, please login again."); return; }
-        if (amount < 1) { alert("Minimum deposit is $1"); return; }
-        if (!tid) { alert("Please enter Transaction ID"); return; }
-        if (!file) { alert("Please upload payment screenshot"); return; }
-
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Processing...";
-        btn.disabled = true;
-
-        try {
-            const base64Img = await getBase64(file);
-            const depositID = Date.now(); // یونیک آئی ڈی
-
-            const depData = {
-                phone: phone,
-                amount: amount,
-                tid: tid,
-                method: currentMethod,
-                screenshot: base64Img,
-                status: "Pending",
-                date: new Date().toLocaleString()
-            };
-
-            // 1. ڈیٹا ایڈمن پینل کے لیے بھیجیں (تاکہ آپ اپروو کر سکیں)
-            await db.ref('deposits/' + depositID).set(depData);
-
-            // 2. ڈیٹا یوزر کے اپنے اکاؤنٹ میں ہسٹری کے لیے بھیجیں
-            await db.ref('users/' + phone + '/deposits/' + depositID).set(depData);
-
-            alert("Request submitted! Your deposit is under review.");
-            window.location.href = "dashboard.html";
-        } catch (e) {
-            alert("Error: " + e.message);
-            btn.disabled = false;
-            btn.innerText = "SUBMIT REQUEST";
+        const usdInput = document.getElementById('depositAmount');
+        const pkrNote = document.getElementById('pkrNote');
+        if(usdInput && pkrNote){
+            const usd = usdInput.value;
+            pkrNote.innerText = usd > 0 ? "Total to Pay: Rs. " + (usd * 300) : "";
         }
     };
+
+    // Show Selected File Name
+    window.updateFileName = () => {
+        const fileInput = document.getElementById('proof');
+        const fileNameDisp = document.getElementById('fileName');
+        if (fileInput && fileInput.files[0] && fileNameDisp) {
+            fileNameDisp.innerText = fileInput.files[0].name;
+        }
+    };
+
+    // Main Submit Function
+    const submitBtn = document.getElementById('submitBtn');
+    if(submitBtn) {
+        submitBtn.onclick = async () => {
+            const amountField = document.getElementById('depositAmount');
+            const tidField = document.getElementById('tid');
+            const fileField = document.getElementById('proof');
+
+            if (!phone) { alert("Session expired, please login again."); return; }
+            if (!amountField || amountField.value < 1) { alert("Minimum deposit is $1"); return; }
+            if (!tidField || !tidField.value) { alert("Please enter Transaction ID"); return; }
+            if (!fileField || !fileField.files[0]) { alert("Please upload payment screenshot"); return; }
+
+            // UI Update
+            submitBtn.innerText = "Processing...";
+            submitBtn.disabled = true;
+
+            try {
+                const base64Img = await getBase64(fileField.files[0]);
+                const depositID = Date.now();
+
+                const depData = {
+                    phone: phone,
+                    amount: amountField.value,
+                    tid: tidField.value,
+                    method: currentMethod,
+                    screenshot: base64Img,
+                    status: "Pending",
+                    date: new Date().toLocaleString()
+                };
+
+                // Save to Admin and User nodes
+                await db.ref('deposits/' + depositID).set(depData);
+                await db.ref('users/' + phone + '/deposits/' + depositID).set(depData);
+
+                alert("Request submitted! Your deposit is under review.");
+                window.location.replace("dashboard.html");
+
+            } catch (e) {
+                alert("Error: " + e.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "SUBMIT REQUEST";
+            }
+        };
+    }
 </script>
