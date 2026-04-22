@@ -7,71 +7,106 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold: #f1c40f; --bg: #0f051d; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 80px; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 100px; }
         .header { padding: 25px; text-align: center; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(241,196,15,0.2); }
         .deposit-box { padding: 20px; }
-        .method-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
-        .tab { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid transparent; font-size: 12px; }
+        
+        /* Methods Styling */
+        .method-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .tab { padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 5px; }
+        .tab img { width: 30px; height: 30px; border-radius: 5px; }
         .tab.active { border-color: var(--gold); background: rgba(241,196,15,0.1); color: var(--gold); }
-        .pay-info { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--gold); }
-        .pay-info b { color: var(--gold); display: block; margin-top: 5px; font-size: 18px; }
+        
+        .pay-info { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--gold); position: relative; }
+        .pay-info small { color: #aaa; text-transform: uppercase; font-size: 10px; }
+        .pay-info b { color: var(--gold); display: block; margin-top: 5px; font-size: 18px; letter-spacing: 1px; }
+        
         .input-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; font-size: 12px; color: #aaa; }
         input { width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; }
-        .file-input { border: 2px dashed rgba(241,196,15,0.3); padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; }
-        .submit-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        
+        .file-input { border: 2px dashed rgba(241,196,15,0.3); padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; background: rgba(255,255,255,0.02); }
+        .submit-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 900; margin-top: 20px; cursor: pointer; text-transform: uppercase; }
+        
+        /* History Section */
+        .history-section { padding: 0 20px; margin-top: 30px; }
+        .history-title { font-size: 14px; color: var(--gold); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .history-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #777; }
+        
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 100; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { display: block; font-size: 18px; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h3 style="margin:0;">Add Investment</h3>
+    <h3 style="margin:0; color: var(--gold);">DEPOSIT FUNDS</h3>
 </div>
 
 <div class="deposit-box">
     <div class="method-tabs">
-        <div class="tab active" onclick="switchMethod('JazzCash', '03XXXXXXXXX', 'Ahmad Anjum', this)">JazzCash</div>
-        <div class="tab" onclick="switchMethod('Easypaisa', '03XXXXXXXXX', 'Ahmad Anjum', this)">Easypaisa</div>
+        <div class="tab active" onclick="switchMethod('JazzCash', '03037264598', 'Ahmad Nafees Anjum', this)">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8X9eX0Mh0EaA6Cq_YFvJ_4Zsh1X9p278kbg&s" alt="JazzCash">
+            JazzCash
+        </div>
+        <div class="tab" onclick="switchMethod('Easypaisa', '03037264598', 'Ahmad Nafees Anjum', this)">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_6uM450H3UasK79_E-M0x9F_4H1K1v8x77A&s" alt="Easypaisa">
+            Easypaisa
+        </div>
+        <div class="tab" onclick="switchMethod('BNB (BEP20)', '0x123...Copy From Admin', 'Ahmad Nafees Anjum', this)">
+            <img src="https://cryptologos.cc/logos/binance-coin-bnb-logo.png" alt="BNB">
+            BNB (BEP20)
+        </div>
+        <div class="tab" onclick="switchMethod('TRX (TRC20)', 'T123...Copy From Admin', 'Ahmad Nafees Anjum', this)">
+            <img src="https://cryptologos.cc/logos/tron-trx-logo.png" alt="TRX">
+            TRX (TRC20)
+        </div>
     </div>
 
     <div class="pay-info">
         <small id="methodName">JazzCash Transfer</small>
-        <b id="accNumber">03XXXXXXXXX</b>
-        <span id="accHolder" style="font-size: 12px; opacity: 0.8;">Holder: Ahmad Anjum</span>
+        <b id="accNumber">03037264598</b>
+        <span id="accHolder" style="font-size: 12px; opacity: 0.8;">Holder: Ahmad Nafees Anjum</span>
     </div>
 
     <div class="input-group">
-        <label>Deposit Amount ($)</label>
-        <input type="number" id="depositAmount" oninput="updatePKR()" placeholder="Enter USD amount">
-        <small id="pkrNote" style="color: #00ff64; font-size: 11px;"></small>
+        <label>Amount in USD ($)</label>
+        <input type="number" id="depositAmount" oninput="updatePKR()" placeholder="Min $1">
+        <small id="pkrNote" style="color: #00ff64; font-size: 11px; margin-top: 5px; display: block;"></small>
     </div>
 
     <div class="input-group">
-        <label>Transaction ID (TID)</label>
-        <input type="text" id="tid" placeholder="Enter TID">
+        <label>Transaction ID / Hash</label>
+        <input type="text" id="tid" placeholder="Enter TID or Hash">
     </div>
 
     <div class="input-group">
-        <label>Upload Screenshot</label>
+        <label>Payment Screenshot</label>
         <div class="file-input" onclick="document.getElementById('proof').click()">
-            <i class="fas fa-cloud-upload-alt" style="font-size: 24px; color: var(--gold);"></i>
-            <p id="fileName" style="font-size: 12px; margin-top: 5px;">Click to upload proof</p>
+            <i class="fas fa-image" style="font-size: 24px; color: var(--gold);"></i>
+            <p id="fileName" style="font-size: 11px; margin-top: 5px; color: #888;">Select screenshot to upload</p>
             <input type="file" id="proof" style="display:none" onchange="updateFileName()" accept="image/*">
         </div>
     </div>
 
-    <button class="submit-btn" id="submitBtn">SUBMIT REQUEST</button>
+    <button class="submit-btn" id="submitBtn">CONFIRM DEPOSIT</button>
+</div>
+
+<div class="history-section">
+    <div class="history-title"><i class="fas fa-clock-rotate-left"></i> Recent Deposits</div>
+    <div id="depositHistory">
+        <p style="text-align: center; color: #555; font-size: 12px;">Loading history...</p>
+    </div>
 </div>
 
 <nav class="nav-bar">
     <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
-    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
+    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+    <a href="profile.html" class="nav-btn active"><i class="fas fa-user-gear"></i>DEPOSIT</a>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -91,6 +126,8 @@
     if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
+
+    if (!phone) { window.location.href = "login.html"; }
 
     let currentMethod = "JazzCash";
 
@@ -114,7 +151,8 @@
 
     window.updatePKR = () => {
         const usd = document.getElementById('depositAmount').value;
-        if(usd > 0) document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
+        if(usd > 0) document.getElementById('pkrNote').innerText = "You need to pay: Rs. " + (usd * 300);
+        else document.getElementById('pkrNote').innerText = "";
     };
 
     window.updateFileName = () => {
@@ -122,34 +160,65 @@
         if (file) document.getElementById('fileName').innerText = file.name;
     };
 
+    // Load History
+    db.ref('users/' + phone + '/deposits').on('value', (snapshot) => {
+        const historyDiv = document.getElementById('depositHistory');
+        let html = "";
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            Object.keys(data).reverse().forEach(key => {
+                const dep = data[key];
+                let color = dep.status === "Approved" ? "#00ff64" : (dep.status === "Rejected" ? "#ff4b2b" : "#f1c40f");
+                html += `
+                    <div class="history-card" style="border-left-color: ${color}">
+                        <div style="display:flex; justify-content:space-between; font-size:11px;">
+                            <span>${dep.date}</span>
+                            <b style="color:${color}">${dep.status}</b>
+                        </div>
+                        <div style="margin-top:5px; font-weight:bold;">$${dep.amount} - ${dep.method}</div>
+                        <div style="font-size:10px; color:#555;">TID: ${dep.tid}</div>
+                    </div>`;
+            });
+            historyDiv.innerHTML = html;
+        } else {
+            historyDiv.innerHTML = "<p style='text-align:center; color:#555; font-size:12px;'>No deposit history yet.</p>";
+        }
+    });
+
+    // Handle Submit
     document.getElementById('submitBtn').onclick = async () => {
         const amount = document.getElementById('depositAmount').value;
         const tid = document.getElementById('tid').value;
         const file = document.getElementById('proof').files[0];
 
-        if (!phone) { alert("Please login again."); return; }
-        if (amount < 1) { alert("Min deposit $1"); return; }
-        if (!tid) { alert("Enter TID"); return; }
-        if (!file) { alert("Upload proof"); return; }
+        if (amount < 1 || !tid || !file) { alert("Please fill all fields!"); return; }
 
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "Processing...";
+        btn.innerText = "UPLOADING...";
         btn.disabled = true;
 
         try {
             const base64Img = await getBase64(file);
             const depositID = Date.now();
             const depData = {
-                phone: phone, amount: amount, tid: tid,
-                method: currentMethod, screenshot: base64Img,
-                status: "Pending", date: new Date().toLocaleString()
+                phone: phone, 
+                amount: amount, 
+                tid: tid,
+                method: currentMethod, 
+                screenshot: base64Img,
+                status: "Pending", 
+                date: new Date().toLocaleString()
             };
 
             await db.ref('deposits/' + depositID).set(depData);
             await db.ref('users/' + phone + '/deposits/' + depositID).set(depData);
 
-            alert("Request submitted!");
-            window.location.href = "dashboard.html";
+            alert("Deposit submitted! Please wait for admin approval.");
+            btn.innerText = "SUBMIT REQUEST";
+            btn.disabled = false;
+            document.getElementById('depositAmount').value = "";
+            document.getElementById('tid').value = "";
+            document.getElementById('fileName').innerText = "Click to upload proof";
         } catch (e) {
             alert("Error: " + e.message);
             btn.disabled = false;
