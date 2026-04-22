@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Secret Admin Control</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #f1c40f; --bg: #0f051d; --card: #1a0b2e; }
+        body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 20px; }
+        
+        /* Password Overlay */
+        #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+        .login-box { background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--gold); text-align:center; }
+        input { padding:12px; border-radius:10px; border:none; margin-bottom:10px; width:200px; text-align:center; }
+        
+        header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        .stats-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
+        .stat-item { background: var(--gold); color: #000; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; }
+        
+        .admin-card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
+        .proof-img { width: 120px; border-radius: 10px; margin-top: 10px; border: 2px solid var(--gold); cursor: pointer; }
+        
+        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        button { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .approve-btn { background: var(--gold); color: #000; }
+        .reject-btn { background: #ff3232; color: #fff; }
+        
+        h3 { color: var(--gold); text-transform: uppercase; font-size: 14px; margin-top: 40px; }
+    </style>
+</head>
+<body>
+
+<div id="authOverlay">
+    <div class="login-box">
+        <h2 style="color:var(--gold)">Admin Access</h2>
+        <input type="password" id="adminPass" placeholder="Enter Password"><br>
+        <button class="approve-btn" onclick="checkPass()">Login</button>
+    </div>
+</div>
+
+<header>
+    <h1>GOLD PLUS <span style="color:var(--gold)">PANEL</span></h1>
+    <p style="font-size: 12px; color: #aaa;">Authorized access only - Ahmad Anjum</p>
+</header>
+
+<div class="stats-bar">
+    <div class="stat-item">Deposits: <span id="pendingDep">0</span></div>
+    <div class="stat-item">Withdraws: <span id="pendingWith">0</span></div>
+</div>
+
+<h3><i class="fas fa-arrow-down"></i> Pending Deposits</h3>
+<div id="depositContainer">Loading...</div>
+
+<h3><i class="fas fa-arrow-up"></i> Pending Withdrawals</h3>
+<div id="withdrawContainer">Loading...</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue, update, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    // Password Logic
+    window.checkPass = () => {
+        const pass = document.getElementById('adminPass').value;
+        if(pass === "1234") { // یہاں اپنا پاس ورڈ بدل لیں
+            document.getElementById('authOverlay').style.display = 'none';
+        } else {
+            alert("Wrong Password!");
+        }
+    };
+
+    // 1. Deposits Logic
+    onValue(ref(db, 'deposits'), (snapshot) => {
+        const container = document.getElementById('depositContainer');
+        container.innerHTML = '';
+        let count = 0;
+        snapshot.forEach((childSnap) => {
+            const data = childSnap.val();
+            const rid = childSnap.key;
+            if(data.status === "Pending") {
+                count++;
+                container.innerHTML += `
+                    <div class="admin-card">
+                        <div style="display:flex; justify-content:space-between">
+                            <b>User: ${data.phone || data.username}</b>
+                            <b style="color:var(--gold)">$${data.amount}</b>
+                        </div>
+                        <p style="font-size:12px; color:#aaa">TID: ${data.tid}</p>
+                        <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
+                        <div class="btn-group">
+                            <button class="approve-btn" onclick="handleDeposit('${data.phone || data.username}', '${rid}', '${data.amount}')">APPROVE</button>
+                            <button class="reject-btn" onclick="updateStatus('deposits', '${rid}', 'Rejected')">REJECT</button>
+                        </div>
+                    </div>`;
+            }
+        });
+        document.getElementById('pendingDep').innerText = count;
+    });
+
+    // 2. Withdrawals Logic
+    onValue(ref(db, 'withdrawals'), (snapshot) => {
+        const container = document.getElementById('withdrawContainer');
+        container.innerHTML = '';
+        let count = 0;
+        snapshot.forEach((childSnap) => {
+            const data = childSnap.val();
+            const rid = childSnap.key;
+            if(data.status === "Pending") {
+                count++;
+                container.innerHTML += `
+                    <div class="admin-card">
+                        <div style="display:flex; justify-content:space-between">
+                            <b>User: ${data.phone || data.username}</b>
+                            <b style="color:#ff3232">$${data.amount}</b>
+                        </div>
+                        <p style="font-size:12px; color:#aaa">${data.method}: ${data.accountNumber}</p>
+                        <div class="btn-group">
+                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">APPROVE</button>
+                            <button class="reject-btn" onclick="handleWithdrawReject('${data.phone || data.username}', '${rid}', '${data.amount}')">REJECT & REFUND</button>
+                        </div>
+                    </div>`;
+            }
+        });
+        document.getElementById('pendingWith').innerText = count;
+    });
+
+    // Global Functions
+    window.handleDeposit = (userID, rid, amount) => {
+        const balanceRef = ref(db, `users/${userID}/balance`);
+        runTransaction(balanceRef, (curr) => (parseFloat(curr) || 0) + parseFloat(amount))
+        .then(() => {
+            update(ref(db, `deposits/${rid}`), { status: 'Approved' });
+            alert("Success! Added to " + userID);
+        });
+    };
+
+    window.handleWithdrawReject = (userID, rid, amount) => {
+        const balanceRef = ref(db, `users/${userID}/balance`);
+        runTransaction(balanceRef, (curr) => (parseFloat(curr) || 0) + parseFloat(amount))
+        .then(() => {
+            update(ref(db, `withdrawals/${rid}`), { status: 'Rejected' });
+            alert("Refunded!");
+        });
+    };
+
+    window.updateStatus = (path, rid, status) => {
+        update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Request " + status));
+    };
+</script>
+</body>
+</html>
