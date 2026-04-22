@@ -3,131 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Cloud Mining</title>
+    <title>Gold Plus - Secure Withdrawal</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
-        
-        .top-header { padding: 30px 20px; background: var(--gold-grad); border-bottom: 3px solid #b8860b; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); color: #000; }
-        .user-welcome { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
-        .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; color: #000; font-weight: bold; }
-        .mini-stats b { font-size: 22px; color: #000; display: block; margin-top: 5px; }
-        .extra-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px 0; }
-        .stat-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(241,196,15,0.1); }
-        .stat-box small { font-size: 9px; color: #aaa; text-transform: uppercase; display: block; }
-        .stat-box span { font-size: 14px; font-weight: bold; color: #f1c40f; }
-        .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
-        .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); animation: floatMining 2s ease-in-out infinite; }
-        @keyframes floatMining { 0%, 100% { transform: translateY(0); box-shadow: 0 0 10px rgba(241,196,15,0.4); } 50% { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(241,196,15,0.7); } }
-        .timer-text { font-size: 8px; color: #888; font-weight: bold; margin-top: 5px; }
-        .get-all-box { padding: 0 20px 20px; text-align: center; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3); transition: 0.3s; }
-        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
-        .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; min-height: 90px; text-decoration: none; display: block; }
-        .grid-card h5 { margin: 0; font-size: 13px; color: #f1c40f; }
-        .grid-card p { margin: 5px 0; font-size: 15px; color: #fff; font-weight: bold; }
-        .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 9px; pointer-events: none; }
-        .card-img { position: absolute; right: 8px; bottom: 8px; width: 40px; opacity: 0.6; }
-        .support-links { position: fixed; bottom: 85px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
-        .float-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; color: white; text-decoration: none; animation: pulse 2s infinite; }
-        .wa-float { background: #25d366; } .tg-float { background: #0088cc; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 10002; }
+        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.07); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 80px; }
+        .header { padding: 30px 20px; background: rgba(0,0,0,0.3); text-align: center; border-radius: 0 0 30px 30px; border-bottom: 1px solid rgba(241, 196, 15, 0.2); }
+        .balance-card { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; margin: -30px 20px 20px; padding: 20px; border-radius: 20px; text-align: center; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .balance-card h1 { margin: 5px 0; font-size: 32px; }
+        .withdraw-form { padding: 20px; }
+        .input-group { margin-bottom: 20px; }
+        .input-group label { display: block; margin-bottom: 8px; font-size: 13px; color: var(--gold); }
+        select, input { width: 100%; padding: 14px; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; outline: none; box-sizing: border-box; }
+        .request-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; cursor: pointer; }
+        .history-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
         .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
 
-<div class="top-header">
-    <div class="user-welcome" id="userNameLabel">
-        <i class="fas fa-crown"></i> GOLD PLUS VIP
-    </div>
-    <div class="mini-stats">
-        <div>Available Assets <b id="mainBalance">$0.00</b></div>
-        <div>Status: <b id="activePlan">VIP ACCESS</b></div>
-    </div>
+<div class="header">
+    <h2 style="margin:0; color: var(--gold);">Withdraw Funds</h2>
 </div>
 
-<div class="extra-stats">
-    <div class="stat-box">
-        <small>Total Deposit</small>
-        <span id="totalDeposit">$0.00</span>
-    </div>
-    <div class="stat-box">
-        <small>Total Earned</small>
-        <span id="totalEarned">$0.00</span>
-    </div>
+<div class="balance-card">
+    <h3>Available Balance</h3>
+    <h1 id="currentBalance">$0.00</h1>
+    <span id="pkrValue" style="font-size: 12px; font-weight: bold;">(Rs. 0)</span>
 </div>
 
-<marquee style="background: rgba(241, 196, 15, 0.1); color: #f1c40f; font-size: 10px; padding: 6px 0; margin-top: 10px;">
-    🚀 Notice: Invite friends and get bonus! | 🛡️ Secure Mining in progress...
-</marquee>
-
-<div class="machines-grid">
-    <div class="machine-card" id="machine_1">
-        <div class="coin-ball"><i class="fas fa-microchip"></i></div>
-        <div class="timer-text" id="time_1">Locked</div>
+<div class="withdraw-form">
+    <div class="input-group">
+        <label>Select Method</label>
+        <select id="method">
+            <option value="Easypaisa">Easypaisa</option>
+            <option value="JazzCash">JazzCash</option>
+            <option value="USDT_TRC20">USDT (TRC20)</option>
+        </select>
     </div>
-    <div class="machine-card" id="machine_2">
-        <div class="coin-ball"><i class="fas fa-bolt"></i></div>
-        <div class="timer-text" id="time_2">Locked</div>
-    </div>
-    <div class="machine-card" id="machine_3">
-        <div class="coin-ball"><i class="fas fa-server"></i></div>
-        <div class="timer-text" id="time_3">Locked</div>
-    </div>
-    <div class="machine-card" id="machine_4">
-        <div class="coin-ball"><i class="fas fa-link"></i></div>
-        <div class="timer-text" id="time_4">Locked</div>
-    </div>
-</div>
 
-<div class="get-all-box">
-    <button class="get-all-btn" id="claimBtn" disabled>WAIT FOR PLAN</button>
-</div>
+    <div class="input-group">
+        <label>Amount ($)</label>
+        <input type="number" id="withdrawAmount" placeholder="Min $1.00">
+        <small id="calcNote" style="color: #00ff64; font-size: 11px;"></small>
+    </div>
 
-<div class="main-grid">
-    <a href="refer.html" class="grid-card">
-        <h5>My Team / Refer</h5>
-        <p id="teamCount">0 Members</p>
-        <button class="btn-link">Invite Now</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/1256/1256650.png" class="card-img">
-    </a>
-    <a href="mining.html" class="grid-card">
-        <h5>Daily Task</h5>
-        <p id="dailyRate">Earn Profit</p>
-        <button class="btn-link">Go to Task</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933116.png" class="card-img">
-    </a>
-    <a href="withdraw.html" class="grid-card">
-        <h5>Withdrawal</h5>
-        <p id="withdrawStat">$0.00</p>
-        <button class="btn-link">Payout</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/10149/10149458.png" class="card-img">
-    </a>
-    <a href="deposit.html" class="grid-card">
-        <h5>Deposit</h5>
-        <p>Instant Add</p>
-        <button class="btn-link">Deposit Now</button>
-        <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="card-img">
-    </a>
-</div>
+    <div class="input-group">
+        <label>Account Number</label>
+        <input type="text" id="accountNum" placeholder="Number or Address">
+    </div>
 
-<div class="support-links">
-    <a href="https://t.me/mranjum143" class="float-btn tg-float" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-    <a href="https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l" class="float-btn wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+    <div class="input-group">
+        <label>Account Name</label>
+        <input type="text" id="accountName" placeholder="Full Name">
+    </div>
+
+    <button class="request-btn" id="requestBtn">CONFIRM WITHDRAWAL</button>
+
+    <h3 style="color: var(--gold); margin-top: 30px;">Withdrawal History</h3>
+    <div id="historyList"></div>
 </div>
 
 <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn active"><i class="fas fa-house"></i>HOME</a>
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
     <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+    <a href="profile.html" class="nav-btn active"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -147,30 +92,71 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
+    let currentBalance = 0;
 
-    if (!phone) {
-        window.location.href = "login.html";
-    }
+    if (!phone) { window.location.href = "login.html"; }
 
-    // لائیو بیلنس دکھانے کے لیے
+    // لوڈ بیلنس اور ہسٹری
     db.ref('users/' + phone).on('value', (snapshot) => {
         if (snapshot.exists()) {
-            const data = snapshot.val();
-            const balance = parseFloat(data.balance) || 0;
-            
-            // یہاں میں نے آپ کے IDs کے مطابق بیلنس سیٹ کر دیا ہے
-            document.getElementById('mainBalance').innerText = "$" + balance.toFixed(2);
-            document.getElementById('withdrawStat').innerText = "$" + balance.toFixed(2);
-            
-            // ٹوٹل ڈپازٹ اور ارننگ اگر ڈیٹا بیس میں موجود ہوں
-            if(data.totalDeposit) document.getElementById('totalDeposit').innerText = "$" + data.totalDeposit;
-            if(data.totalEarned) document.getElementById('totalEarned').innerText = "$" + data.totalEarned;
-            
-            // یوزر کا نام یا نمبر دکھانے کے لیے
-            document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-crown"></i> VIP: ' + phone;
+            currentBalance = parseFloat(snapshot.val().balance) || 0;
+            document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
+            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
         }
     });
-</script>
 
+    db.ref('withdrawals').orderByChild('phone').equalTo(phone).on('value', (snapshot) => {
+        let html = '';
+        snapshot.forEach((child) => {
+            const data = child.val();
+            const statusColor = data.status === "Pending" ? "#f1c40f" : (data.status === "Approved" ? "#2ecc71" : "#ff3232");
+            html += `<div class="history-card">
+                        <div style="display:flex; justify-content:space-between">
+                            <span>$${data.amount}</span>
+                            <b style="color:${statusColor}">${data.status}</b>
+                        </div>
+                        <small style="color:#888">${data.date}</small>
+                    </div>`;
+        });
+        document.getElementById('historyList').innerHTML = html || '<p>No history.</p>';
+    });
+
+    document.getElementById('withdrawAmount').oninput = (e) => {
+        document.getElementById('calcNote').innerText = e.target.value > 0 ? "You receive: Rs. " + (e.target.value * 300) : "";
+    };
+
+    document.getElementById('requestBtn').onclick = function() {
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const method = document.getElementById('method').value;
+        const accNum = document.getElementById('accountNum').value;
+        const accName = document.getElementById('accountName').value;
+
+        if (amount < 1 || amount > currentBalance) { alert("Invalid Amount!"); return; }
+        if (!accNum || !accName) { alert("Fill all details!"); return; }
+
+        this.disabled = true;
+        this.innerText = "Processing...";
+
+        const withdrawID = Date.now();
+        db.ref('users/' + phone + '/balance').transaction((curr) => {
+            if (curr >= amount) return curr - amount;
+        }, (error, committed) => {
+            if (committed) {
+                db.ref('withdrawals/' + withdrawID).set({
+                    phone: phone, amount: amount, method: method,
+                    accountNumber: accNum, accountName: accName,
+                    status: "Pending", date: new Date().toLocaleString()
+                }).then(() => {
+                    alert("Withdrawal Requested!");
+                    location.reload();
+                });
+            } else {
+                alert("Failed!");
+                this.disabled = false;
+                this.innerText = "CONFIRM WITHDRAWAL";
+            }
+        });
+    };
+</script>
 </body>
 </html>
