@@ -9,59 +9,30 @@
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
         
-        /* New Gold VIP Header */
-        .top-header { 
-            padding: 30px 20px; 
-            background: var(--gold-grad); 
-            border-bottom: 3px solid #b8860b; 
-            border-radius: 0 0 40px 40px; 
-            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
-            color: #000; /* Text black for readability */
-        }
+        .top-header { padding: 30px 20px; background: var(--gold-grad); border-bottom: 3px solid #b8860b; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); color: #000; }
         .user-welcome { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
         .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; color: #000; font-weight: bold; }
         .mini-stats b { font-size: 22px; color: #000; display: block; margin-top: 5px; }
-
         .extra-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px 0; }
         .stat-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(241,196,15,0.1); }
         .stat-box small { font-size: 9px; color: #aaa; text-transform: uppercase; display: block; }
         .stat-box span { font-size: 14px; font-weight: bold; color: #f1c40f; }
-
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
         .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        
-        .coin-ball { 
-            width: 45px; height: 45px; 
-            background: radial-gradient(circle, #f1c40f, #b8860b); 
-            border-radius: 50%; margin: 0 auto 10px; 
-            display: flex; align-items: center; justify-content: center; 
-            box-shadow: 0 0 15px rgba(241,196,15,0.5); 
-            animation: floatMining 2s ease-in-out infinite; 
-        }
-        @keyframes floatMining {
-            0%, 100% { transform: translateY(0); box-shadow: 0 0 10px rgba(241,196,15,0.4); }
-            50% { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(241,196,15,0.7); }
-        }
-
+        .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); animation: floatMining 2s ease-in-out infinite; }
+        @keyframes floatMining { 0%, 100% { transform: translateY(0); box-shadow: 0 0 10px rgba(241,196,15,0.4); } 50% { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(241,196,15,0.7); } }
         .timer-text { font-size: 8px; color: #888; font-weight: bold; margin-top: 5px; }
-        .active-timer { color: #00ff00; } /* Only shows when active */
-
         .get-all-box { padding: 0 20px 20px; text-align: center; }
         .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3); transition: 0.3s; }
-        .get-all-btn:disabled { background: #222; color: #555; cursor: not-allowed; opacity: 0.5; box-shadow: none; border: 1px solid #444; }
-
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; overflow: hidden; min-height: 90px; text-decoration: none; display: block; }
         .grid-card h5 { margin: 0; font-size: 13px; color: #f1c40f; }
         .grid-card p { margin: 5px 0; font-size: 15px; color: #fff; font-weight: bold; }
         .btn-link { background: rgba(255,255,255,0.1); border: none; color: #fff; padding: 5px 12px; border-radius: 20px; font-size: 9px; pointer-events: none; }
         .card-img { position: absolute; right: 8px; bottom: 8px; width: 40px; opacity: 0.6; }
-
         .support-links { position: fixed; bottom: 85px; right: 15px; display: flex; flex-direction: column; gap: 10px; z-index: 999; }
-        .float-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; color: white; text-decoration: none; box-shadow: 0 4px 15px rgba(0,0,0,0.4); animation: pulse 2s infinite; }
-        .wa-float { background: #25d366; }
-        .tg-float { background: #0088cc; }
-
+        .float-btn { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 25px; color: white; text-decoration: none; animation: pulse 2s infinite; }
+        .wa-float { background: #25d366; } .tg-float { background: #0088cc; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 10002; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
@@ -158,6 +129,48 @@
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
     <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1",
+        storageBucket: "gold-plus-v1.firebasestorage.app",
+        messagingSenderId: "474592887487",
+        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const phone = localStorage.getItem('userPhone');
+
+    if (!phone) {
+        window.location.href = "login.html";
+    }
+
+    // لائیو بیلنس دکھانے کے لیے
+    db.ref('users/' + phone).on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            const balance = parseFloat(data.balance) || 0;
+            
+            // یہاں میں نے آپ کے IDs کے مطابق بیلنس سیٹ کر دیا ہے
+            document.getElementById('mainBalance').innerText = "$" + balance.toFixed(2);
+            document.getElementById('withdrawStat').innerText = "$" + balance.toFixed(2);
+            
+            // ٹوٹل ڈپازٹ اور ارننگ اگر ڈیٹا بیس میں موجود ہوں
+            if(data.totalDeposit) document.getElementById('totalDeposit').innerText = "$" + data.totalDeposit;
+            if(data.totalEarned) document.getElementById('totalEarned').innerText = "$" + data.totalEarned;
+            
+            // یوزر کا نام یا نمبر دکھانے کے لیے
+            document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-crown"></i> VIP: ' + phone;
+        }
+    });
+</script>
 
 </body>
 </html>
