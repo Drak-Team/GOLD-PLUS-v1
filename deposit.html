@@ -1,7 +1,8 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<script>
+    // Firebase Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
@@ -12,12 +13,16 @@
       appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    // Initialize Firebase
+    if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
 
     let currentMethod = "JazzCash";
 
+    // تصویر کو ٹیکسٹ (Base64) میں تبدیل کرنے کا فنکشن
     const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -27,6 +32,7 @@
         });
     };
 
+    // پیمنٹ میتھڈ تبدیل کرنے کا فنکشن
     window.switchMethod = (name, num, holder, el) => {
         currentMethod = name;
         document.getElementById('methodName').innerText = name + " Transfer";
@@ -36,16 +42,19 @@
         el.classList.add('active');
     };
 
+    // PKR کی قیمت دکھانا (1 USD = 300 PKR)
     window.updatePKR = () => {
         const usd = document.getElementById('depositAmount').value;
         if(usd > 0) document.getElementById('pkrNote').innerText = "Total to Pay: Rs. " + (usd * 300);
     };
 
+    // اپ لوڈ کی گئی فائل کا نام دکھانا
     window.updateFileName = () => {
         const file = document.getElementById('proof').files[0];
         if (file) document.getElementById('fileName').innerText = file.name;
     };
 
+    // بٹن دبانے پر ڈپازٹ ریکویسٹ بھیجنا
     document.getElementById('submitBtn').onclick = async () => {
         const amount = document.getElementById('depositAmount').value;
         const tid = document.getElementById('tid').value;
@@ -56,12 +65,13 @@
         if (!tid) { alert("Please enter Transaction ID"); return; }
         if (!file) { alert("Please upload payment screenshot"); return; }
 
-        document.getElementById('submitBtn').innerText = "Processing...";
-        document.getElementById('submitBtn').disabled = true;
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Processing...";
+        btn.disabled = true;
 
         try {
             const base64Img = await getBase64(file);
-            const depositID = Date.now(); // ایک یونیک آئی ڈی
+            const depositID = Date.now(); // یونیک آئی ڈی
 
             const depData = {
                 phone: phone,
@@ -73,18 +83,18 @@
                 date: new Date().toLocaleString()
             };
 
-            // 1. ڈیٹا ایڈمن پینل کے لیے بھیجیں
-            await set(ref(db, 'deposits/' + depositID), depData);
+            // 1. ڈیٹا ایڈمن پینل کے لیے بھیجیں (تاکہ آپ اپروو کر سکیں)
+            await db.ref('deposits/' + depositID).set(depData);
 
-            // 2. ڈیٹا یوزر کی ہسٹری کے لیے بھیجیں
-            await set(ref(db, 'users/' + phone + '/deposits/' + depositID), depData);
+            // 2. ڈیٹا یوزر کے اپنے اکاؤنٹ میں ہسٹری کے لیے بھیجیں
+            await db.ref('users/' + phone + '/deposits/' + depositID).set(depData);
 
-            alert("Request submitted! Check your deposit history.");
+            alert("Request submitted! Your deposit is under review.");
             window.location.href = "dashboard.html";
         } catch (e) {
             alert("Error: " + e.message);
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('submitBtn').innerText = "SUBMIT REQUEST";
+            btn.disabled = false;
+            btn.innerText = "SUBMIT REQUEST";
         }
     };
 </script>
