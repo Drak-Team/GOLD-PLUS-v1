@@ -3,143 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Professional Mining Plans</title>
+    <title>Gold Plus - Premium Robot Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; --neon-green: #00ff64; --neon-blue: #00d4ff; }
+        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.05); --neon-green: #00ff64; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 120px; }
         
         .header { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.5); border-bottom: 2px solid var(--gold); border-radius: 0 0 50px 50px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.3); }
-        .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; font-weight: 900; }
+        .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; }
 
         .container { padding: 15px; }
 
-        /* Offer Banner */
-        .promo-banner {
-            background: linear-gradient(90deg, #6311ff, #00d4ff);
-            margin: 15px 0;
-            padding: 15px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
+        .section-title { color: var(--gold); font-size: 14px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--neon-green); padding-left: 10px; }
 
-        .section-title { color: var(--gold); font-size: 15px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--neon-green); padding-left: 10px; }
-
-        /* Professional Plan Cards */
+        /* Premium Robot Cards */
         .plan-card {
             background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(241, 196, 15, 0.15);
             border-radius: 30px;
-            padding: 22px;
+            padding: 20px;
             margin-bottom: 20px;
             position: relative;
             overflow: hidden;
             backdrop-filter: blur(15px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
         }
         
+        .robot-bg { position: absolute; right: -15px; top: -10px; font-size: 100px; color: rgba(241, 196, 15, 0.04); pointer-events: none; }
+
         .badge { position: absolute; top: 0; right: 0; background: #ff4444; color: #fff; font-size: 9px; font-weight: bold; padding: 7px 15px; border-bottom-left-radius: 15px; }
 
-        .plan-name { font-size: 20px; font-weight: bold; margin: 0; }
-        .price-row { display: flex; align-items: baseline; gap: 8px; margin: 8px 0; }
-        .price-usd { color: var(--gold); font-size: 24px; font-weight: 800; }
-        .price-rs { color: #aaa; font-size: 14px; }
+        .plan-header h3 { margin: 0; font-size: 19px; color: #fff; letter-spacing: 1px; }
+        .price-tag { display: block; color: var(--gold); font-size: 22px; font-weight: 800; margin: 5px 0; }
+        .price-rs { font-size: 13px; color: #aaa; font-weight: normal; }
 
         .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
-        .stat-box { background: rgba(0,0,0,0.3); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
-        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; }
-        .stat-box b { font-size: 14px; color: var(--neon-green); }
+        .stat-box { background: rgba(0,0,0,0.4); padding: 10px; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; margin-bottom: 3px; }
+        .stat-box span { font-size: 13px; font-weight: 700; color: var(--neon-green); }
 
-        .buy-btn { 
-            background: linear-gradient(90deg, #f1c40f, #e67e22); 
-            color: #000; border: none; width: 100%; padding: 18px; 
-            border-radius: 20px; font-weight: 900; font-size: 16px; 
-            cursor: pointer; text-transform: uppercase; transition: 0.3s;
-        }
-        .buy-btn:active { transform: scale(0.95); }
+        .total-profit { background: rgba(0, 255, 100, 0.08); border: 1px dashed var(--neon-green); padding: 12px; border-radius: 15px; margin-bottom: 15px; text-align: center; }
+        .total-profit small { display: block; font-size: 9px; color: var(--neon-green); text-transform: uppercase; }
+        .total-profit b { font-size: 16px; color: #fff; }
 
-        /* Navigation Bar */
+        .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 18px; font-weight: 900; font-size: 15px; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 8px 15px rgba(230, 126, 34, 0.2); }
+        
+        .coming-soon { text-align: center; padding: 40px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 30px; color: #555; margin-top: 20px; font-weight: bold; }
+
+        /* Nav Bar */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; }
-        .nav-btn.active { color: var(--gold); }
-        .nav-btn i { font-size: 22px; display: block; }
+        .nav-btn i { font-size: 22px; display: block; margin-bottom: 2px; }
         .nav-btn span { font-size: 10px; }
+        .nav-btn.active { color: var(--gold); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2>MINING PLANS</h2>
+    <h2>GOLD PLUS MINING</h2>
 </div>
 
 <div class="container">
 
-    <div class="promo-banner">
-        <i class="fas fa-wallet" style="font-size: 30px;"></i>
-        <div>
-            <b>INSTANT DEPOSIT</b><br>
-            <small>Get 5% Bonus on USDT Deposits</small>
-        </div>
-    </div>
+    <div class="section-title">Standard Mining Robots</div>
 
-    <div class="section-title">Investment Packages</div>
+    <script>
+        const plans = [
+            {id: 2, name: "Nano Bot", rs: "600", daily: "60", monthly: "1,800"},
+            {id: 5, name: "Micro Miner", rs: "1,500", daily: "150", monthly: "4,500"},
+            {id: 10, name: "Volt Robot", rs: "3,000", daily: "300", monthly: "9,000"},
+            {id: 20, name: "Cyber Hunter", rs: "6,000", daily: "600", monthly: "18,000"},
+            {id: 30, name: "Alpha AI", rs: "9,000", daily: "900", monthly: "27,000"},
+            {id: 50, name: "Delta Power", rs: "15,000", daily: "1,500", monthly: "45,000"},
+            {id: 100, name: "Titan X", rs: "30,000", daily: "3,500", monthly: "105,000"},
+            {id: 200, name: "Omega Machine", rs: "60,000", daily: "7,500", monthly: "225,000"},
+            {id: 300, name: "Galactic Miner", rs: "90,000", daily: "12,000", monthly: "360,000"},
+            {id: 400, name: "Supreme AI", rs: "120,000", daily: "16,000", monthly: "480,000"},
+            {id: 500, name: "Emperor Robot", rs: "150,000", daily: "20,000", monthly: "600,000"}
+        ];
 
-    <div class="plan-card">
-        <div class="badge" style="background:var(--neon-green); color:#000;">STARTER</div>
-        <div class="plan-name">Micro AI Bot</div>
-        <div class="price-row">
-            <span class="price-usd">$2.00</span>
-            <span class="price-rs">/ Rs. 600</span>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-box"><label>Daily</label><b>Rs. 60</b></div>
-            <div class="stat-box"><label>ROI</label><b>10 Days</b></div>
-        </div>
-        <button class="buy-btn" onclick="goToDeposit(2)">Invest Now</button>
-    </div>
+        plans.forEach(plan => {
+            document.write(`
+                <div class="plan-card">
+                    <i class="fas fa-robot robot-bg"></i>
+                    <div class="badge">30 DAYS PLAN</div>
+                    <div class="plan-header">
+                        <h3>${plan.name}</h3>
+                        <span class="price-tag">$${plan.id}.00 <span class="price-rs">/ Rs. ${plan.rs}</span></span>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-box"><label>Daily Earning</label><span>Rs. ${plan.daily}</span></div>
+                        <div class="stat-box"><label>Plan Validity</label><span style="color:#fff;">30 Days</span></div>
+                    </div>
+                    <div class="total-profit">
+                        <small>Total Monthly Profit</small>
+                        <b>Rs. ${plan.monthly}</b>
+                    </div>
+                    <button class="buy-btn" onclick="location.href='deposit.html?amount=${plan.id}'">Invest Now</button>
+                </div>
+            `);
+        });
+    </script>
 
-    <div class="plan-card">
-        <div class="badge">HOT</div>
-        <div class="plan-name">Mini Miner X</div>
-        <div class="price-row">
-            <span class="price-usd">$5.00</span>
-            <span class="price-rs">/ Rs. 1,500</span>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-box"><label>Daily</label><b>Rs. 150</b></div>
-            <div class="stat-box"><label>ROI</label><b>10 Days</b></div>
-        </div>
-        <button class="buy-btn" onclick="goToDeposit(5)">Invest Now</button>
-    </div>
-
-    <div class="plan-card" style="border: 1px solid var(--neon-blue);">
-        <div class="badge" style="background:var(--neon-blue);">VIP</div>
-        <div class="plan-name">Silver Titan</div>
-        <div class="price-row">
-            <span class="price-usd">$100.00</span>
-            <span class="price-rs">/ Rs. 30,000</span>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-box"><label>Daily</label><b>Rs. 3,600</b></div>
-            <div class="stat-box"><label>ROI</label><b>8 Days</b></div>
-        </div>
-        <button class="buy-btn" onclick="goToDeposit(100)">Invest Now</button>
-    </div>
-
-    <div class="plan-card" style="border: 2px solid var(--gold);">
-        <div class="badge">EXCLUSIVE</div>
-        <div class="plan-name">Platinum King</div>
-        <div class="price-row">
-            <span class="price-usd">$1,000.00</span>
-            <span class="price-rs">/ Rs. 300,000</span>
-        </div>
-        <div class="stats-grid">
-            <div class="stat-box"><label>Daily</label><b>Rs. 45,000</b></div>
-            <div class="stat-box"><label>Bonus</label><b>$50 Back</b></div>
-        </div>
-        <button class="buy-btn" onclick="goToDeposit(1000)">Invest Now</button>
+    <div class="coming-soon">
+        <i class="fas fa-lock" style="font-size:30px; margin-bottom:10px;"></i><br>
+        MORE VIP PLANS COMING SOON
     </div>
 
 </div>
@@ -151,13 +120,6 @@
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i><span>Refer</span></a>
     <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i><span>Profile</span></a>
 </nav>
-
-<script>
-    function goToDeposit(amount) {
-        // Yeh line user ko direct deposit page par le jaye gi
-        window.location.href = "deposit.html?amount=" + amount;
-    }
-</script>
 
 </body>
 </html>
