@@ -34,16 +34,19 @@
 
         .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 12px; border-left: 3px solid var(--primary-gold); }
         
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: #f1c40f; }
+        /* Dashboard Jaisa Navigation Bar */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 999; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; flex: 1; transition: 0.3s; }
+        .nav-btn i { font-size: 22px; display: block; margin-bottom: 2px; }
+        .nav-btn span { font-size: 10px; font-weight: 600; text-transform: uppercase; }
+        .nav-btn.active { color: #f1c40f; text-shadow: 0 0 10px rgba(241, 196, 15, 0.5); }
     </style>
 </head>
 <body>
 
 <div class="header">
     <div class="free-tag">100% FREE DAILY WORK</div>
-    <h2 style="color:var(--primary-gold); margin:0;">VIP WORKSTATION</h2>
+    <h2 style="color:var(--primary-gold); margin:0; letter-spacing: 1px;">VIP WORKSTATION</h2>
     <p style="font-size:11px; color:#aaa; margin:5px 0 0;">قیمت لکھ کر ڈیٹا انٹری مکمل کریں</p>
 </div>
 
@@ -53,11 +56,8 @@
             <i class="fas fa-mobile-screen-button product-icon" id="pIcon"></i>
             <div id="productName" style="font-size:18px; font-weight:bold; letter-spacing: 1px;">SMARTPHONE</div>
         </div>
-        
-        <span class="price-hint" id="priceHint">Expected Price: $500 - $1200</span>
-        
+        <span class="price-hint" id="priceHint">Expected: $500 - $1200</span>
         <input type="number" id="priceInput" class="task-input" placeholder="یہاں قیمت لکھیں">
-        
         <button class="btn" onclick="handleTaskSubmit()">SUBMIT & NEXT</button>
         <p id="progText" style="margin-top:15px; color:var(--primary-gold); font-weight:bold; font-size:18px;">Progress: 0 / 5</p>
     </div>
@@ -80,37 +80,28 @@
 
 <div class="card">
     <h3 style="text-align:left; font-size:16px; margin-bottom:15px;"><i class="fas fa-award"></i> VIP MILESTONES</h3>
-    
     <div class="refer-row">
         <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">5 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$1.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
-
     <div class="refer-row">
         <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">10 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$3.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
-
     <div class="refer-row">
         <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">20 Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$10.00</div>
         <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
     </div>
-
-    <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px; font-weight:bold;">50 Referrals</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$30.00</div>
-        <button class="btn btn-vip-lock" style="width:70px; padding:8px; font-size:10px;">CLAIM</button>
-    </div>
 </div>
 
 <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
-    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i><span>Home</span></a>
+    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i><span>Earn</span></a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i><span>Refer</span></a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i><span>Profile</span></a>
 </nav>
 
 <script type="module">
@@ -141,7 +132,7 @@
     ];
 
     async function checkStatus() {
-        if(!userPhone) { window.location.href="login.html"; return; }
+        if(!userPhone) return;
         const snap = await get(ref(db, 'users/' + userPhone));
         if (snap.exists()) {
             const last = snap.val().lastClaim || 0;
@@ -162,9 +153,7 @@
     }
 
     window.handleTaskSubmit = function() {
-        const val = document.getElementById('priceInput').value;
-        if(!val) { alert("Please enter price!"); return; }
-        
+        if(!document.getElementById('priceInput').value) { alert("Please enter price!"); return; }
         count++;
         if(count >= 5) {
             document.getElementById('taskContent').style.display = 'none';
@@ -178,14 +167,11 @@
     window.claimDailyEarning = async function() {
         const snap = await get(ref(db, 'users/' + userPhone));
         const currentBalance = snap.val().balance || 0;
-        const dailyLimit = snap.val().dailyEarning || 0.50;
-        
         await update(ref(db, 'users/' + userPhone), {
-            balance: currentBalance + dailyLimit,
+            balance: currentBalance + 0.50,
             lastClaim: Date.now()
         });
-        
-        alert("کامیابی! منافع آپ کے بیلنس میں جمع کر دیا گیا ہے۔");
+        alert("کامیابی! پیسے جمع کر دیے گئے ہیں۔");
         location.reload();
     };
 
@@ -198,8 +184,7 @@
             const h = Math.floor(left/3600000);
             const m = Math.floor((left%3600000)/60000);
             const s = Math.floor((left%60000)/1000);
-            document.getElementById('countdown').innerText = 
-                `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+            document.getElementById('countdown').innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
         }, 1000);
     }
 
