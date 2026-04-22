@@ -8,27 +8,59 @@
     <style>
         :root { --gold: #f1c40f; --bg: #0f051d; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: white; padding-bottom: 100px; }
-        .header { padding: 25px; text-align: center; background: rgba(0,0,0,0.2); border-bottom: 1px solid rgba(241,196,15,0.2); }
-        .deposit-box { padding: 20px; }
-        
-        .method-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .tab { padding: 12px; background: rgba(255,255,255,0.05); border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; font-size: 11px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
-        .tab img { width: 35px; height: 35px; object-fit: contain; border-radius: 8px; }
-        .tab.active { border-color: var(--gold); background: rgba(241,196,15,0.1); color: var(--gold); }
-        
-        .pay-info { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; margin-bottom: 20px; border-left: 4px solid var(--gold); }
-        .pay-info small { color: #aaa; text-transform: uppercase; font-size: 10px; }
-        .pay-info b { color: var(--gold); display: block; margin-top: 5px; font-size: 18px; letter-spacing: 1px; }
-        
-        input { width: 100%; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; outline: none; box-sizing: border-box; margin-bottom: 15px; }
-        .file-input { border: 2px dashed rgba(241,196,15,0.3); padding: 20px; text-align: center; border-radius: 15px; cursor: pointer; background: rgba(255,255,255,0.02); }
-        .submit-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 900; cursor: pointer; text-transform: uppercase; margin-top: 10px; }
-        
-        .history-section { padding: 0 20px; margin-top: 30px; }
-        .history-card { background: rgba(255,255,255,0.05); padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid #f1c40f; }
+        .header { padding: 20px; text-align: center; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241,196,15,0.2); }
+        .deposit-box { padding: 15px; }
 
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
+        .method-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .tab { 
+            background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px;
+            text-align: center; cursor: pointer; border: 1px solid rgba(255,255,255,0.1);
+            display: flex; flex-direction: column; align-items: center; gap: 5px;
+        }
+        .tab img { width: 30px; height: 30px; object-fit: contain; }
+        .tab span { font-size: 11px; font-weight: 500; }
+        .tab.active { border-color: var(--gold); background: rgba(241,196,15,0.15); color: var(--gold); }
+
+        .pay-info { 
+            background: rgba(255,255,255,0.06); padding: 15px; border-radius: 15px; 
+            margin-bottom: 20px; border-left: 5px solid var(--gold); position: relative;
+        }
+        .pay-info b { color: var(--gold); display: block; margin-top: 5px; font-size: 18px; }
+        .copy-btn { 
+            position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+            background: var(--gold); color: #000; border: none; padding: 6px 12px;
+            border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer;
+        }
+
+        input { 
+            width: 100%; padding: 12px; background: rgba(255,255,255,0.08); 
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; 
+            color: white; margin-bottom: 15px; box-sizing: border-box; outline: none;
+        }
+
+        .file-input { 
+            border: 2px dashed rgba(241,196,15,0.3); padding: 20px; 
+            text-align: center; border-radius: 15px; cursor: pointer;
+        }
+
+        .submit-btn { 
+            background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; 
+            border: none; width: 100%; padding: 15px; border-radius: 12px; 
+            font-weight: 800; cursor: pointer; margin-top: 15px;
+        }
+
+        .history-card { 
+            background: rgba(255,255,255,0.04); padding: 12px; border-radius: 12px; 
+            margin-bottom: 10px; border-left: 4px solid var(--gold);
+        }
+
+        .nav-bar { 
+            position: fixed; bottom: 0; width: 100%; background: #0a0414; 
+            display: flex; justify-content: space-around; padding: 12px 0; 
+            border-top: 1px solid rgba(241, 196, 15, 0.2); 
+        }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn i { display: block; font-size: 18px; margin-bottom: 4px; }
         .nav-btn.active { color: #f1c40f; }
     </style>
 </head>
@@ -39,54 +71,55 @@
 <div class="deposit-box">
     <div class="method-tabs">
         <div class="tab active" onclick="switchMethod('JazzCash', '03037264598', 'Ahmad Nafees Anjum', this)">
-            <img src="https://img.icons8.com/color/96/wallet--v1.png" alt="Jazz">
-            JazzCash
+            <img src="https://img.icons8.com/color/48/wallet.png">
+            <span>JazzCash</span>
         </div>
         <div class="tab" onclick="switchMethod('Easypaisa', '03037264598', 'Ahmad Nafees Anjum', this)">
-            <img src="https://img.icons8.com/color/96/money-transfer.png" alt="EP">
-            Easypaisa
+            <img src="https://img.icons8.com/color/48/money-transfer.png">
+            <span>Easypaisa</span>
         </div>
-        <div class="tab" onclick="switchMethod('BNB (BEP20)', '0x...', 'Ahmad Nafees Anjum', this)">
-            <img src="https://img.icons8.com/color/96/binance.png" alt="BNB">
-            BNB (BEP20)
+        <div class="tab" onclick="switchMethod('BNB (BEP20)', '0x000...Copy_From_Admin', 'Ahmad Nafees Anjum', this)">
+            <img src="https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png">
+            <span>BNB (BEP20)</span>
         </div>
-        <div class="tab" onclick="switchMethod('TRX (TRC20)', 'T...', 'Ahmad Nafees Anjum', this)">
-            <img src="https://img.icons8.com/color/96/tron.png" alt="TRX">
-            TRX (TRC20)
+        <div class="tab" onclick="switchMethod('TRX (TRC20)', 'T000...Copy_From_Admin', 'Ahmad Nafees Anjum', this)">
+            <img src="https://assets.coingecko.com/coins/images/1094/small/tron-logo.png">
+            <span>TRX (TRC20)</span>
         </div>
     </div>
 
     <div class="pay-info">
         <small id="methodName">JazzCash Transfer</small>
         <b id="accNumber">03037264598</b>
-        <span id="accHolder" style="font-size: 12px; opacity: 0.8;">Holder: Ahmad Nafees Anjum</span>
+        <span id="accHolder" style="font-size: 12px;">Holder: Ahmad Nafees Anjum</span>
+        <button class="copy-btn" onclick="copyNum()">COPY</button>
     </div>
 
-    <input type="number" id="depositAmount" oninput="updatePKR()" placeholder="Amount in USD ($)">
-    <small id="pkrNote" style="color: #00ff64; font-size: 11px; margin-bottom: 10px; display: block;"></small>
+    <input type="number" id="depositAmount" oninput="updatePKR()" placeholder="Amount ($)">
+    <small id="pkrNote" style="color: #00ff64; font-size: 11px; display: block; margin-bottom: 10px;"></small>
     
     <input type="text" id="tid" placeholder="Transaction ID (TID)">
 
     <div class="file-input" onclick="document.getElementById('proof').click()">
-        <i class="fas fa-image" style="font-size: 20px; color: var(--gold);"></i>
-        <p id="fileName" style="font-size: 11px; margin: 5px 0 0 0;">Upload Screenshot</p>
+        <i class="fas fa-camera" style="font-size: 20px; color: var(--gold);"></i>
+        <p id="fileName" style="font-size: 12px; margin-top: 5px;">Upload Proof</p>
         <input type="file" id="proof" style="display:none" onchange="updateFileName()" accept="image/*">
     </div>
 
     <button class="submit-btn" id="submitBtn">Submit Request</button>
 </div>
 
-<div class="history-section">
-    <div style="color: var(--gold); font-size: 14px; margin-bottom: 10px;">Deposit History</div>
+<div style="padding: 20px;">
+    <h4 style="color: var(--gold); margin-bottom: 10px;">Deposit History</h4>
     <div id="depositHistory"></div>
 </div>
 
 <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-home"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
     <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn active"><i class="fas fa-user-gear"></i>PROFILE</a>
+    <a href="profile.html" class="nav-btn active"><i class="fas fa-user"></i>DEPOSIT</a>
 </nav>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -118,9 +151,15 @@
         el.classList.add('active');
     };
 
+    window.copyNum = () => {
+        const num = document.getElementById('accNumber').innerText;
+        navigator.clipboard.writeText(num);
+        alert("Number Copied!");
+    };
+
     window.updatePKR = () => {
         const usd = document.getElementById('depositAmount').value;
-        document.getElementById('pkrNote').innerText = usd > 0 ? "Total: Rs. " + (usd * 300) : "";
+        document.getElementById('pkrNote').innerText = usd > 0 ? "Total PKR: Rs. " + (usd * 300) : "";
     };
 
     window.updateFileName = () => {
@@ -128,7 +167,6 @@
         if (file) document.getElementById('fileName').innerText = file.name;
     };
 
-    // Live History Listener
     if (phone) {
         db.ref('users/' + phone + '/deposits').on('value', (snap) => {
             const histDiv = document.getElementById('depositHistory');
@@ -142,7 +180,7 @@
                         <div style="display:flex; justify-content:space-between; font-size:11px;">
                             <span>${d.date}</span><b style="color:${color}">${d.status}</b>
                         </div>
-                        <div style="font-weight:bold; margin-top:5px;">$${d.amount} - ${d.method}</div>
+                        <div style="font-weight:bold; margin-top:5px;">$${d.amount} (${d.method})</div>
                     </div>`;
                 });
                 histDiv.innerHTML = html;
@@ -159,7 +197,7 @@
         if (!amt || !tid || !file) { alert("Fill all fields!"); return; }
 
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "UPLOADING..."; btn.disabled = true;
+        btn.innerText = "Processing..."; btn.disabled = true;
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
@@ -171,7 +209,7 @@
             };
             await db.ref('deposits/' + depID).set(depData);
             await db.ref('users/' + phone + '/deposits/' + depID).set(depData);
-            alert("Submitted!");
+            alert("Deposit Submitted!");
             btn.innerText = "Submit Request"; btn.disabled = false;
         };
     };
