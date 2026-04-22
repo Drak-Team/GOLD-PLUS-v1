@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Secret Admin Control</title>
+    <title>Gold Plus - Final Admin Panel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold: #f1c40f; --bg: #0f051d; --card: #1a0b2e; }
@@ -11,49 +11,54 @@
         
         /* Password Overlay */
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; }
-        .login-box { background:var(--card); padding:30px; border-radius:20px; border:1px solid var(--gold); text-align:center; }
-        input { padding:12px; border-radius:10px; border:none; margin-bottom:10px; width:200px; text-align:center; }
+        .login-box { background:var(--card); padding:35px; border-radius:25px; border:2px solid var(--gold); text-align:center; box-shadow: 0 0 30px rgba(241, 196, 15, 0.2); }
+        input { padding:15px; border-radius:12px; border:1px solid #444; margin-bottom:15px; width:220px; text-align:center; background:#000; color:#fff; font-size:18px; letter-spacing:4px; }
         
-        header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; }
+        header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 30px; text-align: center; }
         .stats-bar { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
-        .stat-item { background: var(--gold); color: #000; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; }
+        .stat-item { background: var(--gold); color: #000; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 14px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
         
-        .admin-card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; padding: 15px; margin-bottom: 15px; }
-        .proof-img { width: 120px; border-radius: 10px; margin-top: 10px; border: 2px solid var(--gold); cursor: pointer; }
+        .admin-card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 20px; transition: 0.3s; }
+        .admin-card:hover { border-color: var(--gold); }
+        .proof-img { width: 150px; border-radius: 12px; margin-top: 15px; border: 2px solid var(--gold); cursor: pointer; transition: 0.3s; }
+        .proof-img:hover { transform: scale(1.05); }
         
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
-        button { padding: 10px 20px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+        button { padding: 12px 25px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .approve-btn { background: var(--gold); color: #000; }
+        .approve-btn:hover { background: #fff; }
         .reject-btn { background: #ff3232; color: #fff; }
         
-        h3 { color: var(--gold); text-transform: uppercase; font-size: 14px; margin-top: 40px; }
+        h3 { color: var(--gold); text-transform: uppercase; font-size: 14px; margin-top: 40px; border-left: 4px solid var(--gold); padding-left: 10px; }
+        .loading { text-align: center; color: #555; padding: 20px; }
     </style>
 </head>
 <body>
 
 <div id="authOverlay">
     <div class="login-box">
-        <h2 style="color:var(--gold)">Admin Access</h2>
-        <input type="password" id="adminPass" placeholder="Enter Password"><br>
-        <button class="approve-btn" onclick="checkPass()">Login</button>
+        <i class="fas fa-user-shield" style="font-size: 50px; color: var(--gold); margin-bottom: 20px;"></i>
+        <h2 style="color:var(--gold); margin-bottom: 20px;">ADMIN LOGIN</h2>
+        <input type="password" id="adminPass" placeholder="******"><br>
+        <button class="approve-btn" style="width: 100%;" onclick="checkPass()">ENTER CONTROL</button>
     </div>
 </div>
 
 <header>
-    <h1>GOLD PLUS <span style="color:var(--gold)">PANEL</span></h1>
-    <p style="font-size: 12px; color: #aaa;">Authorized access only - Ahmad Anjum</p>
+    <h1>GOLD PLUS <span style="color:var(--gold)">ADMIN</span></h1>
+    <p style="font-size: 12px; color: #aaa; letter-spacing: 2px;">SECURE MANAGEMENT INTERFACE</p>
 </header>
 
 <div class="stats-bar">
-    <div class="stat-item">Deposits: <span id="pendingDep">0</span></div>
-    <div class="stat-item">Withdraws: <span id="pendingWith">0</span></div>
+    <div class="stat-item">PENDING DEPOSITS: <span id="pendingDep">0</span></div>
+    <div class="stat-item">PENDING WITHDRAWS: <span id="pendingWith">0</span></div>
 </div>
 
-<h3><i class="fas fa-arrow-down"></i> Pending Deposits</h3>
-<div id="depositContainer">Loading...</div>
+<h3><i class="fas fa-cash-register"></i> Deposit Requests</h3>
+<div id="depositContainer" class="loading">Waiting for data...</div>
 
-<h3><i class="fas fa-arrow-up"></i> Pending Withdrawals</h3>
-<div id="withdrawContainer">Loading...</div>
+<h3><i class="fas fa-university"></i> Withdrawal Requests</h3>
+<div id="withdrawContainer" class="loading">Waiting for data...</div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -72,13 +77,13 @@
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
 
-    // Password Logic
+    // Password Logic - Updated to 231426
     window.checkPass = () => {
         const pass = document.getElementById('adminPass').value;
-        if(pass === "1234") { // یہاں اپنا پاس ورڈ بدل لیں
+        if(pass === "231426") { 
             document.getElementById('authOverlay').style.display = 'none';
         } else {
-            alert("Wrong Password!");
+            alert("Incorrect Admin Key!");
         }
     };
 
@@ -94,20 +99,26 @@
                 count++;
                 container.innerHTML += `
                     <div class="admin-card">
-                        <div style="display:flex; justify-content:space-between">
-                            <b>User: ${data.phone || data.username}</b>
-                            <b style="color:var(--gold)">$${data.amount}</b>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h4 style="margin:0; color:var(--gold)">User: ${data.phone || data.username}</h4>
+                                <span style="font-size:11px; color:#777">TID: ${data.tid}</span>
+                            </div>
+                            <div style="font-size:20px; font-weight:900; color:#00ff00;">$${data.amount}</div>
                         </div>
-                        <p style="font-size:12px; color:#aaa">TID: ${data.tid}</p>
-                        <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
+                        <div style="margin-top:15px;">
+                            <span style="font-size:10px; color:#aaa; display:block; margin-bottom:5px;">PAYMENT PROOF:</span>
+                            <img src="${data.screenshot}" class="proof-img" title="Click to enlarge" onclick="window.open(this.src)">
+                        </div>
                         <div class="btn-group">
-                            <button class="approve-btn" onclick="handleDeposit('${data.phone || data.username}', '${rid}', '${data.amount}')">APPROVE</button>
-                            <button class="reject-btn" onclick="updateStatus('deposits', '${rid}', 'Rejected')">REJECT</button>
+                            <button class="approve-btn" onclick="handleDeposit('${data.phone || data.username}', '${rid}', '${data.amount}')">Approve & Pay</button>
+                            <button class="reject-btn" onclick="updateStatus('deposits', '${rid}', 'Rejected')">Reject</button>
                         </div>
                     </div>`;
             }
         });
         document.getElementById('pendingDep').innerText = count;
+        if(count === 0) container.innerHTML = '<p style="color:#555">No pending deposits.</p>';
     });
 
     // 2. Withdrawals Logic
@@ -122,29 +133,33 @@
                 count++;
                 container.innerHTML += `
                     <div class="admin-card">
-                        <div style="display:flex; justify-content:space-between">
-                            <b>User: ${data.phone || data.username}</b>
-                            <b style="color:#ff3232">$${data.amount}</b>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <div>
+                                <h4 style="margin:0; color:var(--gold)">User: ${data.phone || data.username}</h4>
+                                <span style="font-size:11px; color:#777">${data.method}: ${data.accountNumber}</span>
+                            </div>
+                            <div style="font-size:20px; font-weight:900; color:#ff3232;">$${data.amount}</div>
                         </div>
-                        <p style="font-size:12px; color:#aaa">${data.method}: ${data.accountNumber}</p>
                         <div class="btn-group">
-                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">APPROVE</button>
-                            <button class="reject-btn" onclick="handleWithdrawReject('${data.phone || data.username}', '${rid}', '${data.amount}')">REJECT & REFUND</button>
+                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">Mark as Paid</button>
+                            <button class="reject-btn" onclick="handleWithdrawReject('${data.phone || data.username}', '${rid}', '${data.amount}')">Reject & Refund</button>
                         </div>
                     </div>`;
             }
         });
         document.getElementById('pendingWith').innerText = count;
+        if(count === 0) container.innerHTML = '<p style="color:#555">No pending withdrawals.</p>';
     });
 
-    // Global Functions
+    // --- Core Operations ---
     window.handleDeposit = (userID, rid, amount) => {
+        if(!userID) return alert("Error: No User Phone found!");
         const balanceRef = ref(db, `users/${userID}/balance`);
         runTransaction(balanceRef, (curr) => (parseFloat(curr) || 0) + parseFloat(amount))
         .then(() => {
             update(ref(db, `deposits/${rid}`), { status: 'Approved' });
-            alert("Success! Added to " + userID);
-        });
+            alert("Deposit Confirmed! Account updated.");
+        }).catch(e => alert("System Error: " + e.message));
     };
 
     window.handleWithdrawReject = (userID, rid, amount) => {
@@ -152,12 +167,12 @@
         runTransaction(balanceRef, (curr) => (parseFloat(curr) || 0) + parseFloat(amount))
         .then(() => {
             update(ref(db, `withdrawals/${rid}`), { status: 'Rejected' });
-            alert("Refunded!");
+            alert("Withdrawal Rejected. Balance refunded to user.");
         });
     };
 
     window.updateStatus = (path, rid, status) => {
-        update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Request " + status));
+        update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Request marked as " + status));
     };
 </script>
 </body>
