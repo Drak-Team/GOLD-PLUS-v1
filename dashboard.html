@@ -9,10 +9,18 @@
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
         
-        .top-header { padding: 25px 20px; background: rgba(0,0,0,0.3); border-bottom: 1px solid rgba(241, 196, 15, 0.2); border-radius: 0 0 30px 30px; }
-        .user-welcome { color: #f1c40f; font-size: 15px; font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; }
-        .mini-stats b { font-size: 20px; color: #fff; display: block; margin-top: 5px; }
+        /* New Gold VIP Header */
+        .top-header { 
+            padding: 30px 20px; 
+            background: var(--gold-grad); 
+            border-bottom: 3px solid #b8860b; 
+            border-radius: 0 0 40px 40px; 
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4);
+            color: #000; /* Text black for readability */
+        }
+        .user-welcome { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; color: #000; font-weight: bold; }
+        .mini-stats b { font-size: 22px; color: #000; display: block; margin-top: 5px; }
 
         .extra-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px 20px 0; }
         .stat-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 15px; border: 1px solid rgba(241,196,15,0.1); }
@@ -22,7 +30,6 @@
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px; }
         .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         
-        /* Animated Battery-like Mining Icons */
         .coin-ball { 
             width: 45px; height: 45px; 
             background: radial-gradient(circle, #f1c40f, #b8860b); 
@@ -36,12 +43,11 @@
             50% { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(241,196,15,0.7); }
         }
 
-        .timer-text { font-size: 8px; color: #00ff00; font-weight: bold; margin-top: 5px; }
+        .timer-text { font-size: 8px; color: #888; font-weight: bold; margin-top: 5px; }
+        .active-timer { color: #00ff00; } /* Only shows when active */
 
         .get-all-box { padding: 0 20px 20px; text-align: center; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241,196,15,0.3); transition: 0.3s; }
-        
-        /* Dimmed Claim Button when not ready */
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; cursor: pointer; box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3); transition: 0.3s; }
         .get-all-btn:disabled { background: #222; color: #555; cursor: not-allowed; opacity: 0.5; box-shadow: none; border: 1px solid #444; }
 
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
@@ -67,11 +73,11 @@
 
 <div class="top-header">
     <div class="user-welcome" id="userNameLabel">
-        <i class="fas fa-crown" style="color:#f1c40f"></i> GOLD PLUS VIP
+        <i class="fas fa-crown"></i> GOLD PLUS VIP
     </div>
     <div class="mini-stats">
         <div>Available Assets <b id="mainBalance">$0.00</b></div>
-        <div>Mining Power <b id="activePlan" style="color: #00ff00;">Active</b></div>
+        <div>Status: <b id="activePlan">VIP ACCESS</b></div>
     </div>
 </div>
 
@@ -91,26 +97,26 @@
 </marquee>
 
 <div class="machines-grid">
-    <div class="machine-card" id="machine_Free">
+    <div class="machine-card" id="machine_1">
         <div class="coin-ball"><i class="fas fa-microchip"></i></div>
-        <div class="timer-text" id="time_1">Active</div>
+        <div class="timer-text" id="time_1">Locked</div>
     </div>
-    <div class="machine-card" id="machine_Starter">
+    <div class="machine-card" id="machine_2">
         <div class="coin-ball"><i class="fas fa-bolt"></i></div>
-        <div class="timer-text" id="time_2">10:00 AM</div>
+        <div class="timer-text" id="time_2">Locked</div>
     </div>
-    <div class="machine-card" id="machine_VIP1">
+    <div class="machine-card" id="machine_3">
         <div class="coin-ball"><i class="fas fa-server"></i></div>
-        <div class="timer-text" id="time_3">12:00 PM</div>
+        <div class="timer-text" id="time_3">Locked</div>
     </div>
-    <div class="machine-card" id="machine_VIP2">
+    <div class="machine-card" id="machine_4">
         <div class="coin-ball"><i class="fas fa-link"></i></div>
-        <div class="timer-text" id="time_4">09:00 PM</div>
+        <div class="timer-text" id="time_4">Locked</div>
     </div>
 </div>
 
 <div class="get-all-box">
-    <button class="get-all-btn" id="claimBtn" disabled>WAIT FOR TIME</button>
+    <button class="get-all-btn" id="claimBtn" disabled>WAIT FOR PLAN</button>
 </div>
 
 <div class="main-grid">
