@@ -11,19 +11,25 @@
         
         .header { padding: 25px 20px; background: rgba(0,0,0,0.3); text-align: center; border-radius: 0 0 30px 30px; border-bottom: 1px solid rgba(241, 196, 15, 0.2); }
         
-        /* Mining & Task Cards */
         .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(241, 196, 15, 0.1); margin: 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); text-align: center; }
         
         .product-box { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed var(--primary-gold); }
         .task-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box; }
 
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top:10px; }
         .btn:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; }
 
+        /* Battery Animation */
+        .battery-container { width: 50px; height: 25px; border: 2px solid #fff; border-radius: 5px; position: relative; margin: 0 auto 10px; }
+        .battery-level { height: 100%; background: #00ff00; width: 0%; animation: charge 2s infinite; }
+        .battery-container::after { content: ''; position: absolute; right: -6px; top: 5px; width: 4px; height: 10px; background: #fff; }
+        @keyframes charge { 0% { width: 0%; } 100% { width: 100%; } }
+
+        .bonus-tag { background: #00ff64; color: #000; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; float: right; }
+        
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -33,25 +39,56 @@
 </div>
 
 <div class="card" id="taskSection">
-    <h3><i class="fas fa-keyboard"></i> DATA ENTRY</h3>
-    <div class="product-box">
-        <small style="color:#aaa;">Product Name</small><br>
-        <span id="productName" style="font-size:18px; font-weight:bold;">Loading...</span>
+    <h3><i class="fas fa-keyboard"></i> DAILY DATA ENTRY</h3>
+    <div id="taskContent">
+        <div class="product-box">
+            <small style="color:#aaa;">Product Name</small><br>
+            <span id="productName" style="font-size:18px; font-weight:bold;">Loading...</span>
+        </div>
+        <input type="number" id="priceInput" class="task-input" placeholder="Enter Price">
+        <select id="catInput" class="task-input">
+            <option value="">Select Category</option>
+            <option>Mobile</option>
+            <option>Electronics</option>
+        </select>
+        <button class="btn" id="taskBtn" onclick="submitTask()">SUBMIT TASK</button>
+        <p id="progressMsg" style="font-size:12px; margin-top:10px; color:var(--primary-gold);"></p>
     </div>
-    <input type="number" id="priceInput" class="task-input" placeholder="Enter Price">
-    <select id="catInput" class="task-input">
-        <option value="">Select Category</option>
-        <option>Mobile</option>
-        <option>Electronics</option>
-    </select>
-    <button class="btn" id="taskBtn" onclick="submitTask()">SUBMIT TASK</button>
-    <p id="progressMsg" style="font-size:12px; margin-top:10px; color:var(--primary-gold);"></p>
+    <div id="timerDisplay" style="display:none;">
+        <h4 style="color:#00ff64;">TODAY'S TASK COMPLETED!</h4>
+        <p style="font-size:12px; color:#aaa;">Next tasks available in:</p>
+        <h2 id="countdown" style="color:var(--primary-gold);">00:00:00</h2>
+    </div>
+</div>
+
+<div class="card">
+    <h3><i class="fas fa-gift"></i> REFERRAL BONUSES</h3>
+    
+    <div class="product-box" style="text-align: left;">
+        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
+        <span class="bonus-tag">$1.00</span>
+        <b>Invite 5 Active Users</b>
+        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(5, 1)">CLAIM BONUS</button>
+    </div>
+
+    <div class="product-box" style="text-align: left;">
+        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
+        <span class="bonus-tag">$3.00</span>
+        <b>Invite 10 Active Users</b>
+        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(10, 3)">CLAIM BONUS</button>
+    </div>
+
+    <div class="product-box" style="text-align: left;">
+        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
+        <span class="bonus-tag">$10.00</span>
+        <b>Invite 20 Active Users</b>
+        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(20, 10)">CLAIM BONUS</button>
+    </div>
 </div>
 
 <div class="card" id="miningSection" style="display:none;">
     <div style="font-size:40px; color:var(--primary-gold); margin-bottom:15px;"><i class="fas fa-microchip fa-spin"></i></div>
     <h3>AI MINING READY</h3>
-    <p style="font-size:12px; color:#aaa;">All tasks completed! Click below to claim daily profit.</p>
     <button class="btn" onclick="startMining()">CLAIM DAILY EARNING</button>
 </div>
 
@@ -59,60 +96,55 @@
     <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
     <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
     <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i>PROFILE</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, runTransaction, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-        authDomain: "gold-plus-v1.firebaseapp.com",
-        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-        projectId: "gold-plus-v1",
-        storageBucket: "gold-plus-v1.firebasestorage.app",
-        messagingSenderId: "474592887487",
-        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
-    };
-
+    const firebaseConfig = { /* Your Config Here */ };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const username = localStorage.getItem('userPhone'); // آپ کے ڈیٹا بیس میں یہی کی (Key) ہے
+    const username = localStorage.getItem('userPhone');
 
-    let requiredTasks = 5; // جتنے ٹاسک آپ رکھنا چاہیں
+    let requiredTasks = 5;
     let doneTasks = 0;
     const products = ["iPhone 15", "Samsung S24", "MacBook", "Apple Watch"];
 
-    // 1. لوڈنگ لاجک (چیک کریں کہ کیا یوزر آج مائننگ کر چکا ہے؟)
     async function checkStatus() {
-        if (!username) { window.location.href="login.html"; return; }
-        
         const snap = await get(ref(db, 'users/' + username));
         if (snap.exists()) {
             const user = snap.val();
             const lastClaim = user.lastClaim || 0;
             const now = Date.now();
             
-            // اگر 24 گھنٹے نہیں ہوئے تو ٹاسک چھپا دیں
             if (now - lastClaim < 24 * 60 * 60 * 1000) {
-                document.getElementById('taskSection').innerHTML = "<h3>Already Claimed!</h3><p>Come back after 24 hours.</p>";
+                showTimer(lastClaim);
             } else {
                 loadNewTask();
             }
         }
     }
 
-    function loadNewTask() {
-        document.getElementById('productName').innerText = products[Math.floor(Math.random()*products.length)];
-        document.getElementById('progressMsg').innerText = `Progress: ${doneTasks} / ${requiredTasks}`;
+    function showTimer(lastClaim) {
+        document.getElementById('taskContent').style.display = 'none';
+        document.getElementById('timerDisplay').style.display = 'block';
+        
+        setInterval(() => {
+            const now = Date.now();
+            const timeLeft = (lastClaim + 24*60*60*1000) - now;
+            if(timeLeft <= 0) location.reload();
+            
+            const h = Math.floor(timeLeft / 3600000);
+            const m = Math.floor((timeLeft % 3600000) / 60000);
+            const s = Math.floor((timeLeft % 60000) / 1000);
+            document.getElementById('countdown').innerText = `${h}h ${m}m ${s}s`;
+        }, 1000);
     }
 
     window.submitTask = function() {
-        const p = document.getElementById('priceInput').value;
-        const c = document.getElementById('catInput').value;
-        if(!p || !c) { alert("Fill all fields!"); return; }
-
+        if(!document.getElementById('priceInput').value) return alert("Enter Price!");
         doneTasks++;
         if(doneTasks >= requiredTasks) {
             document.getElementById('taskSection').style.display = 'none';
@@ -124,21 +156,42 @@
     };
 
     window.startMining = async function() {
-        try {
-            await runTransaction(ref(db, 'users/' + username), (user) => {
-                if (user) {
-                    const profit = user.dailyEarning || 0.50; // پیکج کے حساب سے منافع
-                    user.balance = (user.balance || 0) + profit;
-                    user.lastClaim = Date.now();
-                    return user;
-                }
+        const snap = await get(ref(db, 'users/' + username));
+        const user = snap.val();
+        const profit = user.plan === "Free" ? 0.50 : 2.50; // پیکج کے مطابق
+        
+        await update(ref(db, 'users/' + username), {
+            balance: (user.balance || 0) + profit,
+            lastClaim: Date.now()
+        });
+        alert("Daily Profit Added!");
+        location.reload();
+    };
+
+    window.claimBonus = async function(reqMembers, reward) {
+        const snap = await get(ref(db, 'users/' + username));
+        const user = snap.val();
+        
+        // اصلی ریفرل کاؤنٹ چیک کریں
+        const allUsers = await get(ref(db, 'users'));
+        let count = 0;
+        allUsers.forEach(u => { if(u.val().referBy === username) count++; });
+
+        if(count >= reqMembers) {
+            await update(ref(db, 'users/' + username), {
+                balance: (user.balance || 0) + reward
             });
-            alert("Success! Profit added to your balance.");
-            location.reload();
-        } catch (e) { alert("Error: " + e.message); }
+            alert(`Congrats! $${reward} Bonus Added.`);
+        } else {
+            alert(`You need ${reqMembers} active referrals. Current: ${count}`);
+        }
     };
 
     window.onload = checkStatus;
+    function loadNewTask() {
+        document.getElementById('productName').innerText = products[Math.floor(Math.random()*products.length)];
+        document.getElementById('progressMsg').innerText = `Progress: ${doneTasks} / ${requiredTasks}`;
+    }
 </script>
 </body>
 </html>
