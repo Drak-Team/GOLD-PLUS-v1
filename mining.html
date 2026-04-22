@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Mining & Tasks</title>
+    <title>Gold Plus - Simple Tasks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
@@ -13,23 +13,26 @@
         
         .card { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(241, 196, 15, 0.1); margin: 20px; padding: 20px; border-radius: 25px; backdrop-filter: blur(10px); text-align: center; }
         
-        .product-box { background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed var(--primary-gold); }
-        .task-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box; }
+        .product-box { background: rgba(0, 0, 0, 0.4); padding: 20px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--primary-gold); position: relative; }
+        .product-icon { font-size: 40px; color: var(--primary-gold); margin-bottom: 10px; display: block; }
 
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top:10px; }
-        .btn:disabled { background: #444 !important; color: #888 !important; cursor: not-allowed; }
+        .task-input { width: 100%; padding: 15px; margin-bottom: 10px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.5); color: #fff; box-sizing: border-box; font-size: 16px; text-align: center; }
+
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; transition: 0.3s; margin-top:10px; text-transform: uppercase; }
+        .btn:active { transform: scale(0.95); }
 
         /* Battery Animation */
-        .battery-container { width: 50px; height: 25px; border: 2px solid #fff; border-radius: 5px; position: relative; margin: 0 auto 10px; }
+        .battery-container { width: 45px; height: 22px; border: 2px solid #fff; border-radius: 4px; position: relative; margin-bottom: 5px; }
         .battery-level { height: 100%; background: #00ff00; width: 0%; animation: charge 2s infinite; }
-        .battery-container::after { content: ''; position: absolute; right: -6px; top: 5px; width: 4px; height: 10px; background: #fff; }
+        .battery-container::after { content: ''; position: absolute; right: -6px; top: 4px; width: 4px; height: 10px; background: #fff; }
         @keyframes charge { 0% { width: 0%; } 100% { width: 100%; } }
 
-        .bonus-tag { background: #00ff64; color: #000; font-size: 10px; padding: 2px 8px; border-radius: 10px; font-weight: bold; float: right; }
+        .bonus-tag { background: #00ff64; color: #000; font-size: 11px; padding: 3px 10px; border-radius: 10px; font-weight: bold; }
         
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -39,57 +42,58 @@
 </div>
 
 <div class="card" id="taskSection">
-    <h3><i class="fas fa-keyboard"></i> DAILY DATA ENTRY</h3>
+    <h3 style="margin-top:0;"><i class="fas fa-edit"></i> EASY DATA ENTRY</h3>
+    <p style="font-size:12px; color:#aaa; margin-bottom:15px;">Type the price of the item to complete task</p>
+    
     <div id="taskContent">
         <div class="product-box">
-            <small style="color:#aaa;">Product Name</small><br>
-            <span id="productName" style="font-size:18px; font-weight:bold;">Loading...</span>
+            <i class="fas fa-mobile-alt product-icon" id="pIcon"></i>
+            <span id="productName" style="font-size:20px; font-weight:bold; letter-spacing:1px;">SMARTPHONE</span>
         </div>
-        <input type="number" id="priceInput" class="task-input" placeholder="Enter Price">
-        <select id="catInput" class="task-input">
-            <option value="">Select Category</option>
-            <option>Mobile</option>
-            <option>Electronics</option>
-        </select>
-        <button class="btn" id="taskBtn" onclick="submitTask()">SUBMIT TASK</button>
-        <p id="progressMsg" style="font-size:12px; margin-top:10px; color:var(--primary-gold);"></p>
+        
+        <input type="number" id="priceInput" class="task-input" placeholder="Enter Price (e.g. 500)">
+        
+        <button class="btn" onclick="submitTask()">SUBMIT & NEXT</button>
+        <p id="progressMsg" style="font-size:14px; margin-top:15px; font-weight:bold; color:var(--primary-gold);">Progress: 0 / 5</p>
     </div>
+
     <div id="timerDisplay" style="display:none;">
-        <h4 style="color:#00ff64;">TODAY'S TASK COMPLETED!</h4>
-        <p style="font-size:12px; color:#aaa;">Next tasks available in:</p>
-        <h2 id="countdown" style="color:var(--primary-gold);">00:00:00</h2>
+        <i class="fas fa-check-circle" style="font-size:50px; color:#00ff64; margin-bottom:10px;"></i>
+        <h4 style="color:#00ff64; margin:5px;">ALL TASKS DONE!</h4>
+        <p style="font-size:12px; color:#aaa;">New tasks will be ready in:</p>
+        <h2 id="countdown" style="color:var(--primary-gold); margin:10px 0;">00:00:00</h2>
+    </div>
+</div>
+
+<div id="miningSection" style="display:none; padding: 0 20px;">
+    <div class="card" style="border: 2px solid #00ff64; background: rgba(0,255,100,0.05);">
+        <i class="fas fa-coins fa-bounce" style="font-size:40px; color:#00ff64; margin-bottom:10px;"></i>
+        <h3 style="margin:5px;">EARNING READY!</h3>
+        <button class="btn" style="background:#00ff64;" onclick="startMining()">ADD TO BALANCE</button>
     </div>
 </div>
 
 <div class="card">
-    <h3><i class="fas fa-gift"></i> REFERRAL BONUSES</h3>
-    
-    <div class="product-box" style="text-align: left;">
-        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
-        <span class="bonus-tag">$1.00</span>
-        <b>Invite 5 Active Users</b>
-        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(5, 1)">CLAIM BONUS</button>
-    </div>
+    <h3 style="margin-top:0;"><i class="fas fa-gift"></i> EXTRA BONUSES</h3>
+    <div style="display:grid; gap:10px;">
+        <div class="product-box" style="text-align: left; padding:15px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+                <div class="battery-container"><div class="battery-level"></div></div>
+                <small>Invite 5 Users</small>
+            </div>
+            <span class="bonus-tag">$1.00</span>
+            <button onclick="claimBonus(5, 1)" style="border:none; background:var(--gold-grad); padding:5px 10px; border-radius:5px; font-size:10px; font-weight:bold;">CLAIM</button>
+        </div>
 
-    <div class="product-box" style="text-align: left;">
-        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
-        <span class="bonus-tag">$3.00</span>
-        <b>Invite 10 Active Users</b>
-        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(10, 3)">CLAIM BONUS</button>
+        <div class="product-box" style="text-align: left; padding:15px; display:flex; align-items:center; justify-content:space-between;">
+            <div>
+                <div class="battery-container"><div class="battery-level"></div></div>
+                <small>Invite 10 Users</small>
+            </div>
+            <span class="bonus-tag">$3.00</span>
+            <button onclick="claimBonus(10, 3)" style="border:none; background:var(--gold-grad); padding:5px 10px; border-radius:5px; font-size:10px; font-weight:bold;">CLAIM</button>
+        </div>
     </div>
-
-    <div class="product-box" style="text-align: left;">
-        <div class="battery-container" style="float:left; margin-right:10px;"> <div class="battery-level"></div> </div>
-        <span class="bonus-tag">$10.00</span>
-        <b>Invite 20 Active Users</b>
-        <button class="btn" style="padding:8px; font-size:12px;" onclick="claimBonus(20, 10)">CLAIM BONUS</button>
-    </div>
-</div>
-
-<div class="card" id="miningSection" style="display:none;">
-    <div style="font-size:40px; color:var(--primary-gold); margin-bottom:15px;"><i class="fas fa-microchip fa-spin"></i></div>
-    <h3>AI MINING READY</h3>
-    <button class="btn" onclick="startMining()">CLAIM DAILY EARNING</button>
 </div>
 
 <nav class="nav-bar">
@@ -101,25 +105,29 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    const firebaseConfig = { /* Your Config Here */ };
+    const firebaseConfig = { /* اپنی کنفیگ یہاں ڈالیں */ };
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const username = localStorage.getItem('userPhone');
 
     let requiredTasks = 5;
     let doneTasks = 0;
-    const products = ["iPhone 15", "Samsung S24", "MacBook", "Apple Watch"];
+    const items = [
+        {name: "IPHONE 15", icon: "fa-mobile-alt"},
+        {name: "SMART WATCH", icon: "fa-stopwatch"},
+        {name: "LAPTOP PRO", icon: "fa-laptop"},
+        {name: "HEADPHONES", icon: "fa-headphones"},
+        {name: "TABLET Z", icon: "fa-tablet-alt"}
+    ];
 
     async function checkStatus() {
         const snap = await get(ref(db, 'users/' + username));
         if (snap.exists()) {
             const user = snap.val();
             const lastClaim = user.lastClaim || 0;
-            const now = Date.now();
-            
-            if (now - lastClaim < 24 * 60 * 60 * 1000) {
+            if (Date.now() - lastClaim < 24 * 60 * 60 * 1000) {
                 showTimer(lastClaim);
             } else {
                 loadNewTask();
@@ -127,24 +135,17 @@
         }
     }
 
-    function showTimer(lastClaim) {
-        document.getElementById('taskContent').style.display = 'none';
-        document.getElementById('timerDisplay').style.display = 'block';
-        
-        setInterval(() => {
-            const now = Date.now();
-            const timeLeft = (lastClaim + 24*60*60*1000) - now;
-            if(timeLeft <= 0) location.reload();
-            
-            const h = Math.floor(timeLeft / 3600000);
-            const m = Math.floor((timeLeft % 3600000) / 60000);
-            const s = Math.floor((timeLeft % 60000) / 1000);
-            document.getElementById('countdown').innerText = `${h}h ${m}m ${s}s`;
-        }, 1000);
+    function loadNewTask() {
+        const item = items[Math.floor(Math.random()*items.length)];
+        document.getElementById('productName').innerText = item.name;
+        document.getElementById('pIcon').className = `fas ${item.icon} product-icon`;
+        document.getElementById('progressMsg').innerText = `Progress: ${doneTasks} / ${requiredTasks}`;
     }
 
     window.submitTask = function() {
-        if(!document.getElementById('priceInput').value) return alert("Enter Price!");
+        const val = document.getElementById('priceInput').value;
+        if(!val || val < 10) return alert("Please enter a valid price!");
+        
         doneTasks++;
         if(doneTasks >= requiredTasks) {
             document.getElementById('taskSection').style.display = 'none';
@@ -158,40 +159,30 @@
     window.startMining = async function() {
         const snap = await get(ref(db, 'users/' + username));
         const user = snap.val();
-        const profit = user.plan === "Free" ? 0.50 : 2.50; // پیکج کے مطابق
+        const earn = user.dailyEarning || 0.50;
         
         await update(ref(db, 'users/' + username), {
-            balance: (user.balance || 0) + profit,
+            balance: (user.balance || 0) + earn,
             lastClaim: Date.now()
         });
-        alert("Daily Profit Added!");
+        alert(`$${earn} added to your balance!`);
         location.reload();
     };
 
-    window.claimBonus = async function(reqMembers, reward) {
-        const snap = await get(ref(db, 'users/' + username));
-        const user = snap.val();
-        
-        // اصلی ریفرل کاؤنٹ چیک کریں
-        const allUsers = await get(ref(db, 'users'));
-        let count = 0;
-        allUsers.forEach(u => { if(u.val().referBy === username) count++; });
-
-        if(count >= reqMembers) {
-            await update(ref(db, 'users/' + username), {
-                balance: (user.balance || 0) + reward
-            });
-            alert(`Congrats! $${reward} Bonus Added.`);
-        } else {
-            alert(`You need ${reqMembers} active referrals. Current: ${count}`);
-        }
-    };
+    function showTimer(lastClaim) {
+        document.getElementById('taskContent').style.display = 'none';
+        document.getElementById('timerDisplay').style.display = 'block';
+        setInterval(() => {
+            const timeLeft = (lastClaim + 86400000) - Date.now();
+            if(timeLeft <= 0) location.reload();
+            const h = Math.floor(timeLeft / 3600000);
+            const m = Math.floor((timeLeft % 3600000) / 60000);
+            const s = Math.floor((timeLeft % 60000) / 1000);
+            document.getElementById('countdown').innerText = `${h}h ${m}m ${s}s`;
+        }, 1000);
+    }
 
     window.onload = checkStatus;
-    function loadNewTask() {
-        document.getElementById('productName').innerText = products[Math.floor(Math.random()*products.length)];
-        document.getElementById('progressMsg').innerText = `Progress: ${doneTasks} / ${requiredTasks}`;
-    }
 </script>
 </body>
 </html>
