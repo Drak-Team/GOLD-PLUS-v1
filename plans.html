@@ -22,10 +22,10 @@
         .stat-box { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
         .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; }
         .stat-box span { font-size: 14px; font-weight: 700; color: var(--neon-green); }
-        .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .buy-btn.deposit { background: linear-gradient(90deg, #3498db, #2980b9); color: white; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
-        .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; }
+        .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; font-size: 10px; }
         .nav-btn.active { color: var(--gold); }
     </style>
 </head>
@@ -39,7 +39,8 @@
         <div><b>USDT CRYPTO BONUS!</b><p style="font-size: 10px; margin:0;">بیلنس کے مطابق انویسٹ کریں اور آٹومیٹک مائننگ شروع کریں۔</p></div>
     </div>
     <div class="section-title">Investment Plans</div>
-    <div id="plansList"></div>
+    <div id="plansList">
+        </div>
 </div>
 
 <nav class="nav-bar">
@@ -58,10 +59,7 @@
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         authDomain: "gold-plus-v1.firebaseapp.com",
         databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-        projectId: "gold-plus-v1",
-        storageBucket: "gold-plus-v1.firebasestorage.app",
-        messagingSenderId: "474592887487",
-        appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+        projectId: "gold-plus-v1"
     };
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
@@ -81,11 +79,10 @@
         {id: 500, name: "Emperor Robot", rs: "150,000", daily: "20,000", bonus: "15%"}
     ];
 
-    db.ref('users/' + phone).on('value', (snap) => {
-        const balance = parseFloat(snap.val()?.balance || 0);
+    // 1. فوری رینڈرنگ (بغیر فائر بیس کے انتظار کے)
+    function renderPlans() {
         let html = "";
         plans.forEach(plan => {
-            let isAffordable = balance >= plan.id;
             html += `
                 <div class="plan-card">
                     <i class="fas fa-robot robot-bg"></i>
@@ -96,13 +93,33 @@
                         <div class="stat-box"><label>Daily Earning</label><span>Rs. ${plan.daily}</span></div>
                         <div class="stat-box"><label>Life</label><span style="color:#fff;">30 Days</span></div>
                     </div>
-                    <button class="buy-btn ${isAffordable ? '' : 'deposit'}" 
-                            onclick="${isAffordable ? `investNow(${plan.id}, '${plan.name}')` : `window.location.href='deposit.html?amount=${plan.id}'`}">
-                        ${isAffordable ? 'Invest Now' : 'Deposit Now'}
+                    <button id="btn-${plan.id}" class="buy-btn" onclick="window.location.href='deposit.html?amount=${plan.id}'">
+                        Loading...
                     </button>
                 </div>`;
         });
         document.getElementById('plansList').innerHTML = html;
+    }
+
+    renderPlans(); // پیج کھلتے ہی کال کریں
+
+    // 2. فائر بیس سے صرف بیلنس چیک کر کے بٹن اپ ڈیٹ کریں
+    db.ref('users/' + phone).on('value', (snap) => {
+        const balance = parseFloat(snap.val()?.balance || 0);
+        plans.forEach(plan => {
+            const btn = document.getElementById(`btn-${plan.id}`);
+            if (btn) {
+                if (balance >= plan.id) {
+                    btn.innerText = "Invest Now";
+                    btn.className = "buy-btn";
+                    btn.onclick = () => investNow(plan.id, plan.name);
+                } else {
+                    btn.innerText = "Deposit Now";
+                    btn.className = "buy-btn deposit";
+                    btn.onclick = () => window.location.href = `deposit.html?amount=${plan.id}`;
+                }
+            }
+        });
     });
 
     async function investNow(cost, pName) {
@@ -110,6 +127,8 @@
         try {
             const snap = await db.ref('users/' + phone).once('value');
             const currentBal = parseFloat(snap.val().balance || 0);
+            if(currentBal < cost) { alert("Insufficient Balance!"); return; }
+            
             await db.ref('users/' + phone).update({
                 balance: (currentBal - cost).toFixed(2),
                 plan: pName,
