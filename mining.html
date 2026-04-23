@@ -1,73 +1,104 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Professional Mining</title>
+    <title>Gold Plus - Professional Mining & Rewards</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
-        .header { padding: 30px 20px; background: rgba(0,0,0,0.4); text-align: center; border-bottom: 2px solid var(--primary-gold); }
-        .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(241, 196, 15, 0.15); margin: 15px; padding: 20px; border-radius: 25px; backdrop-filter: blur(15px); text-align: center; }
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--primary-gold); overflow: hidden; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn:disabled { background: #444; color: #888; cursor: not-allowed; }
-        .btn-locked { background: #e74c3c !important; color: white !important; }
-        .battery-box { width: 40px; height: 18px; border: 2px solid #fff; border-radius: 3px; position: relative; margin-right: 10px; display: inline-block; vertical-align: middle; }
-        .battery-fill { height: 100%; background: #00ff64; width: 100%; animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-        .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 12px; border-left: 3px solid var(--primary-gold); }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; flex: 1; font-size: 10px; }
-        .nav-btn.active { color: #f1c40f; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 90px; overflow-x: hidden; }
+        
+        /* Fast Header */
+        .header { padding: 25px 20px; background: rgba(0,0,0,0.5); text-align: center; border-bottom: 2px solid var(--primary-gold); }
+        .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
+
+        /* Ad Display Section */
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; cursor: pointer; }
+        iframe { width: 100%; height: 100%; border: none; pointer-events: none; } /* Prevents direct YT clicks */
+        
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
+        .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        /* Rewards UI */
+        .reward-title { text-align: left; font-size: 14px; color: var(--primary-gold); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.4); padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--primary-gold); }
+        .battery-box { width: 30px; height: 14px; border: 1.5px solid #fff; border-radius: 2px; position: relative; display: inline-block; margin-right: 8px; vertical-align: middle; }
+        .battery-fill { height: 100%; background: #00ff64; width: 100%; animation: charge 1.5s infinite; }
+        @keyframes charge { 50% { opacity: 0.4; } }
+
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(251, 196, 15, 0.1); z-index: 100; }
+        .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; font-size: 11px; }
+        .nav-btn.active { color: var(--primary-gold); }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h2 style="color:var(--primary-gold); margin:0;">GOLD PLUS WORKSTATION</h2>
-    <p id="topStatus" style="font-size:11px; color:#aaa; margin-top:5px;">ڈیلی ٹاسک مکمل کریں</p>
+    <h2 style="color:var(--primary-gold); margin:0; letter-spacing: 1px;">GOLD PLUS</h2>
+    <p style="font-size:11px; color:#aaa; margin:5px 0 0 0;">انویسٹ کریں اور روزانہ کمائیں</p>
 </div>
 
-<div class="card" id="mainContainer">
-    <div id="lockScreen" style="display:none;">
+<div class="card" id="taskArea">
+    <div id="activeWork" style="display:none;">
+        <div class="video-box" id="playerWrapper" onclick="checkLock()">
+            <div id="player"></div>
+        </div>
+        <div id="adCounter" style="text-align: center; margin: 15px 0; font-weight: bold; color: var(--primary-gold);">
+            Task Progress: 1 / 5
+        </div>
+        <button class="btn" id="nextBtn" onclick="nextStep()" disabled>Wait 30s</button>
+    </div>
+
+    <div id="lockScreen" style="display:none; text-align: center; padding: 20px 0;">
         <i class="fas fa-lock" style="font-size:50px; color:#e74c3c; margin-bottom:15px;"></i>
-        <h3>پیکج ایکٹیو نہیں ہے</h3>
-        <p style="font-size:13px; color:#aaa;">ایڈز دیکھنے کے لیے پہلے کوئی بھی پیکج بائے (Buy) کریں</p>
-        <button class="btn btn-locked" onclick="window.location.href='dashboard.html'">پیکج ایکٹیو کریں</button>
+        <h3 style="margin:0;">پیکج ایکٹیو نہیں ہے</h3>
+        <p style="font-size:12px; color:#aaa; margin: 10px 0 20px 0;">ایڈز دیکھنے کے لیے پہلے کوئی بھی پلان ایکٹیو کریں</p>
+        <button class="btn" onclick="window.location.href='plans.html'">پلان ایکٹیو کریں</button>
     </div>
 
-    <div id="adArea" style="display:none;">
-        <div class="video-box" id="player"></div>
-        <div id="adCounter" style="margin:10px 0; font-weight:bold; color:var(--primary-gold); font-size:18px;">Ad: 1 / 5</div>
-        <button class="btn" id="nextBtn" onclick="handleNext()" disabled>Wait 30s</button>
+    <div id="timerScreen" style="display:none; text-align: center;">
+        <i class="fas fa-history" style="font-size:40px; color:var(--primary-gold); margin-bottom:10px;"></i>
+        <h2 id="timerDisplay" style="font-size:35px; margin:5px;">00:00:00</h2>
+        <p style="font-size:12px; color:#888;">آپ آج کا ٹاسک مکمل کر چکے ہیں</p>
     </div>
 
-    <div id="claimArea" style="display:none;">
-        <i class="fas fa-coins" style="font-size:50px; color:#00ff64; margin-bottom:10px;"></i>
-        <h3>تمام ایڈز مکمل!</h3>
-        <button class="btn" style="background:#00ff64;" onclick="claimReward()">رقم وصول کریں</button>
-    </div>
-
-    <div id="timerArea" style="display:none;">
-        <h2 id="countdown" style="color:var(--primary-gold); font-size:35px;">00:00:00</h2>
-        <p>اگلا ٹاسک 24 گھنٹے بعد ملے گا</p>
+    <div id="claimArea" style="display:none; text-align: center;">
+        <i class="fas fa-gift" style="font-size:50px; color:#00ff64; margin-bottom:15px;"></i>
+        <h3>مبارک ہو! ٹاسک مکمل</h3>
+        <button class="btn" style="background:#00ff64;" onclick="finishDaily()">ارننگ کلیم کریں</button>
     </div>
 </div>
 
 <div class="card">
-    <h3 style="text-align:left; font-size:15px;"><i class="fas fa-users-gear"></i> TEAM LEADER REWARDS</h3>
-    <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">10 Active Members</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$5.00</div>
-        <button class="btn" style="width:70px; padding:6px; font-size:10px; background:#444; color:#888;" disabled>CLAIM</button>
+    <div class="reward-title">
+        <i class="fas fa-trophy"></i> 
+        <span>TEAM LEADER REWARDS (Extra Bonus)</span>
     </div>
+
     <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">20 Active Members</span></div>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">5 Active Referrals</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$1.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
+    </div>
+
+    <div class="refer-row">
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">10 Active Referrals</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$5.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
+    </div>
+
+    <div class="refer-row">
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">20 Active Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$10.00</div>
-        <button class="btn" style="width:70px; padding:6px; font-size:10px; background:#444; color:#888;" disabled>CLAIM</button>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
+    </div>
+
+    <div class="refer-row">
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">50 Active Referrals</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$50.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
     </div>
 </div>
 
@@ -92,90 +123,84 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    let currentStep = 0;
-    // مختلف انویسٹمنٹ اور ایڈز والی ویڈیوز
-    const ads = ["dQw4w9WgXcQ", "3p19F1N9Vms", "9xwazD5SyVg", "z9O0yW8nK_Y", "LhC55I5vMow"];
+    let currentAd = 0;
+    const vids = ["3p19F1N9Vms", "9xwazD5SyVg", "z9O0yW8nK_Y", "LhC55I5vMow", "dQw4w9WgXcQ"];
+    let hasPackage = false;
 
-    async function checkAccess() {
+    async function init() {
         if(!userPhone) return;
         const snap = await get(ref(db, 'users/' + userPhone));
-        if(snap.exists()) {
-            const data = snap.val();
+        if(snap.exists()){
+            const d = snap.val();
             
-            // اگر پیکج ایکٹیو نہیں ہے تو لاک دکھائیں
-            if(!data.activePackage || data.activePackage === "") {
+            // Check Package Activity First
+            if(!d.activePackage) {
                 document.getElementById('lockScreen').style.display = 'block';
                 return;
             }
-
-            // اگر 24 گھنٹے نہیں ہوئے تو ٹائمر دکھائیں
-            const last = data.lastClaim || 0;
+            
+            hasPackage = true;
+            const last = d.lastClaim || 0;
+            // Check 24hr Timer
             if(Date.now() - last < 86400000) {
-                showTimer(last);
+                runTimer(last);
             } else {
-                document.getElementById('adArea').style.display = 'block';
-                loadStep();
+                document.getElementById('activeWork').style.display = 'block';
+                loadAd();
             }
         }
     }
 
-    function loadStep() {
-        if(currentStep >= 5) {
-            document.getElementById('adArea').style.display = 'none';
+    function loadAd() {
+        if(currentAd >= 5) {
+            document.getElementById('activeWork').style.display = 'none';
             document.getElementById('claimArea').style.display = 'block';
             return;
         }
-
-        const vid = ads[currentStep];
-        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&controls=0&mute=1&rel=0"></iframe>`;
-        document.getElementById('adCounter').innerText = `Ad: ${currentStep + 1} / 5`;
+        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${vids[currentAd]}?autoplay=1&mute=1&controls=0&rel=0&disablekb=1"></iframe>`;
+        document.getElementById('adCounter').innerText = `Task Progress: ${currentAd + 1} / 5`;
         
-        let sec = 30;
+        let time = 30;
         const btn = document.getElementById('nextBtn');
         btn.disabled = true;
-        const t = setInterval(() => {
-            sec--;
-            btn.innerText = `Wait (${sec}s)`;
-            if(sec <= 0) {
-                clearInterval(t);
-                btn.disabled = false;
-                btn.innerText = "Next Ad";
-            }
+        const clock = setInterval(() => {
+            time--;
+            btn.innerText = `Wait (${time}s)`;
+            if(time <= 0) { clearInterval(clock); btn.disabled = false; btn.innerText = "Next Ad"; }
         }, 1000);
     }
 
-    window.handleNext = () => {
-        currentStep++;
-        loadStep();
+    window.nextStep = () => { currentAd++; loadAd(); };
+
+    window.checkLock = () => {
+        if(!hasPackage) window.location.href = 'plans.html';
     };
 
-    window.claimReward = async () => {
+    window.finishDaily = async () => {
         const snap = await get(ref(db, 'users/' + userPhone));
-        const data = snap.val();
-        const pkg = data.activePackage;
-        const rates = { "600": 30, "2000": 100, "5000": 250, "10000": 550 };
+        const d = snap.val();
+        const incomeMap = { "600": 30, "2000": 100, "5000": 250, "10000": 550 };
         
         await update(ref(db, 'users/' + userPhone), {
-            balance: (data.balance || 0) + (rates[pkg] || 5),
+            balance: (d.balance || 0) + (incomeMap[d.activePackage] || 5),
             lastClaim: Date.now()
         });
-        alert("Success! Earnings added.");
         location.reload();
     };
 
-    function showTimer(last) {
-        document.getElementById('timerArea').style.display = 'block';
+    function runTimer(last) {
+        document.getElementById('timerScreen').style.display = 'block';
         setInterval(() => {
             const left = (last + 86400000) - Date.now();
             if(left <= 0) location.reload();
             const h = Math.floor(left/3600000).toString().padStart(2,'0');
             const m = Math.floor((left%3600000)/60000).toString().padStart(2,'0');
             const s = Math.floor((left%60000)/1000).toString().padStart(2,'0');
-            document.getElementById('countdown').innerText = `${h}:${m}:${s}`;
+            document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    window.onload = checkAccess;
+    window.onload = init;
 </script>
 </body>
 </html>
