@@ -3,31 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Mining & Team Reward</title>
+    <title>Gold Plus - Professional Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
-        
-        .header { padding: 30px 20px; background: rgba(0,0,0,0.4); text-align: center; border-radius: 0 0 35px 35px; border-bottom: 2px solid var(--primary-gold); }
+        .header { padding: 30px 20px; background: rgba(0,0,0,0.4); text-align: center; border-bottom: 2px solid var(--primary-gold); }
         .card { background: rgba(255,255,255,0.06); border: 1px solid rgba(241, 196, 15, 0.15); margin: 15px; padding: 20px; border-radius: 25px; backdrop-filter: blur(15px); text-align: center; }
-        
-        /* Ad Player */
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--primary-gold); overflow: hidden; position: relative; }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--primary-gold); overflow: hidden; }
         iframe { width: 100%; height: 100%; border: none; }
-
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .btn:disabled { background: #444; color: #888; cursor: not-allowed; }
-
-        /* Battery Section */
+        .btn-locked { background: #e74c3c !important; color: white !important; }
         .battery-box { width: 40px; height: 18px; border: 2px solid #fff; border-radius: 3px; position: relative; margin-right: 10px; display: inline-block; vertical-align: middle; }
-        .battery-fill { height: 100%; background: #00ff64; width: 60%; animation: charge 2s infinite; }
-        .battery-box::after { content: ''; position: absolute; right: -5px; top: 4px; width: 3px; height: 8px; background: #fff; }
-        @keyframes charge { 0% { opacity: 0.3; } 100% { opacity: 1; } }
-
+        .battery-fill { height: 100%; background: #00ff64; width: 100%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
         .refer-row { display: flex; align-items: center; justify-content: space-between; background: rgba(0,0,0,0.3); padding: 15px; border-radius: 15px; margin-bottom: 12px; border-left: 3px solid var(--primary-gold); }
-        .btn-vip-lock { background: rgba(255,255,255,0.1) !important; color: rgba(255,255,255,0.3) !important; cursor: not-allowed; width: 70px; padding: 8px; font-size: 10px; }
-
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 10px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; flex: 1; font-size: 10px; }
         .nav-btn.active { color: #f1c40f; }
@@ -36,41 +27,47 @@
 <body>
 
 <div class="header">
-    <h2 style="color:var(--primary-gold); margin:0;">GOLD PLUS MINING</h2>
-    <p id="statusText" style="font-size:12px; color:#aaa; margin-top:5px;">ایڈز دیکھیں اور ارننگ کلیم کریں</p>
+    <h2 style="color:var(--primary-gold); margin:0;">GOLD PLUS WORKSTATION</h2>
+    <p id="topStatus" style="font-size:11px; color:#aaa; margin-top:5px;">ڈیلی ٹاسک مکمل کریں</p>
 </div>
 
-<div class="card" id="taskSection">
-    <div id="adContainer">
-        <div class="video-box" id="videoPlayer">
-            </div>
-        <p id="progText" style="font-weight:bold; color:var(--primary-gold);">Progress: 0 / 5</p>
-        <button class="btn" id="nextBtn" onclick="nextAd()" disabled>Wait 30s</button>
+<div class="card" id="mainContainer">
+    <div id="lockScreen" style="display:none;">
+        <i class="fas fa-lock" style="font-size:50px; color:#e74c3c; margin-bottom:15px;"></i>
+        <h3>پیکج ایکٹیو نہیں ہے</h3>
+        <p style="font-size:13px; color:#aaa;">ایڈز دیکھنے کے لیے پہلے کوئی بھی پیکج بائے (Buy) کریں</p>
+        <button class="btn btn-locked" onclick="window.location.href='dashboard.html'">پیکج ایکٹیو کریں</button>
+    </div>
+
+    <div id="adArea" style="display:none;">
+        <div class="video-box" id="player"></div>
+        <div id="adCounter" style="margin:10px 0; font-weight:bold; color:var(--primary-gold); font-size:18px;">Ad: 1 / 5</div>
+        <button class="btn" id="nextBtn" onclick="handleNext()" disabled>Wait 30s</button>
     </div>
 
     <div id="claimArea" style="display:none;">
-        <i class="fas fa-check-circle" style="font-size:50px; color:#00ff64; margin-bottom:10px;"></i>
-        <h3>ٹاسک مکمل!</h3>
-        <button class="btn" style="background:#00ff64;" onclick="processClaim()">کلیم ارننگ</button>
+        <i class="fas fa-coins" style="font-size:50px; color:#00ff64; margin-bottom:10px;"></i>
+        <h3>تمام ایڈز مکمل!</h3>
+        <button class="btn" style="background:#00ff64;" onclick="claimReward()">رقم وصول کریں</button>
     </div>
 
     <div id="timerArea" style="display:none;">
-        <h2 id="countdown" style="color:var(--primary-gold); font-size:30px;">00:00:00</h2>
-        <p>بعد دوبارہ آئیں</p>
+        <h2 id="countdown" style="color:var(--primary-gold); font-size:35px;">00:00:00</h2>
+        <p>اگلا ٹاسک 24 گھنٹے بعد ملے گا</p>
     </div>
 </div>
 
 <div class="card">
-    <h3 style="text-align:left; font-size:16px; margin-bottom:15px;"><i class="fas fa-award"></i> TEAM LEADER REWARDS</h3>
+    <h3 style="text-align:left; font-size:15px;"><i class="fas fa-users-gear"></i> TEAM LEADER REWARDS</h3>
     <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px;">5 Active Referrals</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$1.00</div>
-        <button class="btn-vip-lock">CLAIM</button>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">10 Active Members</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$5.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:10px; background:#444; color:#888;" disabled>CLAIM</button>
     </div>
     <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:12px;">20 Active Referrals</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$5.00</div>
-        <button class="btn-vip-lock">CLAIM</button>
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">20 Active Members</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$10.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:10px; background:#444; color:#888;" disabled>CLAIM</button>
     </div>
 </div>
 
@@ -95,58 +92,71 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    let currentAdIndex = 0;
-    const adLinks = ["dQw4w9WgXcQ", "dQw4w9WgXcQ", "dQw4w9WgXcQ", "dQw4w9WgXcQ", "dQw4w9WgXcQ"]; // یہاں اپنی یوٹیوب ویڈیو آئی ڈیز ڈالیں
+    let currentStep = 0;
+    // مختلف انویسٹمنٹ اور ایڈز والی ویڈیوز
+    const ads = ["dQw4w9WgXcQ", "3p19F1N9Vms", "9xwazD5SyVg", "z9O0yW8nK_Y", "LhC55I5vMow"];
 
-    async function init() {
+    async function checkAccess() {
         if(!userPhone) return;
         const snap = await get(ref(db, 'users/' + userPhone));
         if(snap.exists()) {
-            const last = snap.val().lastClaim || 0;
+            const data = snap.val();
+            
+            // اگر پیکج ایکٹیو نہیں ہے تو لاک دکھائیں
+            if(!data.activePackage || data.activePackage === "") {
+                document.getElementById('lockScreen').style.display = 'block';
+                return;
+            }
+
+            // اگر 24 گھنٹے نہیں ہوئے تو ٹائمر دکھائیں
+            const last = data.lastClaim || 0;
             if(Date.now() - last < 86400000) {
                 showTimer(last);
             } else {
-                loadAd();
+                document.getElementById('adArea').style.display = 'block';
+                loadStep();
             }
         }
     }
 
-    function loadAd() {
-        if(currentAdIndex >= 5) {
-            document.getElementById('adContainer').style.display = 'none';
+    function loadStep() {
+        if(currentStep >= 5) {
+            document.getElementById('adArea').style.display = 'none';
             document.getElementById('claimArea').style.display = 'block';
             return;
         }
 
-        const vid = adLinks[currentAdIndex];
-        // Correct Embed Link to fix the error in screenshot
-        document.getElementById('videoPlayer').innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&controls=0&mute=1&rel=0"></iframe>`;
+        const vid = ads[currentStep];
+        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${vid}?autoplay=1&controls=0&mute=1&rel=0"></iframe>`;
+        document.getElementById('adCounter').innerText = `Ad: ${currentStep + 1} / 5`;
         
         let sec = 30;
         const btn = document.getElementById('nextBtn');
         btn.disabled = true;
-        
-        const timer = setInterval(() => {
+        const t = setInterval(() => {
             sec--;
             btn.innerText = `Wait (${sec}s)`;
             if(sec <= 0) {
-                clearInterval(timer);
+                clearInterval(t);
                 btn.disabled = false;
                 btn.innerText = "Next Ad";
             }
         }, 1000);
     }
 
-    window.nextAd = () => { currentAdIndex++; loadAd(); };
+    window.handleNext = () => {
+        currentStep++;
+        loadStep();
+    };
 
-    window.processClaim = async () => {
+    window.claimReward = async () => {
         const snap = await get(ref(db, 'users/' + userPhone));
         const data = snap.val();
-        const pkg = data.activePackage || "free";
-        const earnings = { "600": 30, "2000": 100, "5000": 250, "free": 5 };
+        const pkg = data.activePackage;
+        const rates = { "600": 30, "2000": 100, "5000": 250, "10000": 550 };
         
         await update(ref(db, 'users/' + userPhone), {
-            balance: (data.balance || 0) + (earnings[pkg] || 5),
+            balance: (data.balance || 0) + (rates[pkg] || 5),
             lastClaim: Date.now()
         });
         alert("Success! Earnings added.");
@@ -154,19 +164,18 @@
     };
 
     function showTimer(last) {
-        document.getElementById('adContainer').style.display = 'none';
         document.getElementById('timerArea').style.display = 'block';
         setInterval(() => {
             const left = (last + 86400000) - Date.now();
             if(left <= 0) location.reload();
-            const h = Math.floor(left/3600000);
-            const m = Math.floor((left%3600000)/60000);
-            const s = Math.floor((left%60000)/1000);
+            const h = Math.floor(left/3600000).toString().padStart(2,'0');
+            const m = Math.floor((left%3600000)/60000).toString().padStart(2,'0');
+            const s = Math.floor((left%60000)/1000).toString().padStart(2,'0');
             document.getElementById('countdown').innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
 
-    window.onload = init;
+    window.onload = checkAccess;
 </script>
 </body>
 </html>
