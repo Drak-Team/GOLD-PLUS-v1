@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 90px; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; overflow-x: hidden; }
         
         /* Fast Header */
         .header { padding: 25px 20px; background: rgba(0,0,0,0.5); text-align: center; border-bottom: 2px solid var(--primary-gold); }
@@ -15,7 +15,7 @@
 
         /* Ad Display Section */
         .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; cursor: pointer; }
-        iframe { width: 100%; height: 100%; border: none; pointer-events: none; } /* Prevents direct YT clicks */
+        iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
         
         .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
@@ -27,10 +27,11 @@
         .battery-fill { height: 100%; background: #00ff64; width: 100%; animation: charge 1.5s infinite; }
         @keyframes charge { 50% { opacity: 0.4; } }
 
-        /* Navigation */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(251, 196, 15, 0.1); z-index: 100; }
-        .nav-btn { color: #555; text-decoration: none; text-align: center; flex: 1; font-size: 11px; }
+        /* Professional Navigation - Updated to Match Theme */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: var(--primary-gold); }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -74,7 +75,7 @@
 <div class="card">
     <div class="reward-title">
         <i class="fas fa-trophy"></i> 
-        <span>TEAM LEADER REWARDS (Extra Bonus)</span>
+        <span>TEAM LEADER REWARDS</span>
     </div>
 
     <div class="refer-row">
@@ -88,24 +89,14 @@
         <div style="color:#00ff64; font-weight:bold;">$5.00</div>
         <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
     </div>
-
-    <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">20 Active Referrals</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$10.00</div>
-        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
-    </div>
-
-    <div class="refer-row">
-        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">50 Active Referrals</span></div>
-        <div style="color:#00ff64; font-weight:bold;">$50.00</div>
-        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
-    </div>
 </div>
 
 <nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i><span>Home</span></a>
-    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i><span>Earn</span></a>
-    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i><span>Refer</span></a>
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
 </nav>
 
 <script type="module">
@@ -132,16 +123,12 @@
         const snap = await get(ref(db, 'users/' + userPhone));
         if(snap.exists()){
             const d = snap.val();
-            
-            // Check Package Activity First
-            if(!d.activePackage) {
+            if(!d.plan && !d.activePackage) {
                 document.getElementById('lockScreen').style.display = 'block';
                 return;
             }
-            
             hasPackage = true;
             const last = d.lastClaim || 0;
-            // Check 24hr Timer
             if(Date.now() - last < 86400000) {
                 runTimer(last);
             } else {
@@ -171,18 +158,13 @@
     }
 
     window.nextStep = () => { currentAd++; loadAd(); };
-
-    window.checkLock = () => {
-        if(!hasPackage) window.location.href = 'plans.html';
-    };
+    window.checkLock = () => { if(!hasPackage) window.location.href = 'plans.html'; };
 
     window.finishDaily = async () => {
         const snap = await get(ref(db, 'users/' + userPhone));
         const d = snap.val();
-        const incomeMap = { "600": 30, "2000": 100, "5000": 250, "10000": 550 };
-        
         await update(ref(db, 'users/' + userPhone), {
-            balance: (d.balance || 0) + (incomeMap[d.activePackage] || 5),
+            balance: (parseFloat(d.balance) || 0) + 1.00, // Example earn
             lastClaim: Date.now()
         });
         location.reload();
@@ -199,7 +181,6 @@
             document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
-
     window.onload = init;
 </script>
 </body>
