@@ -1,195 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mining Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Volt Mining</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- Google Font -->
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold-primary: #f7a21b;
+            --dark-bg: #0b0618;
+            --card-bg: #1a1230;
+            --gold-grad: linear-gradient(135deg, #f7a21b, #ff7b00);
+        }
 
-<style>
-body{
-    margin:0;
-    font-family:'Poppins',sans-serif;
-    background:#0b0618;
-    color:#fff;
-}
+        body {
+            margin: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark-bg);
+            color: #fff;
+            padding-bottom: 100px;
+        }
 
-/* HEADER */
-.header{
-    background:linear-gradient(135deg,#f7a21b,#ff7b00);
-    padding:20px;
-    border-bottom-left-radius:25px;
-    border-bottom-right-radius:25px;
-}
-.header h2{
-    margin:0;
-}
-.flex{
-    display:flex;
-    justify-content:space-between;
-}
+        /* VIP Header Area */
+        .vip-card {
+            background: var(--gold-grad);
+            margin: 15px;
+            padding: 20px;
+            border-radius: 20px;
+            color: #000;
+        }
+        .vip-card .flex-row { display: flex; justify-content: space-between; align-items: center; }
+        .vip-card h2 { margin: 5px 0; font-size: 28px; }
 
-/* CARDS */
-.card{
-    background:#1a1230;
-    margin:10px;
-    padding:15px;
-    border-radius:15px;
-    box-shadow:0 0 15px rgba(255,165,0,0.2);
-}
+        /* Stats Row */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 0 15px; }
+        .mini-card { background: var(--card-bg); padding: 15px; border-radius: 15px; border: 1px solid rgba(247, 162, 27, 0.1); }
+        .mini-card h4 { margin: 0; color: var(--gold-primary); }
+        .mini-card p { margin: 5px 0 0; font-size: 12px; color: #aaa; }
 
-/* BOT SECTION */
-.bot{
-    text-align:center;
-    position:relative;
-}
-.bot img{
-    width:140px;
-    animation: float 3s ease-in-out infinite;
-}
-@keyframes float{
-    0%{transform:translateY(0);}
-    50%{transform:translateY(-10px);}
-    100%{transform:translateY(0);}
-}
+        /* Main Robot Section */
+        .robot-section {
+            text-align: center;
+            margin: 20px 15px;
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 20px;
+            position: relative;
+        }
+        .robot-img {
+            width: 180px;
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 10px 15px rgba(247, 162, 27, 0.3));
+        }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
 
-/* GLOW COINS */
-.coin{
-    position:absolute;
-    width:10px;
-    height:10px;
-    background:gold;
-    border-radius:50%;
-    animation: fall 2s linear infinite;
-}
-@keyframes fall{
-    0%{top:0;opacity:1;}
-    100%{top:100px;opacity:0;}
-}
+        /* Action Icons */
+        .icon-grid { display: flex; justify-content: space-around; margin: 20px 15px; }
+        .icon-box { text-align: center; font-size: 10px; color: #aaa; }
+        .icon-circle {
+            width: 50px; height: 50px;
+            background: var(--card-bg);
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 5px;
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-primary);
+            box-shadow: 0 0 10px rgba(247, 162, 27, 0.2);
+        }
 
-/* STATS */
-.stats{
-    display:flex;
-    justify-content:space-between;
-}
-.stat{
-    flex:1;
-    text-align:center;
-}
+        /* Claim Button */
+        .claim-btn {
+            background: var(--gold-grad);
+            margin: 15px;
+            padding: 18px;
+            border-radius: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(247, 162, 27, 0.4);
+        }
 
-/* BUTTON */
-.btn{
-    background:linear-gradient(135deg,#f7a21b,#ff7b00);
-    padding:15px;
-    border-radius:12px;
-    text-align:center;
-    font-weight:bold;
-    margin:15px;
-}
+        /* Bottom Grid */
+        .feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px; }
+        .feature-card { background: var(--card-bg); padding: 15px; border-radius: 15px; display: flex; align-items: center; gap: 10px; }
+        .feature-card i { color: var(--gold-primary); font-size: 20px; }
 
-/* SUMMARY */
-.summary{
-    display:flex;
-}
-.summary .card{
-    flex:1;
-}
-
-.small{
-    font-size:12px;
-    color:#aaa;
-}
-</style>
-
+        /* Navigation */
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(247, 162, 27, 0.1); }
+        .nav-item { color: #666; text-decoration: none; text-align: center; font-size: 10px; }
+        .nav-item.active { color: var(--gold-primary); }
+        .nav-item i { display: block; font-size: 20px; margin-bottom: 3px; }
+    </style>
 </head>
-
 <body>
 
-<!-- HEADER -->
-<div class="header">
-    <div class="flex">
-        <h3>👑 VIP: 03037264598</h3>
-        <h3>Status: Volt Robot</h3>
+    <div class="vip-card">
+        <div class="flex-row">
+            <span style="font-weight:bold;">👑 VIP: <span id="phoneNum">03037264598</span></span>
+            <span style="font-size:12px;">Status: <b>Volt Robot</b></span>
+        </div>
+        <h2 id="balance">$0.10</h2>
+        <p style="margin:0; font-size:12px;">Available Assets</p>
     </div>
-    <h2>$0.10</h2>
-    <p>Available Assets</p>
-</div>
 
-<!-- BOT SECTION -->
-<div class="card bot">
-    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
+    <div class="stats-grid">
+        <div class="mini-card">
+            <h4 id="totalDeposit">$10.00</h4>
+            <p>Total Deposit</p>
+        </div>
+        <div class="mini-card">
+            <h4 id="totalEarned">$2.30</h4>
+            <p>Total Earned</p>
+        </div>
+    </div>
 
-    <!-- animated coins -->
-    <div class="coin" style="left:30%"></div>
-    <div class="coin" style="left:50%"></div>
-    <div class="coin" style="left:70%"></div>
+    <div class="robot-section">
+        <p style="color:var(--gold-primary); font-size:11px; margin-bottom:10px;">🚀 Notice: Invite friends and get bonus!</p>
+        <img src="https://i.ibb.co/p3Vn78Z/volt-robot.png" class="robot-img" alt="Volt Robot">
+        <div style="display:flex; justify-content:space-around; margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+            <div><b id="activePkg" style="color:var(--gold-primary);">2</b><br><small>Active Packages</small></div>
+            <div><b style="color:var(--gold-primary);">200 GH/s</b><br><small>Total Hash Power</small></div>
+        </div>
+    </div>
 
-    <h2>2 Active Packages</h2>
-    <p class="small">Total Hash Power: 200 GH/s</p>
-</div>
+    <div class="icon-grid">
+        <div class="icon-box"><div class="icon-circle"><i class="fas fa-microchip"></i></div>Active</div>
+        <div class="icon-box"><div class="icon-circle"><i class="fas fa-bolt"></i></div>Mining</div>
+        <div class="icon-box"><div class="icon-circle"><i class="fas fa-server"></i></div>Online</div>
+        <div class="icon-box"><div class="icon-circle"><i class="fas fa-link"></i></div>Linked</div>
+    </div>
 
-<!-- EARNING SUMMARY -->
-<div class="summary">
-    <div class="card">
-        <h3>$0.50</h3>
-        <p class="small">Today's Earning</p>
+    <div class="claim-btn" onclick="window.location.href='mining.html'">
+        CLAIM DAILY MINING
     </div>
-    <div class="card">
-        <h3>$2.30</h3>
-        <p class="small">Total Earning</p>
-    </div>
-</div>
 
-<!-- ACTION BUTTON -->
-<div class="btn">
-    CLAIM DAILY MINING
-</div>
+    <div class="feature-grid">
+        <div class="feature-card" onclick="window.location.href='refer.html'">
+            <i class="fas fa-users"></i>
+            <div><b id="team">0</b><br><small>My Team</small></div>
+        </div>
+        <div class="feature-card" onclick="window.location.href='mining.html'">
+            <i class="fas fa-calendar-check"></i>
+            <div><b>Earn</b><br><small>Daily Task</small></div>
+        </div>
+        <div class="feature-card" onclick="window.location.href='withdraw.html'">
+            <i class="fas fa-wallet"></i>
+            <div><b id="withdraw">$0.10</b><br><small>Withdrawal</small></div>
+        </div>
+        <div class="feature-card" onclick="window.location.href='deposit.html'">
+            <i class="fas fa-university"></i>
+            <div><b>Instant</b><br><small>Deposit</small></div>
+        </div>
+    </div>
 
-<!-- FEATURES -->
-<div class="stats">
-    <div class="card stat">
-        ⚙️
-        <p>Active</p>
-    </div>
-    <div class="card stat">
-        ⚡
-        <p>Mining</p>
-    </div>
-    <div class="card stat">
-        🌐
-        <p>Online</p>
-    </div>
-    <div class="card stat">
-        🔗
-        <p>Linked</p>
-    </div>
-</div>
+    <nav class="nav-bar">
+        <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
+        <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>Plans</a>
+        <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>Earn</a>
+        <a href="refer.html" class="nav-item"><i class="fas fa-user-friends"></i>Refer</a>
+        <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
+    </nav>
 
-<!-- TEAM + TASK -->
-<div class="summary">
-    <div class="card">
-        <h3>0</h3>
-        <p class="small">Team Members</p>
-    </div>
-    <div class="card">
-        <h3>Earn</h3>
-        <p class="small">Daily Task</p>
-    </div>
-</div>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-<!-- WITHDRAW + DEPOSIT -->
-<div class="summary">
-    <div class="card">
-        <h3>$0.10</h3>
-        <p class="small">Withdraw</p>
-    </div>
-    <div class="card">
-        <h3>Add</h3>
-        <p class="small">Deposit</p>
-    </div>
-</div>
+    // آپ کی فائر بیس کنفیگریشن
+    const firebaseConfig = { 
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const userPhone = localStorage.getItem('userPhone') || "03037264598";
+
+    // ڈیٹا لوڈ کرنا
+    onValue(ref(db, 'users/' + userPhone), (snap) => {
+        const d = snap.val();
+        if(d) {
+            document.getElementById('balance').innerText = `$${(d.balance || 0).toFixed(2)}`;
+            document.getElementById('phoneNum').innerText = userPhone;
+            document.getElementById('activePkg').innerText = d.activePackage ? "1" : "0";
+            // دیگر ڈیٹا بھی اسی طرح اپ ڈیٹ کریں
+        }
+    });
+</script>
 
 </body>
 </html>
