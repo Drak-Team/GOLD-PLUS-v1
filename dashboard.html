@@ -51,10 +51,15 @@
         }
         .robot-img {
             width: 180px;
-            animation: float 3s ease-in-out infinite;
+            animation: float 3s ease-in-out infinite; /* یہاں اینیمیشن لگی ہے */
             filter: drop-shadow(0 10px 15px rgba(247, 162, 27, 0.3));
         }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+        
+        /* روبوٹ کے اوپر نیچے تیرنے کی اینیمیشن */
+        @keyframes float { 
+            0%, 100% { transform: translateY(0); } 
+            50% { transform: translateY(-15px); } 
+        }
 
         /* Action Icons */
         .icon-grid { display: flex; justify-content: space-around; margin: 20px 15px; }
@@ -120,7 +125,9 @@
 
     <div class="robot-section">
         <p style="color:var(--gold-primary); font-size:11px; margin-bottom:10px;">🚀 Notice: Invite friends and get bonus!</p>
+        
         <img src="https://i.ibb.co/p3Vn78Z/volt-robot.png" class="robot-img" alt="Volt Robot">
+        
         <div style="display:flex; justify-content:space-around; margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
             <div><b id="activePkg" style="color:var(--gold-primary);">2</b><br><small>Active Packages</small></div>
             <div><b style="color:var(--gold-primary);">200 GH/s</b><br><small>Total Hash Power</small></div>
@@ -159,7 +166,7 @@
 
     <nav class="nav-bar">
         <a href="dashboard.html" class="nav-item active"><i class="fas fa-home"></i>Home</a>
-        <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>Plans</a>
+        <a href="plans.html" class="nav-item"><i class="fas fa gem"></i>Plans</a>
         <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>Earn</a>
         <a href="refer.html" class="nav-item"><i class="fas fa-user-friends"></i>Refer</a>
         <a href="profile.html" class="nav-item"><i class="fas fa-user-circle"></i>Profile</a>
@@ -169,7 +176,6 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-    // آپ کی فائر بیس کنفیگریشن
     const firebaseConfig = { 
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         authDomain: "gold-plus-v1.firebaseapp.com",
@@ -181,14 +187,14 @@
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone') || "03037264598";
 
-    // ڈیٹا لوڈ کرنا
     onValue(ref(db, 'users/' + userPhone), (snap) => {
         const d = snap.val();
         if(d) {
             document.getElementById('balance').innerText = `$${(d.balance || 0).toFixed(2)}`;
             document.getElementById('phoneNum').innerText = userPhone;
-            document.getElementById('activePkg').innerText = d.activePackage ? "1" : "0";
-            // دیگر ڈیٹا بھی اسی طرح اپ ڈیٹ کریں
+            document.getElementById('activePkg').innerText = d.activePackage ? "2" : "0";
+            document.getElementById('totalDeposit').innerText = `$${(d.totalDeposit || 10).toFixed(2)}`;
+            document.getElementById('totalEarned').innerText = `$${(d.totalEarned || 2.30).toFixed(2)}`;
         }
     });
 </script>
