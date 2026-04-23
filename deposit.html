@@ -168,17 +168,20 @@
     };
 
     if (phone) {
-        db.ref('users/' + phone + '/deposits').on('value', (snap) => {
+        // فکس: اب ہسٹری براہ راست مین ڈپازٹ ڈیٹا بیس سے سنک ہوگی تاکہ اسٹیٹس اپ ڈیٹ ہو سکے
+        db.ref('deposits').orderByChild('phone').equalTo(phone).on('value', (snap) => {
             const histDiv = document.getElementById('depositHistory');
             let html = "";
             if (snap.exists()) {
                 const data = snap.val();
-                Object.keys(data).reverse().forEach(key => {
+                const sortedKeys = Object.keys(data).sort((a, b) => b - a);
+                sortedKeys.forEach(key => {
                     const d = data[key];
-                    let color = d.status === "Approved" ? "#00ff64" : (d.status === "Rejected" ? "#ff4b2b" : "#f1c40f");
+                    let statusText = d.status || "Pending";
+                    let color = statusText === "Approved" ? "#00ff64" : (statusText === "Rejected" ? "#ff4b2b" : "#f1c40f");
                     html += `<div class="history-card" style="border-left-color: ${color}">
                         <div style="display:flex; justify-content:space-between; font-size:11px;">
-                            <span>${d.date}</span><b style="color:${color}">${d.status}</b>
+                            <span>${d.date}</span><b style="color:${color}">${statusText}</b>
                         </div>
                         <div style="font-weight:bold; margin-top:5px;">$${d.amount} (${d.method})</div>
                     </div>`;
@@ -207,10 +210,14 @@
                 phone, amount: amt, tid, method: currentMethod,
                 screenshot: reader.result, status: "Pending", date: new Date().toLocaleString()
             };
+            // مین ڈپازٹ ٹیبل میں ڈیٹا ڈالنا تاکہ ایڈمن اسے دیکھ سکے
             await db.ref('deposits/' + depID).set(depData);
-            await db.ref('users/' + phone + '/deposits/' + depID).set(depData);
             alert("Deposit Submitted!");
             btn.innerText = "Submit Request"; btn.disabled = false;
+            // ری سیٹ فارم
+            document.getElementById('depositAmount').value = "";
+            document.getElementById('tid').value = "";
+            document.getElementById('fileName').innerText = "Upload Proof";
         };
     };
 </script>
