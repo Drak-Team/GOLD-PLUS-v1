@@ -27,7 +27,7 @@
         .battery-fill { height: 100%; background: #00ff64; width: 100%; animation: charge 1.5s infinite; }
         @keyframes charge { 50% { opacity: 0.4; } }
 
-        /* Professional Navigation - Updated to Match Theme */
+        /* Navigation Bar - Updated strictly to Theme Style */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: var(--primary-gold); }
@@ -75,7 +75,7 @@
 <div class="card">
     <div class="reward-title">
         <i class="fas fa-trophy"></i> 
-        <span>TEAM LEADER REWARDS</span>
+        <span>TEAM LEADER REWARDS (Extra Bonus)</span>
     </div>
 
     <div class="refer-row">
@@ -87,6 +87,18 @@
     <div class="refer-row">
         <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">10 Active Referrals</span></div>
         <div style="color:#00ff64; font-weight:bold;">$5.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
+    </div>
+
+    <div class="refer-row">
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">20 Active Referrals</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$10.00</div>
+        <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
+    </div>
+
+    <div class="refer-row">
+        <div><div class="battery-box"><div class="battery-fill"></div></div><span style="font-size:11px;">50 Active Referrals</span></div>
+        <div style="color:#00ff64; font-weight:bold;">$50.00</div>
         <button class="btn" style="width:70px; padding:6px; font-size:9px; background:#333; color:#777;" disabled>Claim</button>
     </div>
 </div>
@@ -123,10 +135,13 @@
         const snap = await get(ref(db, 'users/' + userPhone));
         if(snap.exists()){
             const d = snap.val();
-            if(!d.plan && !d.activePackage) {
+            
+            // Your original logic: check for activePackage
+            if(!d.activePackage) {
                 document.getElementById('lockScreen').style.display = 'block';
                 return;
             }
+            
             hasPackage = true;
             const last = d.lastClaim || 0;
             if(Date.now() - last < 86400000) {
@@ -163,8 +178,11 @@
     window.finishDaily = async () => {
         const snap = await get(ref(db, 'users/' + userPhone));
         const d = snap.val();
+        // Your original income mapping
+        const incomeMap = { "600": 30, "2000": 100, "5000": 250, "10000": 550 };
+        
         await update(ref(db, 'users/' + userPhone), {
-            balance: (parseFloat(d.balance) || 0) + 1.00, // Example earn
+            balance: (d.balance || 0) + (incomeMap[d.activePackage] || 5),
             lastClaim: Date.now()
         });
         location.reload();
@@ -181,6 +199,7 @@
             document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
+
     window.onload = init;
 </script>
 </body>
