@@ -1,3 +1,66 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Mining</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; overflow-x: hidden; }
+        .header { padding: 25px 20px; background: rgba(0,0,0,0.5); text-align: center; border-bottom: 2px solid var(--primary-gold); }
+        .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn.active { color: var(--primary-gold); }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h2 style="color:var(--primary-gold); margin:0;">GOLD PLUS</h2>
+    <p style="font-size:11px; color:#aaa; margin:5px 0 0 0;">انویسٹ کریں اور روزانہ کمائیں</p>
+</div>
+
+<div class="card" id="taskArea">
+    <div id="activeWork" style="display:none;">
+        <div class="video-box" id="player"></div>
+        <div id="adCounter" style="text-align: center; margin: 15px 0; font-weight: bold; color: var(--primary-gold);">Task Progress: 1 / 5</div>
+        <button class="btn" id="nextBtn" onclick="nextStep()" disabled>Wait 30s</button>
+    </div>
+
+    <div id="lockScreen" style="display:none; text-align: center; padding: 20px 0;">
+        <i class="fas fa-lock" style="font-size:50px; color:#e74c3c; margin-bottom:15px;"></i>
+        <h3>پیکج ایکٹیو نہیں ہے</h3>
+        <button class="btn" onclick="window.location.href='plans.html'">پلان ایکٹیو کریں</button>
+    </div>
+
+    <div id="timerScreen" style="display:none; text-align: center;">
+        <i class="fas fa-history" style="font-size:40px; color:var(--primary-gold); margin-bottom:10px;"></i>
+        <h2 id="timerDisplay" style="font-size:35px; margin:5px;">00:00:00</h2>
+        <p style="font-size:12px; color:#888;">آپ آج کا ٹاسک مکمل کر چکے ہیں</p>
+    </div>
+
+    <div id="claimArea" style="display:none; text-align: center;">
+        <i class="fas fa-gift" style="font-size:50px; color:#00ff64; margin-bottom:15px;"></i>
+        <h3>ٹاسک مکمل!</h3>
+        <button class="btn" style="background:#00ff64;" id="claimBtn" onclick="finishDaily()">ارننگ کلیم کریں</button>
+    </div>
+</div>
+
+<nav class="nav-bar">
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn active"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+</nav>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -14,35 +77,23 @@
     const userPhone = localStorage.getItem('userPhone');
 
     let currentAd = 0;
-    // انویسٹمنٹ اور ارننگ والی ویڈیوز کے آئی ڈیز
     const vids = ["K_n_C_G_Y8s", "3_Vsh5E70e4", "EIs6X39H6j8", "6_S7pC2Q_gY", "S_X7O5xN1_w"]; 
     let dailyEarnings = 0;
 
-    async function init() {
+    function init() {
         if(!userPhone) return;
-        
         onValue(ref(db, 'users/' + userPhone), (snap) => {
             const d = snap.val();
             if(!d) return;
-
             if(!d.plan) {
                 document.getElementById('lockScreen').style.display = 'block';
-                document.getElementById('activeWork').style.display = 'none';
                 return;
             }
-
             dailyEarnings = parseFloat(d.dailyProfit || 0);
             const last = d.lastClaim || 0;
-            const now = Date.now();
-
-            if(now - last < 86400000) {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('activeWork').style.display = 'none';
-                document.getElementById('claimArea').style.display = 'none';
+            if(Date.now() - last < 86400000) {
                 runTimer(last);
             } else {
-                document.getElementById('lockScreen').style.display = 'none';
-                document.getElementById('timerScreen').style.display = 'none';
                 if(currentAd < 5) {
                     document.getElementById('activeWork').style.display = 'block';
                     loadAd();
@@ -57,17 +108,8 @@
             document.getElementById('claimArea').style.display = 'block';
             return;
         }
-        
-        // یوٹیوب پلیئر کا صحیح ایمبیڈ لنک
         const videoId = vids[currentAd];
-        document.getElementById('player').innerHTML = `
-            <iframe width="100%" height="100%" 
-                src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&rel=0&showinfo=0" 
-                title="Investment Ad" frameborder="0" 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                allowfullscreen>
-            </iframe>`;
-
+        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0" allow="autoplay"></iframe>`;
         document.getElementById('adCounter').innerText = `Task Progress: ${currentAd + 1} / 5`;
         
         let time = 30;
@@ -84,48 +126,32 @@
         }, 1000);
     }
 
-    window.nextStep = () => { 
-        currentAd++; 
-        loadAd(); 
-    };
+    window.nextStep = () => { currentAd++; loadAd(); };
 
     window.finishDaily = async () => {
-        const btn = document.getElementById('claimBtn');
-        btn.disabled = true;
-        btn.innerText = "Processing...";
-
         try {
             const snap = await get(ref(db, 'users/' + userPhone));
             const d = snap.val();
             const newBal = (parseFloat(d.balance || 0) + dailyEarnings).toFixed(2);
-            
-            await update(ref(db, 'users/' + userPhone), {
-                balance: newBal,
-                lastClaim: Date.now()
-            });
-
-            alert(`مبارک ہو! Rs. ${dailyEarnings} آپ کے اکاؤنٹ میں جمع ہو گئے ہیں۔`);
+            await update(ref(db, 'users/' + userPhone), { balance: newBal, lastClaim: Date.now() });
+            alert(`Rs. ${dailyEarnings} جمع ہو گئے ہیں!`);
             location.reload();
-        } catch (e) {
-            alert("Error: " + e.message);
-            btn.disabled = false;
-        }
+        } catch (e) { alert(e.message); }
     };
 
     function runTimer(last) {
         document.getElementById('timerScreen').style.display = 'block';
-        const timerDisplay = document.getElementById('timerDisplay');
-        const updateTimer = () => {
+        setInterval(() => {
             const left = (last + 86400000) - Date.now();
-            if(left <= 0) { location.reload(); return; }
+            if(left <= 0) location.reload();
             const h = Math.floor(left/3600000).toString().padStart(2,'0');
             const m = Math.floor((left%3600000)/60000).toString().padStart(2,'0');
             const s = Math.floor((left%60000)/1000).toString().padStart(2,'0');
-            timerDisplay.innerText = `${h}:${m}:${s}`;
-        };
-        updateTimer();
-        setInterval(updateTimer, 1000);
+            document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
+        }, 1000);
     }
 
     init();
 </script>
+</body>
+</html>
