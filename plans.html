@@ -22,11 +22,8 @@
         .stat-box { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
         .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; }
         .stat-box span { font-size: 14px; font-weight: 700; color: var(--neon-green); }
-        
         .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; }
         .buy-btn.deposit { background: linear-gradient(90deg, #3498db, #2980b9); color: white; }
-
-        /* Navigation Bar - Fixed as per previous style */
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
@@ -40,7 +37,7 @@
 <div class="container">
     <div class="crypto-promo">
         <i class="fab fa-bitcoin" style="font-size: 30px; color: var(--crypto-blue);"></i>
-        <div><b>USDT CRYPTO BONUS!</b><p style="font-size: 10px; margin:0;">بیلنس کے مطابق انویسٹ کریں اور آٹومیٹک مائننگ شروع کریں۔</p></div>
+        <div><b>USDT CRYPTO BONUS!</b><p style="font-size: 10px; margin:0;">انویسٹ کریں اور مائننگ شروع کریں۔</p></div>
     </div>
     <div class="section-title">Investment Plans</div>
     <div id="plansList"></div>
@@ -82,7 +79,6 @@
         {id: 500, name: "Emperor Robot", rs: "150,000", daily: "20,000", bonus: "15%"}
     ];
 
-    // فوری رینڈرنگ ڈیفالٹ بٹن کے ساتھ
     function renderInitialPlans() {
         let html = "";
         plans.forEach(plan => {
@@ -106,16 +102,25 @@
 
     renderInitialPlans();
 
-    // فائر بیس سے بیلنس چیک کر کے بٹن اپ ڈیٹ کرنا
     db.ref('users/' + phone).on('value', (snap) => {
-        const balance = parseFloat(snap.val()?.balance || 0);
+        if (!snap.exists()) return;
+        const data = snap.val();
+        const balance = parseFloat(data.balance || 0);
+        const activePlanName = data.plan || "";
+
         plans.forEach(plan => {
             const btn = document.getElementById(`btn-${plan.id}`);
             if (btn) {
-                if (balance >= plan.id) {
+                if (activePlanName === plan.name) {
+                    btn.innerText = "Current Plan";
+                    btn.className = "buy-btn";
+                    btn.style.background = "#00ff64";
+                    btn.disabled = true;
+                    btn.onclick = null;
+                } else if (balance >= plan.id) {
                     btn.innerText = "Invest Now";
                     btn.className = "buy-btn";
-                    btn.onclick = () => investNow(plan.id, plan.name);
+                    btn.onclick = () => investNow(plan.id, plan.name, plan.daily);
                 } else {
                     btn.innerText = "Deposit Now";
                     btn.className = "buy-btn deposit";
@@ -125,21 +130,22 @@
         });
     });
 
-    async function investNow(cost, pName) {
+    async function investNow(cost, pName, dailyIncome) {
         if (!confirm(`Confirm investment in ${pName} for $${cost}?`)) return;
         try {
             const snap = await db.ref('users/' + phone).once('value');
             const currentBal = parseFloat(snap.val().balance || 0);
-            if(currentBal < cost) { alert("Insufficient Balance!"); return; }
             
             await db.ref('users/' + phone).update({
                 balance: (currentBal - cost).toFixed(2),
                 plan: pName,
+                dailyProfit: dailyIncome, // یہاں روزانہ کی ارننگ محفوظ ہوگی
                 miningStatus: "Active",
-                planDate: new Date().toLocaleDateString()
+                lastClaim: 0, // تاکہ یوزر فوری پہلا ٹاسک کر سکے
+                planDate: new Date().getTime() // تاریخ کے بجائے ٹائم اسٹیمپ
             });
-            alert(pName + " Activated! Mining Started.");
-            window.location.href = "dashboard.html";
+            alert(pName + " Activated! Go to EARN page to start mining.");
+            window.location.href = "mining.html";
         } catch (e) { alert("Error: " + e.message); }
     }
 </script>
