@@ -1,159 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mining Dashboard</title>
 
-    <style>
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0b0618; color: #fff; padding-bottom: 80px; }
-        
-        /* HEADER */
-        .header {
-            background: linear-gradient(135deg, #f1c40f, #e67e22);
-            padding: 30px 20px;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            box-shadow: 0 5px 20px rgba(241, 196, 15, 0.3);
-        }
-        .header h3 { margin: 0; font-size: 14px; opacity: 0.9; }
-        .header h2 { margin: 10px 0 0 0; font-size: 32px; font-weight: 700; }
-        .flex { display: flex; justify-content: space-between; align-items: center; }
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
 
-        /* CARDS */
-        .card { background: #1a1230; margin: 12px; padding: 20px; border-radius: 20px; border: 1px solid rgba(241, 196, 15, 0.1); }
+<style>
+body{
+    margin:0;
+    font-family:'Poppins',sans-serif;
+    background:#0b0618;
+    color:#fff;
+}
 
-        /* BOT SECTION */
-        .bot { text-align: center; position: relative; overflow: hidden; }
-        .bot img { width: 150px; animation: float 3s ease-in-out infinite; filter: drop-shadow(0 0 15px #f1c40f); }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+/* HEADER */
+.header{
+    background:linear-gradient(135deg,#f7a21b,#ff7b00);
+    padding:20px;
+    border-bottom-left-radius:25px;
+    border-bottom-right-radius:25px;
+}
+.header h2{
+    margin:0;
+}
+.flex{
+    display:flex;
+    justify-content:space-between;
+}
 
-        /* COIN ANIMATION */
-        .coin { position: absolute; width: 12px; height: 12px; background: gold; border-radius: 50%; box-shadow: 0 0 10px gold; animation: fall 2.5s linear infinite; }
-        @keyframes fall { 0% { top: -20px; opacity: 1; } 100% { top: 150px; opacity: 0; } }
+/* CARDS */
+.card{
+    background:#1a1230;
+    margin:10px;
+    padding:15px;
+    border-radius:15px;
+    box-shadow:0 0 15px rgba(255,165,0,0.2);
+}
 
-        /* SUMMARY GRID */
-        .summary { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; padding: 0 5px; }
-        .summary .card { margin: 5px; text-align: center; }
-        .summary h3 { margin: 0; color: #f1c40f; font-size: 18px; }
-        .small { font-size: 11px; color: #aaa; margin-top: 5px; }
+/* BOT SECTION */
+.bot{
+    text-align:center;
+    position:relative;
+}
+.bot img{
+    width:140px;
+    animation: float 3s ease-in-out infinite;
+}
+@keyframes float{
+    0%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+    100%{transform:translateY(0);}
+}
 
-        /* BUTTON */
-        .btn-claim {
-            background: linear-gradient(135deg, #f1c40f, #e67e22);
-            padding: 18px; border-radius: 15px; text-align: center; font-weight: bold; margin: 15px;
-            color: #000; cursor: pointer; box-shadow: 0 4px 15px rgba(241, 196, 15, 0.4);
-            text-transform: uppercase; letter-spacing: 1px;
-        }
+/* GLOW COINS */
+.coin{
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:gold;
+    border-radius:50%;
+    animation: fall 2s linear infinite;
+}
+@keyframes fall{
+    0%{top:0;opacity:1;}
+    100%{top:100px;opacity:0;}
+}
 
-        /* NAVIGATION BAR */
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.1); }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: #f1c40f; }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
-    </style>
+/* STATS */
+.stats{
+    display:flex;
+    justify-content:space-between;
+}
+.stat{
+    flex:1;
+    text-align:center;
+}
+
+/* BUTTON */
+.btn{
+    background:linear-gradient(135deg,#f7a21b,#ff7b00);
+    padding:15px;
+    border-radius:12px;
+    text-align:center;
+    font-weight:bold;
+    margin:15px;
+}
+
+/* SUMMARY */
+.summary{
+    display:flex;
+}
+.summary .card{
+    flex:1;
+}
+
+.small{
+    font-size:12px;
+    color:#aaa;
+}
+</style>
+
 </head>
+
 <body>
 
+<!-- HEADER -->
 <div class="header">
     <div class="flex">
-        <h3 id="userDisplay">👑 VIP: Loading...</h3>
-        <span style="background:rgba(0,0,0,0.2); padding:4px 10px; border-radius:20px; font-size:10px;">Volt Robot Active</span>
+        <h3>👑 VIP: 03037264598</h3>
+        <h3>Status: Volt Robot</h3>
     </div>
-    <h2 id="balanceDisplay">$0.00</h2>
-    <p style="margin:0; font-size:12px; opacity:0.8;">Available Assets</p>
+    <h2>$0.10</h2>
+    <p>Available Assets</p>
 </div>
 
+<!-- BOT SECTION -->
 <div class="card bot">
-    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png" alt="Robot">
-    <div class="coin" style="left:20%; animation-delay: 0s;"></div>
-    <div class="coin" style="left:50%; animation-delay: 1s;"></div>
-    <div class="coin" style="left:80%; animation-delay: 0.5s;"></div>
+    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712109.png">
 
-    <h2 id="pkgDisplay" style="margin:15px 0 5px 0; color:#f1c40f;">No Active Package</h2>
-    <p class="small">System Status: Mining Online ⚡</p>
+    <!-- animated coins -->
+    <div class="coin" style="left:30%"></div>
+    <div class="coin" style="left:50%"></div>
+    <div class="coin" style="left:70%"></div>
+
+    <h2>2 Active Packages</h2>
+    <p class="small">Total Hash Power: 200 GH/s</p>
 </div>
 
+<!-- EARNING SUMMARY -->
 <div class="summary">
     <div class="card">
-        <h3 id="todayEarn">$0.00</h3>
+        <h3>$0.50</h3>
         <p class="small">Today's Earning</p>
     </div>
     <div class="card">
-        <h3 id="totalEarn">$0.00</h3>
+        <h3>$2.30</h3>
         <p class="small">Total Earning</p>
     </div>
 </div>
 
-<div class="btn-claim" onclick="window.location.href='mining.html'">
-    <i class="fas fa-hammer"></i> START DAILY MINING
+<!-- ACTION BUTTON -->
+<div class="btn">
+    CLAIM DAILY MINING
 </div>
 
+<!-- FEATURES -->
+<div class="stats">
+    <div class="card stat">
+        ⚙️
+        <p>Active</p>
+    </div>
+    <div class="card stat">
+        ⚡
+        <p>Mining</p>
+    </div>
+    <div class="card stat">
+        🌐
+        <p>Online</p>
+    </div>
+    <div class="card stat">
+        🔗
+        <p>Linked</p>
+    </div>
+</div>
+
+<!-- TEAM + TASK -->
 <div class="summary">
-    <div class="card" onclick="window.location.href='refer.html'">
-        <h3 id="teamCount">0</h3>
+    <div class="card">
+        <h3>0</h3>
         <p class="small">Team Members</p>
     </div>
-    <div class="card" onclick="window.location.href='mining.html'">
-        <i class="fas fa-tasks" style="color:#f1c40f;"></i>
+    <div class="card">
+        <h3>Earn</h3>
         <p class="small">Daily Task</p>
     </div>
 </div>
 
+<!-- WITHDRAW + DEPOSIT -->
 <div class="summary">
-    <div class="card" onclick="window.location.href='withdraw.html'">
-        <i class="fas fa-wallet" style="color:#f1c40f; font-size:20px;"></i>
+    <div class="card">
+        <h3>$0.10</h3>
         <p class="small">Withdraw</p>
     </div>
-    <div class="card" onclick="window.location.href='deposit.html'">
-        <i class="fas fa-plus-circle" style="color:#f1c40f; font-size:20px;"></i>
+    <div class="card">
+        <h3>Add</h3>
         <p class="small">Deposit</p>
     </div>
 </div>
-
-<nav class="nav-bar">
-    <a href="dashboard.html" class="nav-btn active"><i class="fas fa-house"></i><span>Home</span></a>
-    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i><span>Earn</span></a>
-    <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i><span>Plans</span></a>
-    <a href="profile.html" class="nav-btn"><i class="fas fa-user"></i><span>Profile</span></a>
-</nav>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-
-    const firebaseConfig = { 
-        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-        authDomain: "gold-plus-v1.firebaseapp.com",
-        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-        projectId: "gold-plus-v1"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const userPhone = localStorage.getItem('userPhone');
-
-    if(!userPhone) {
-        window.location.href = 'login.html';
-    } else {
-        const userRef = ref(db, 'users/' + userPhone);
-        onValue(userRef, (snapshot) => {
-            const data = snapshot.val();
-            if(data) {
-                document.getElementById('userDisplay').innerText = `👑 VIP: ${userPhone}`;
-                document.getElementById('balanceDisplay').innerText = `$${(data.balance || 0).toFixed(2)}`;
-                document.getElementById('pkgDisplay').innerText = data.activePackage ? data.activePackage + " Package" : "No Active Package";
-                document.getElementById('teamCount').innerText = data.referrals ? Object.keys(data.referrals).length : "0";
-                
-                // ہم فرض کر رہے ہیں کہ ارننگ ڈیٹا بیس میں ہے
-                document.getElementById('totalEarn').innerText = `$${(data.totalEarning || 0).toFixed(2)}`;
-                document.getElementById('todayEarn').innerText = `$${(data.todayEarning || 0).toFixed(2)}`;
-            }
-        });
-    }
-</script>
 
 </body>
 </html>
