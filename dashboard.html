@@ -14,7 +14,7 @@
         .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; color: #000; font-weight: bold; }
         .mini-stats b { font-size: 22px; color: #000; display: block; margin-top: 5px; }
 
-        /* Active Packages Section - New Style */
+        /* Active Packages Section */
         .package-section { padding: 20px; }
         .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .section-header h4 { margin: 0; font-size: 14px; color: #fff; }
@@ -38,7 +38,6 @@
         .stat-box h3 { margin: 5px 0; font-size: 20px; color: #fff; }
         .stat-img { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); width: 35px; opacity: 0.8; }
 
-        /* Remaining Styles */
         .machines-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 0 20px 20px; }
         .machine-card { background: var(--card-bg); border-radius: 20px; padding: 12px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .coin-ball { width: 45px; height: 45px; background: radial-gradient(circle, #f1c40f, #b8860b); border-radius: 50%; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 15px rgba(241,196,15,0.5); animation: floatMining 2s ease-in-out infinite; }
@@ -69,7 +68,7 @@
     <div class="user-welcome" id="userNameLabel"><i class="fas fa-crown"></i> GOLD PLUS VIP</div>
     <div class="mini-stats">
         <div>Available Assets <b id="mainBalance">$0.00</b></div>
-        <div>Status: <b id="activePlan">Volt Robot</b></div>
+        <div>Status: <b id="activePlan">No Active Plan</b></div>
     </div>
 </div>
 
@@ -79,14 +78,6 @@
         <a href="plans.html">View All</a>
     </div>
     <div class="packages-container" id="packageList">
-        <div class="pkg-card">
-            <div class="pkg-top">
-                <div class="pkg-icon"><i class="fas fa-microchip"></i></div>
-                <div class="pkg-info"><h5>Basic Miner</h5><small>100 GH/s</small></div>
-            </div>
-            <div class="status-dot"><div class="dot"></div> Active</div>
-        </div>
-        
         <a href="plans.html" class="pkg-card add-more">
             <i class="fas fa-plus"></i>
             <span style="font-size: 11px;">Add More</span>
@@ -158,13 +149,43 @@
     db.ref('users/' + phone).on('value', (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
+            
+            // 1. Updating Top Stats
             document.getElementById('mainBalance').innerText = "$" + parseFloat(data.balance || 0).toFixed(2);
             document.getElementById('withdrawStat').innerText = "$" + parseFloat(data.balance || 0).toFixed(2);
+            
+            // 2. Fixing Total Deposit and Total Earned Display
             document.getElementById('totalEarned').innerText = "$" + parseFloat(data.totalEarned || 0).toFixed(2);
             document.getElementById('totalDeposit').innerText = "$" + parseFloat(data.totalDeposit || 0).toFixed(2);
-            document.getElementById('activePlan').innerText = data.plan || "Volt Robot";
+            
+            // 3. Updating Active Package Name
+            const currentPlan = data.plan || data.activePackage || "No Active Plan";
+            document.getElementById('activePlan').innerText = currentPlan;
             document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-crown"></i> VIP: ' + phone;
             document.getElementById('teamCount').innerText = (data.referrals ? Object.keys(data.referrals).length : 0) + " Members";
+
+            // 4. Injecting Active Package Card into UI
+            const pkgList = document.getElementById('packageList');
+            let pkgHTML = "";
+            
+            if (data.plan || data.activePackage) {
+                pkgHTML = `
+                <div class="pkg-card">
+                    <div class="pkg-top">
+                        <div class="pkg-icon"><i class="fas fa-microchip"></i></div>
+                        <div class="pkg-info"><h5>${currentPlan}</h5><small>Active Miner</small></div>
+                    </div>
+                    <div class="status-dot"><div class="dot"></div> Running</div>
+                </div>`;
+            }
+
+            pkgHTML += `
+            <a href="plans.html" class="pkg-card add-more">
+                <i class="fas fa-plus"></i>
+                <span style="font-size: 11px;">Add More</span>
+            </a>`;
+            
+            pkgList.innerHTML = pkgHTML;
         }
     });
 
