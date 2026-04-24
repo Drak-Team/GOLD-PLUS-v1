@@ -12,7 +12,7 @@
         .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
         .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
@@ -63,7 +63,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -80,26 +80,30 @@
     const vids = ["K_n_C_G_Y8s", "3_Vsh5E70e4", "EIs6X39H6j8", "6_S7pC2Q_gY", "S_X7O5xN1_w"]; 
     let dailyEarnings = 0;
 
-    function init() {
-        if(!userPhone) return;
-        onValue(ref(db, 'users/' + userPhone), (snap) => {
-            const d = snap.val();
-            if(!d) return;
-            if(!d.plan) {
-                document.getElementById('lockScreen').style.display = 'block';
-                return;
-            }
-            dailyEarnings = parseFloat(d.dailyProfit || 0);
-            const last = d.lastClaim || 0;
-            if(Date.now() - last < 86400000) {
-                runTimer(last);
-            } else {
-                if(currentAd < 5) {
-                    document.getElementById('activeWork').style.display = 'block';
-                    loadAd();
-                }
-            }
-        });
+    async function init() {
+        if(!userPhone) {
+            window.location.href = 'index.html';
+            return;
+        }
+
+        const snapshot = await get(ref(db, 'users/' + userPhone));
+        const d = snapshot.val();
+
+        if(!d || !d.plan) {
+            document.getElementById('lockScreen').style.display = 'block';
+            return;
+        }
+
+        dailyEarnings = parseFloat(d.dailyProfit || 0);
+        const last = d.lastClaim || 0;
+        const now = Date.now();
+
+        if(now - last < 86400000) {
+            runTimer(last);
+        } else {
+            document.getElementById('activeWork').style.display = 'block';
+            loadAd();
+        }
     }
 
     function loadAd() {
@@ -108,13 +112,17 @@
             document.getElementById('claimArea').style.display = 'block';
             return;
         }
+        
         const videoId = vids[currentAd];
-        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0" allow="autoplay"></iframe>`;
+        // ویڈیو لنک کو ٹھیک کر دیا گیا ہے
+        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&rel=0" allow="autoplay; encrypted-media"></iframe>`;
         document.getElementById('adCounter').innerText = `Task Progress: ${currentAd + 1} / 5`;
         
         let time = 30;
         const btn = document.getElementById('nextBtn');
         btn.disabled = true;
+        btn.innerText = `Wait (${time}s)`;
+        
         const clock = setInterval(() => {
             time--;
             btn.innerText = `Wait (${time}s)`;
@@ -126,28 +134,55 @@
         }, 1000);
     }
 
-    window.nextStep = () => { currentAd++; loadAd(); };
+    window.nextStep = () => { 
+        currentAd++; 
+        loadAd(); 
+    };
 
     window.finishDaily = async () => {
+        const claimBtn = document.getElementById('claimBtn');
+        claimBtn.disabled = true;
+        claimBtn.innerText = "Processing...";
+
         try {
-            const snap = await get(ref(db, 'users/' + userPhone));
-            const d = snap.val();
-            const newBal = (parseFloat(d.balance || 0) + dailyEarnings).toFixed(2);
-            await update(ref(db, 'users/' + userPhone), { balance: newBal, lastClaim: Date.now() });
-            alert(`Rs. ${dailyEarnings} جمع ہو گئے ہیں!`);
-            location.reload();
-        } catch (e) { alert(e.message); }
+            const snapshot = await get(ref(db, 'users/' + userPhone));
+            const d = snapshot.val();
+            
+            // ارننگ کیلکولیشن اور اپ ڈیٹ
+            const currentBalance = parseFloat(d.balance || 0);
+            const newBalance = (currentBalance + dailyEarnings).toFixed(2);
+
+            await update(ref(db, 'users/' + userPhone), { 
+                balance: newBalance, 
+                lastClaim: Date.now() 
+            });
+
+            alert(`مبارک ہو! Rs. ${dailyEarnings} آپ کے اکاؤنٹ میں جمع ہو گئے ہیں۔`);
+            window.location.href = 'dashboard.html';
+        } catch (e) { 
+            alert("Error: " + e.message); 
+            claimBtn.disabled = false;
+            claimBtn.innerText = "ارننگ کلیم کریں";
+        }
     };
 
     function runTimer(last) {
         document.getElementById('timerScreen').style.display = 'block';
-        setInterval(() => {
-            const left = (last + 86400000) - Date.now();
-            if(left <= 0) location.reload();
-            const h = Math.floor(left/3600000).toString().padStart(2,'0');
-            const m = Math.floor((left%3600000)/60000).toString().padStart(2,'0');
-            const s = Math.floor((left%60000)/1000).toString().padStart(2,'0');
-            document.getElementById('timerDisplay').innerText = `${h}:${m}:${s}`;
+        const timerDisplay = document.getElementById('timerDisplay');
+        
+        const timerInterval = setInterval(() => {
+            const now = Date.now();
+            const left = (last + 86400000) - now;
+            
+            if(left <= 0) {
+                clearInterval(timerInterval);
+                location.reload();
+            }
+
+            const h = Math.floor(left / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((left % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((left % 60000) / 1000).toString().padStart(2, '0');
+            timerDisplay.innerText = `${h}:${m}:${s}`;
         }, 1000);
     }
 
