@@ -19,11 +19,10 @@
             font-family: 'Poppins', sans-serif;
             background: radial-gradient(circle at top, #1a0b2e, #0f051d);
             color: white;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
             min-height: 100vh;
         }
 
-        /* VIP Golden Header like Dashboard */
         .profile-header {
             text-align: center;
             padding: 50px 20px;
@@ -41,7 +40,6 @@
             border-radius: 50%; margin: 0 auto 15px;
             display: flex; align-items: center; justify-content: center;
             font-size: 40px; color: var(--primary-gold); font-weight: 900;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
 
         .user-name { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
@@ -60,39 +58,52 @@
             box-shadow: 0 15px 30px rgba(0,0,0,0.5);
         }
 
-        .stat-card i { color: var(--primary-gold); font-size: 22px; margin-bottom: 10px; }
-        .stat-card b { font-size: 18px; color: #fff; display: block; }
-        .stat-card span { font-size: 10px; color: #aaa; text-transform: uppercase; font-weight: bold; }
-
-        .menu-container {
-            background: var(--card-bg); border-radius: 30px;
-            padding: 10px; border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
+        /* History Table Styles */
+        .history-section {
+            background: var(--card-bg);
+            border-radius: 25px;
+            padding: 15px;
+            margin-top: 25px;
+            border: 1px solid var(--glass-border);
         }
 
-        .menu-item {
-            display: flex; align-items: center; padding: 18px;
-            text-decoration: none; color: #fff;
+        .history-title {
+            color: var(--primary-gold);
+            font-size: 16px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
             border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: 0.3s;
-        }
-        .menu-item:last-child { border-bottom: none; }
-
-        .menu-item i:first-child {
-            width: 40px; height: 40px;
-            background: rgba(241, 196, 15, 0.1); border-radius: 12px;
-            display: flex; align-items: center; justify-content: center;
-            margin-right: 15px; color: var(--primary-gold); font-size: 18px;
         }
 
-        .menu-item span { flex: 1; font-size: 15px; font-weight: 500; }
-        .menu-item i:last-child { color: #444; font-size: 14px; }
+        .history-item:last-child { border-bottom: none; }
+
+        .history-info b { font-size: 14px; display: block; }
+        .history-info small { color: #888; font-size: 10px; }
+        
+        .history-status { text-align: right; }
+        .status-badge {
+            font-size: 10px;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+        .status-pending { background: rgba(241, 196, 15, 0.2); color: var(--primary-gold); }
+        .status-completed { background: rgba(0, 255, 100, 0.2); color: #00ff64; }
 
         .logout-btn {
             margin-top: 30px; width: 100%; padding: 18px;
             background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.3);
-            color: #ff4444; border-radius: 20px; font-weight: 900; cursor: pointer;
-            text-transform: uppercase; letter-spacing: 1px;
+            color: #ff4444; border-radius: 20px; font-weight: 900;
+            text-transform: uppercase;
         }
 
         .bottom-nav {
@@ -101,7 +112,7 @@
             padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000;
         }
 
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; font-weight: bold; }
+        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
         .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
     </style>
@@ -128,32 +139,14 @@
         </div>
     </div>
 
-    <div class="menu-container">
-        <a href="edit-profile.html" class="menu-item">
-            <i class="fas fa-user-shield"></i>
-            <span>Account Security</span>
-            <i class="fas fa-chevron-right"></i>
-        </a>
-        <a href="deposit-history.html" class="menu-item">
-            <i class="fas fa-file-invoice-dollar"></i>
-            <span>Deposit History</span>
-            <i class="fas fa-chevron-right"></i>
-        </a>
-        <a href="withdraw-history.html" class="menu-item">
-            <i class="fas fa-history"></i>
-            <span>Withdrawal Logs</span>
-            <i class="fas fa-chevron-right"></i>
-        </a>
-        <a href="refer.html" class="menu-item">
-            <i class="fas fa-gift"></i>
-            <span>Invite Rewards</span>
-            <i class="fas fa-chevron-right"></i>
-        </a>
-        <a href="https://t.me/mranjum143" class="menu-item">
-            <i class="fab fa-telegram"></i>
-            <span>Official Support</span>
-            <i class="fas fa-chevron-right"></i>
-        </a>
+    <div class="history-section">
+        <div class="history-title"><i class="fas fa-plus-circle"></i> Recent Deposits</div>
+        <div id="depositList"><p style="font-size:12px; color:#666;">No deposit history found.</p></div>
+    </div>
+
+    <div class="history-section">
+        <div class="history-title"><i class="fas fa-minus-circle"></i> Withdrawal Logs</div>
+        <div id="withdrawList"><p style="font-size:12px; color:#666;">No withdrawal history found.</p></div>
     </div>
 
     <button class="logout-btn" onclick="logout()">Logout Account</button>
@@ -175,10 +168,7 @@
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
       databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+      projectId: "gold-plus-v1"
     };
 
     const app = initializeApp(firebaseConfig);
@@ -186,30 +176,52 @@
 
     window.onload = function() {
         const phone = localStorage.getItem('userPhone');
-        if (!phone) {
-            window.location.href = 'index.html';
-        } else {
-            // Live Data Syncing
-            onValue(ref(db, 'users/' + phone), (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    // پکا کر لیں کہ بیلنس ہر حال میں ریڈر ہو
-                    const bal = data.balance || 0;
-                    document.getElementById('totalBalance').innerText = "$" + parseFloat(bal).toFixed(2);
-                    
-                    document.getElementById('profileName').innerText = data.name || "Gold User";
-                    document.getElementById('profileID').innerText = "ID: GP-" + phone.substring(phone.length - 6);
-                    document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
-                    document.getElementById('avatarChar').innerText = (data.name || "G").charAt(0).toUpperCase();
-                }
-            });
-        }
+        if (!phone) { window.location.href = 'index.html'; return; }
+
+        // Live User Stats
+        onValue(ref(db, 'users/' + phone), (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('totalBalance').innerText = "$" + parseFloat(data.balance || 0).toFixed(2);
+                document.getElementById('profileName').innerText = data.name || "Gold User";
+                document.getElementById('profileID').innerText = "ID: GP-" + phone.substring(phone.length - 6);
+                document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
+                document.getElementById('avatarChar').innerText = (data.name || "G").charAt(0).toUpperCase();
+            }
+        });
+
+        // Load Deposit History
+        onValue(ref(db, 'deposits/' + phone), (snap) => {
+            let html = "";
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    const d = child.val();
+                    html += `<div class="history-item">
+                        <div class="history-info"><b>$${d.amount}</b><small>${d.date || 'Today'}</small></div>
+                        <div class="history-status"><span class="status-badge ${d.status === 'Completed' ? 'status-completed' : 'status-pending'}">${d.status || 'Pending'}</span></div>
+                    </div>`;
+                });
+                document.getElementById('depositList').innerHTML = html;
+            }
+        });
+
+        // Load Withdraw History
+        onValue(ref(db, 'withdrawals/' + phone), (snap) => {
+            let html = "";
+            if (snap.exists()) {
+                snap.forEach(child => {
+                    const d = child.val();
+                    html += `<div class="history-item">
+                        <div class="history-info"><b>$${d.amount}</b><small>${d.date || 'Today'}</small></div>
+                        <div class="history-status"><span class="status-badge ${d.status === 'Completed' ? 'status-completed' : 'status-pending'}">${d.status || 'Pending'}</span></div>
+                    </div>`;
+                });
+                document.getElementById('withdrawList').innerHTML = html;
+            }
+        });
     };
 
-    window.logout = () => {
-        localStorage.removeItem('userPhone');
-        window.location.href = 'index.html';
-    };
+    window.logout = () => { localStorage.removeItem('userPhone'); window.location.href = 'index.html'; };
 </script>
 
 </body>
