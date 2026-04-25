@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Profile VIP</title>
+    <title>Gold Plus - VIP Profile</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -11,153 +11,153 @@
             --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22);
             --bg-dark: #0f051d;
             --card-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass: rgba(255, 255, 255, 0.08);
         }
 
         body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: radial-gradient(circle at top, #1a0b2e, #0f051d);
-            color: white;
-            padding-bottom: 120px;
-            min-height: 100vh;
+            margin: 0; font-family: 'Poppins', sans-serif;
+            background: #0a0414; color: white; padding-bottom: 100px;
         }
 
+        /* VIP Header Design */
         .profile-header {
-            text-align: center;
-            padding: 50px 20px;
-            background: var(--gold-grad);
-            border-bottom: 3px solid #b8860b;
-            border-radius: 0 0 50px 50px;
-            box-shadow: 0 10px 40px rgba(241, 196, 15, 0.4);
-            color: #000;
+            background: linear-gradient(180deg, rgba(241, 196, 15, 0.2) 0%, #0a0414 100%);
+            padding: 40px 20px; text-align: center; border-radius: 0 0 40px 40px;
+            border-bottom: 1px solid rgba(241, 196, 15, 0.3);
+            position: relative; overflow: hidden;
         }
 
+        .profile-header::before {
+            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(241, 196, 15, 0.05) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        .avatar-wrapper {
+            position: relative; width: 100px; height: 100px; margin: 0 auto 15px;
+        }
         .avatar-box {
-            width: 90px; height: 90px;
-            background: #000;
-            border: 4px solid #fff;
-            border-radius: 50%; margin: 0 auto 15px;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 40px; color: var(--primary-gold); font-weight: 900;
+            width: 100%; height: 100%; background: var(--gold-grad);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 45px; color: #000; font-weight: bold; border: 4px solid #0a0414;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.5);
+        }
+        .vip-badge {
+            position: absolute; bottom: 0; right: 0; background: #000; color: var(--primary-gold);
+            padding: 4px 10px; border-radius: 10px; font-size: 10px; font-weight: bold;
+            border: 1px solid var(--primary-gold);
         }
 
-        .user-name { font-size: 22px; font-weight: 900; margin-bottom: 5px; text-transform: uppercase; }
-        .user-id { font-size: 13px; color: #333; font-weight: bold; letter-spacing: 1px; }
+        .user-info h2 { margin: 5px 0; font-size: 22px; text-transform: uppercase; letter-spacing: 1px; }
+        .user-info p { margin: 0; color: #888; font-size: 12px; }
 
-        .container { padding: 20px; }
+        .container { padding: 0 20px; margin-top: -30px; }
 
-        .stats-row {
-            display: grid; grid-template-columns: 1fr 1fr;
-            gap: 15px; margin-top: -40px; margin-bottom: 30px;
+        /* Balance Card */
+        .balance-card {
+            background: var(--gold-grad); color: #000; padding: 20px; border-radius: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 25px;
         }
+        .balance-card h3 { margin: 0; font-size: 14px; opacity: 0.8; }
+        .balance-card h1 { margin: 0; font-size: 28px; font-weight: 800; }
 
-        .stat-card {
-            background: #1a0b2e; border: 2px solid var(--primary-gold);
-            border-radius: 25px; padding: 18px; text-align: center;
-            box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+        /* Quick Action Grid */
+        .action-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;
         }
-
-        /* History Table Styles */
-        .history-section {
-            background: var(--card-bg);
-            border-radius: 25px;
-            padding: 15px;
-            margin-top: 25px;
-            border: 1px solid var(--glass-border);
+        .action-item {
+            background: var(--glass); padding: 15px 5px; border-radius: 15px;
+            text-align: center; text-decoration: none; color: white; border: 1px solid rgba(255,255,255,0.05);
         }
+        .action-item i { font-size: 20px; color: var(--primary-gold); margin-bottom: 8px; display: block; }
+        .action-item span { font-size: 10px; font-weight: 500; }
 
-        .history-title {
-            color: var(--primary-gold);
-            font-size: 16px;
-            margin-bottom: 15px;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        /* Menu List */
+        .menu-section { background: var(--glass); border-radius: 20px; padding: 10px; margin-bottom: 20px; }
+        .menu-link {
+            display: flex; align-items: center; padding: 15px; text-decoration: none;
+            color: #ddd; border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-
-        .history-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-        }
-
-        .history-item:last-child { border-bottom: none; }
-
-        .history-info b { font-size: 14px; display: block; }
-        .history-info small { color: #888; font-size: 10px; }
-        
-        .history-status { text-align: right; }
-        .status-badge {
-            font-size: 10px;
-            padding: 4px 8px;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        .status-pending { background: rgba(241, 196, 15, 0.2); color: var(--primary-gold); }
-        .status-completed { background: rgba(0, 255, 100, 0.2); color: #00ff64; }
+        .menu-link:last-child { border-bottom: none; }
+        .menu-link i { width: 30px; color: var(--primary-gold); font-size: 18px; }
+        .menu-link span { flex: 1; font-size: 14px; }
+        .menu-link i.fa-chevron-right { font-size: 12px; color: #555; }
 
         .logout-btn {
-            margin-top: 30px; width: 100%; padding: 18px;
-            background: rgba(255, 50, 50, 0.1); border: 1px solid rgba(255, 50, 50, 0.3);
-            color: #ff4444; border-radius: 20px; font-weight: 900;
-            text-transform: uppercase;
+            background: rgba(255, 50, 50, 0.1); color: #ff5555; padding: 15px;
+            border-radius: 15px; text-align: center; cursor: pointer; font-weight: bold;
+            border: 1px solid rgba(255, 50, 50, 0.2); margin-top: 10px;
         }
 
         .bottom-nav {
-            position: fixed; bottom: 0; width: 100%;
-            background: #0a0414; display: flex; justify-content: space-around;
-            padding: 15px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000;
+            position: fixed; bottom: 0; width: 100%; background: #0a0414;
+            display: flex; justify-content: space-around; padding: 12px 0;
+            border-top: 1px solid rgba(241, 196, 15, 0.2);
         }
-
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
+        .nav-item { color: #555; text-decoration: none; text-align: center; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 22px; display: block; margin-bottom: 4px; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
 <div class="profile-header">
-    <div class="avatar-box" id="avatarChar">G</div>
-    <div class="user-name" id="profileName">GOLD USER</div>
-    <div class="user-id" id="profileID">ID: GP-000000</div>
+    <div class="avatar-wrapper">
+        <div class="avatar-box" id="avatarChar">G</div>
+        <div class="vip-badge">VIP 1</div>
+    </div>
+    <div class="user-info">
+        <h2 id="profileName">Loading...</h2>
+        <p id="profileID">ID: GP-000000</p>
+    </div>
 </div>
 
 <div class="container">
-    <div class="stats-row">
-        <div class="stat-card">
-            <i class="fas fa-wallet"></i>
-            <span>Main Balance</span>
-            <b id="totalBalance">$0.00</b>
+    <div class="balance-card">
+        <div>
+            <h3>Total Balance</h3>
+            <h1 id="totalBalance">$0.00</h1>
         </div>
-        <div class="stat-card">
-            <i class="fas fa-users"></i>
-            <span>Team size</span>
-            <b id="myTeam">0 Members</b>
+        <div style="text-align: right;">
+            <p id="pkrBalance" style="margin:0; font-weight:bold; font-size:14px;">Rs. 0</p>
+            <small style="font-size:9px;">1 USD = 300 PKR</small>
         </div>
     </div>
 
-    <div class="history-section">
-        <div class="history-title"><i class="fas fa-plus-circle"></i> Recent Deposits</div>
-        <div id="depositList"><p style="font-size:12px; color:#666;">No deposit history found.</p></div>
+    <div class="action-grid">
+        <a href="deposit.html" class="action-item"><i class="fas fa-arrow-down"></i><span>Deposit</span></a>
+        <a href="withdraw.html" class="action-item"><i class="fas fa-paper-plane"></i><span>Withdraw</span></a>
+        <a href="refer.html" class="action-item"><i class="fas fa-users"></i><span>My Team</span></a>
+        <a href="withdraw.html" class="action-item"><i class="fas fa-history"></i><span>History</span></a>
     </div>
 
-    <div class="history-section">
-        <div class="history-title"><i class="fas fa-minus-circle"></i> Withdrawal Logs</div>
-        <div id="withdrawList"><p style="font-size:12px; color:#666;">No withdrawal history found.</p></div>
+    <div class="menu-section">
+        <a href="#" class="menu-link" onclick="alert('Feature coming soon!')">
+            <i class="fas fa-user-edit"></i><span>Edit Profile Name</span><i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="#" class="menu-link" onclick="alert('Contact admin to change password')">
+            <i class="fas fa-lock"></i><span>Change Password</span><i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="refer.html" class="menu-link">
+            <i class="fas fa-gift"></i><span>Invite Rewards</span><i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="#" class="menu-link">
+            <i class="fas fa-headset"></i><span>Customer Support</span><i class="fas fa-chevron-right"></i>
+        </a>
     </div>
 
-    <button class="logout-btn" onclick="logout()">Logout Account</button>
+    <div class="logout-btn" onclick="logout()">LOGOUT ACCOUNT</div>
 </div>
 
 <nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-house"></i>HOME</a>
-    <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i>INVEST</a>
-    <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-item"><i class="fas fa-users"></i>REFER</a>
-    <a href="profile.html" class="nav-item active"><i class="fas fa-user-gear"></i>PROFILE</a>
+    <a href="dashboard.html" class="nav-item"><i class="fas fa-house"></i><span>HOME</span></a>
+    <a href="plans.html" class="nav-item"><i class="fas fa-gem"></i><span>PLANS</span></a>
+    <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i><span>EARN</span></a>
+    <a href="refer.html" class="nav-item"><i class="fas fa-users"></i><span>REFER</span></a>
+    <a href="profile.html" class="nav-item active"><i class="fas fa-user-gear"></i><span>PROFILE</span></a>
 </nav>
 
 <script type="module">
@@ -173,55 +173,34 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
+    const PKR_RATE = 300;
 
     window.onload = function() {
         const phone = localStorage.getItem('userPhone');
         if (!phone) { window.location.href = 'index.html'; return; }
 
-        // Live User Stats
         onValue(ref(db, 'users/' + phone), (snapshot) => {
             const data = snapshot.val();
             if (data) {
-                document.getElementById('totalBalance').innerText = "$" + parseFloat(data.balance || 0).toFixed(2);
+                // بیلنس فکس لاجک: روپے کو ڈالر میں بدل کر دکھانا
+                let balancePKR = parseFloat(data.balance || 0);
+                let balanceUSD = balancePKR / PKR_RATE;
+
+                document.getElementById('totalBalance').innerText = "$" + balanceUSD.toFixed(2);
+                document.getElementById('pkrBalance').innerText = "Rs. " + balancePKR.toLocaleString();
                 document.getElementById('profileName').innerText = data.name || "Gold User";
                 document.getElementById('profileID').innerText = "ID: GP-" + phone.substring(phone.length - 6);
-                document.getElementById('myTeam').innerText = (data.referCount || 0) + " Members";
                 document.getElementById('avatarChar').innerText = (data.name || "G").charAt(0).toUpperCase();
-            }
-        });
-
-        // Load Deposit History
-        onValue(ref(db, 'deposits/' + phone), (snap) => {
-            let html = "";
-            if (snap.exists()) {
-                snap.forEach(child => {
-                    const d = child.val();
-                    html += `<div class="history-item">
-                        <div class="history-info"><b>$${d.amount}</b><small>${d.date || 'Today'}</small></div>
-                        <div class="history-status"><span class="status-badge ${d.status === 'Completed' ? 'status-completed' : 'status-pending'}">${d.status || 'Pending'}</span></div>
-                    </div>`;
-                });
-                document.getElementById('depositList').innerHTML = html;
-            }
-        });
-
-        // Load Withdraw History
-        onValue(ref(db, 'withdrawals/' + phone), (snap) => {
-            let html = "";
-            if (snap.exists()) {
-                snap.forEach(child => {
-                    const d = child.val();
-                    html += `<div class="history-item">
-                        <div class="history-info"><b>$${d.amount}</b><small>${d.date || 'Today'}</small></div>
-                        <div class="history-status"><span class="status-badge ${d.status === 'Completed' ? 'status-completed' : 'status-pending'}">${d.status || 'Pending'}</span></div>
-                    </div>`;
-                });
-                document.getElementById('withdrawList').innerHTML = html;
             }
         });
     };
 
-    window.logout = () => { localStorage.removeItem('userPhone'); window.location.href = 'index.html'; };
+    window.logout = () => { 
+        if(confirm("Are you sure you want to logout?")) {
+            localStorage.removeItem('userPhone'); 
+            window.location.href = 'index.html'; 
+        }
+    };
 </script>
 
 </body>
