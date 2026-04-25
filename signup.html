@@ -3,27 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Signup</title>
+    <title>Gold Plus - VIP Signup</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --gold: #f1c40f; --bg: #0f051d; }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .signup-container { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(241, 196, 15, 0.2); text-align: center; }
-        .input-group { margin-bottom: 15px; position: relative; }
-        input { width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; box-sizing: border-box; }
-        .signup-btn { background: #f1c40f; color: black; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        :root { --gold: #f1c40f; --bg: #0f051d; --glass: rgba(255, 255, 255, 0.08); }
+        body { 
+            margin: 0; 
+            font-family: 'Poppins', sans-serif; 
+            background: radial-gradient(circle at top, #1a0b2e, #0f051d); 
+            color: white; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            overflow: hidden;
+        }
+        
+        .signup-container { 
+            width: 90%; 
+            max-width: 400px; 
+            background: var(--glass); 
+            backdrop-filter: blur(20px); 
+            border-radius: 30px; 
+            padding: 40px 30px; 
+            border: 1px solid rgba(241, 196, 15, 0.3); 
+            text-align: center; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* VIP LOGO */
+        .logo-box {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #f1c40f, #e67e22);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 45px;
+            color: #0f051d;
+            margin-bottom: 25px;
+            box-shadow: 0 0 25px rgba(241, 196, 15, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 15px rgba(241, 196, 15, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 30px rgba(241, 196, 15, 0.6); }
+            100% { transform: scale(1); box-shadow: 0 0 15px rgba(241, 196, 15, 0.4); }
+        }
+
+        h2 { color: var(--gold); margin: 0; font-size: 26px; text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+        .inviter-text { font-size: 13px; color: #00ff64; margin: 10px 0 25px; font-weight: 500; }
+
+        .input-group { margin-bottom: 18px; position: relative; }
+        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 18px; }
+        
+        input { 
+            width: 100%; 
+            padding: 14px 15px 14px 45px; 
+            background: rgba(0,0,0,0.4); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 15px; 
+            color: white; 
+            outline: none; 
+            box-sizing: border-box; 
+            transition: 0.3s;
+            font-size: 15px;
+        }
+
+        input:focus { border-color: var(--gold); background: rgba(0,0,0,0.6); box-shadow: 0 0 15px rgba(241, 196, 15, 0.1); }
+        
+        .signup-btn { 
+            background: linear-gradient(90deg, #f1c40f, #e67e22); 
+            color: black; 
+            border: none; 
+            width: 100%; 
+            padding: 16px; 
+            border-radius: 15px; 
+            font-weight: 900; 
+            font-size: 16px; 
+            cursor: pointer; 
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(230, 126, 34, 0.3);
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .signup-btn:active { transform: scale(0.97); }
+        .signup-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        .footer-link { margin-top: 25px; font-size: 14px; color: #bbb; }
+        .footer-link a { color: var(--gold); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="signup-container">
-    <h2 id="inviterText" style="color: #f1c40f;">Create Account</h2>
-    <div class="input-group"><input type="text" id="username" placeholder="Username"></div>
-    <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
-    <div class="input-group"><input type="password" id="pass" placeholder="Password"></div>
-    <div class="input-group"><input type="password" id="confirm_pass" placeholder="Confirm Password"></div>
-    <div class="input-group"><input type="text" id="ref" placeholder="Referral Code"></div>
-    <button class="signup-btn" id="signupBtn">SIGN UP NOW</button>
+    <div class="logo-box"><i class="fas fa-gem"></i></div>
+    <h2>GOLD PLUS</h2>
+    <div id="inviterText" class="inviter-text">GLOBAL MINING NETWORK</div>
+
+    <div class="input-group"><i class="fas fa-user"></i><input type="text" id="username" placeholder="Username"></div>
+    <div class="input-group"><i class="fas fa-envelope"></i><input type="email" id="email" placeholder="Email Address"></div>
+    <div class="input-group"><i class="fas fa-lock"></i><input type="password" id="pass" placeholder="Password (Min 6 chars)"></div>
+    <div class="input-group"><i class="fas fa-shield-alt"></i><input type="password" id="confirm_pass" placeholder="Confirm Password"></div>
+    <div class="input-group"><i class="fas fa-user-friends"></i><input type="text" id="ref" placeholder="Referral Code"></div>
+
+    <button class="signup-btn" id="signupBtn">CREATE VIP ACCOUNT</button>
+
+    <div class="footer-link">Already have an account? <a href="login.html">Login Now</a></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
@@ -31,7 +126,6 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // Firebase Config
     var firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
@@ -39,14 +133,10 @@
       projectId: "gold-plus-v1"
     };
 
-    // Initialize Firebase
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
+    if (!firebase.apps.length) { firebase.initializeApp(firebaseConfig); }
     var db = firebase.database();
     var auth = firebase.auth();
 
-    // ریفرل لنک چیک کریں
     window.onload = function() {
         var params = new URLSearchParams(window.location.search);
         var refCode = params.get('ref');
@@ -56,13 +146,12 @@
             
             db.ref('users/' + refCode).once('value').then(function(snap) {
                 if(snap.exists()) {
-                    document.getElementById('inviterText').innerText = "Invited by " + snap.val().username;
+                    document.getElementById('inviterText').innerText = "JOINING UNDER: " + snap.val().username.toUpperCase();
                 }
             });
         }
     };
 
-    // سائن اپ کا بٹن
     document.getElementById('signupBtn').onclick = function() {
         var user = document.getElementById('username').value.trim().toLowerCase();
         var email = document.getElementById('email').value.trim();
@@ -70,18 +159,18 @@
         var cPass = document.getElementById('confirm_pass').value;
         var refer = document.getElementById('ref').value || "none";
 
-        if(!user || !email || !pass) { alert("Fill all fields!"); return; }
-        if(pass !== cPass) { alert("Password mismatch!"); return; }
+        if(!user || !email || !pass) { alert("Please fill all fields!"); return; }
+        if(pass.length < 6) { alert("Password must be at least 6 characters!"); return; }
+        if(pass !== cPass) { alert("Passwords do not match!"); return; }
 
         var btn = document.getElementById('signupBtn');
-        btn.innerText = "Please wait...";
+        btn.innerText = "PROCESSING...";
         btn.disabled = true;
 
-        // یوزر چیک اور سائن اپ
         db.ref('users/' + user).once('value').then(function(s) {
             if(s.exists()) {
-                alert("Username taken!");
-                btn.innerText = "SIGN UP NOW";
+                alert("Username already taken!");
+                btn.innerText = "CREATE VIP ACCOUNT";
                 btn.disabled = false;
             } else {
                 auth.createUserWithEmailAndPassword(email, pass).then(function(res) {
@@ -91,6 +180,9 @@
                         email: email,
                         referredBy: refer,
                         balance: 0,
+                        totalEarned: 0,
+                        totalDeposit: 0,
+                        status: "active",
                         joinDate: new Date().toLocaleDateString()
                     };
                     
@@ -102,11 +194,12 @@
                             });
                         }
                         localStorage.setItem('userPhone', user);
+                        alert("Account Created Successfully!");
                         window.location.href = "dashboard.html";
                     });
                 }).catch(function(e) {
                     alert(e.message);
-                    btn.innerText = "SIGN UP NOW";
+                    btn.innerText = "CREATE VIP ACCOUNT";
                     btn.disabled = false;
                 });
             }
