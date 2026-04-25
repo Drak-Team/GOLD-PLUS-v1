@@ -154,7 +154,9 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
-    const PKR_RATE = 280; // 1 USD = 280 PKR (آپ اسے بدل سکتے ہیں)
+    
+    // فکس ریٹ 1$ = 300 PKR
+    const PKR_RATE = 300; 
 
     if (!phone) window.location.href = "login.html";
 
@@ -162,25 +164,31 @@
         if (snapshot.exists()) {
             const data = snapshot.val();
             
-            // 1. Balance Calculation (USD & PKR)
-            const bal = parseFloat(data.balance || 0);
-            const pkr = (bal * PKR_RATE).toLocaleString();
+            // 1. بیلنس فکسنگ (Database PKR میں ہے)
+            const rawBalance = parseFloat(data.balance || 0);
+            const usdBalance = rawBalance / PKR_RATE;
             
-            document.getElementById('mainBalance').innerText = "$" + bal.toFixed(2);
-            document.getElementById('pkrBalance').innerText = "Rs. " + pkr;
-            document.getElementById('withdrawStat').innerText = "$" + bal.toFixed(2);
+            // ڈسپلے: اوپر ڈالر اور نیچے پاکستانی روپیز
+            document.getElementById('mainBalance').innerText = "$" + usdBalance.toFixed(2);
+            document.getElementById('pkrBalance').innerText = "Rs. " + rawBalance.toLocaleString();
             
-            // 2. Total Stats
-            document.getElementById('totalEarned').innerText = "$" + parseFloat(data.totalEarned || 0).toFixed(2);
-            document.getElementById('totalDeposit').innerText = "$" + parseFloat(data.totalDeposit || 0).toFixed(2);
+            // ودڈرال والا بیلنس بھی ڈالر میں
+            document.getElementById('withdrawStat').innerText = "$" + usdBalance.toFixed(2);
             
-            // 3. User Info
+            // 2. ٹوٹل ڈپازٹ اور ارننگ (PKR سے ڈالر میں تبدیلی)
+            const totalDepPKR = parseFloat(data.totalDeposit || 0);
+            const totalEarnPKR = parseFloat(data.totalEarned || 0);
+            
+            document.getElementById('totalDeposit').innerText = "$" + (totalDepPKR / PKR_RATE).toFixed(2);
+            document.getElementById('totalEarned').innerText = "$" + (totalEarnPKR / PKR_RATE).toFixed(2);
+            
+            // 3. پروفائل اور ٹیم انفارمیشن
             const currentPlan = data.plan || "No Active Plan";
             document.getElementById('activePlan').innerText = currentPlan;
             document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-crown"></i> VIP: ' + phone;
             document.getElementById('teamCount').innerText = (data.referCount || 0) + " Members";
 
-            // 4. Package Display
+            // 4. ایکٹو پیکج کارڈ کا ڈسپلے
             const pkgList = document.getElementById('packageList');
             let pkgHTML = "";
             if (data.plan) {
