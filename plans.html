@@ -93,8 +93,7 @@
 
     function loadPlans() {
         const list = document.getElementById('plansList');
-        list.innerHTML = "";
-
+        
         db.ref('users/' + phone).on('value', (snap) => {
             const userData = snap.val() || {};
             const userBal = parseFloat(userData.balance || 0);
@@ -104,22 +103,21 @@
             plans.forEach(plan => {
                 let btnText = "Deposit Now";
                 let btnClass = "buy-btn deposit";
-                let btnAction = `window.location.href='deposit.html?amount=${plan.id}'`;
+                let btnAction = `window.location.href='deposit.html?amount=${plan.rs}'`;
                 let isDisabled = false;
 
-                if (activePlan !== "" && activePlan !== "No Active Plan") {
-                    if (activePlan === plan.name) {
-                        btnText = "Activated";
-                        btnClass = "buy-btn active-plan";
-                        isDisabled = true;
-                    } else {
-                        btnText = "Locked";
-                        isDisabled = true;
-                    }
-                } else if (userBal >= plan.rs) {
+                // اگر یوزر کا یہ پلان پہلے سے ایکٹیو ہے
+                if (activePlan === plan.name) {
+                    btnText = "Activated";
+                    btnClass = "buy-btn active-plan";
+                    isDisabled = true;
+                } 
+                // اگر یوزر کے پاس بیلنس ہے تو وہ کوئی بھی پلان خرید سکتا ہے
+                else if (userBal >= plan.rs) {
                     btnText = "Invest Now";
                     btnClass = "buy-btn";
                     btnAction = `investNow(${plan.rs}, '${plan.name}', ${plan.daily})`;
+                    isDisabled = false;
                 }
 
                 html += `
@@ -148,18 +146,20 @@
             const userData = snapshot.val();
             if (userData && parseFloat(userData.balance || 0) >= price) {
                 
+                const currentBalance = parseFloat(userData.balance) - price;
+                
                 // 1. پلان اپ ڈیٹ کریں
-                const updates = {};
-                updates['balance'] = parseFloat(userData.balance) - price;
-                updates['plan'] = name;
-                updates['dailyProfit'] = daily;
-                updates['miningStatus'] = "Active";
-                updates['planDate'] = new Date().getTime();
-
-                userRef.update(updates).then(() => {
+                userRef.update({
+                    balance: currentBalance,
+                    plan: name,
+                    dailyProfit: daily,
+                    miningStatus: "Active",
+                    planDate: new Date().getTime()
+                }).then(() => {
+                    
                     // 2. ریفرل کمیشن (10%)
                     const referBy = userData.referredBy;
-                    if (referBy && referBy !== "none") {
+                    if (referBy && referBy !== "none" && referBy !== "") {
                         const commission = price * 0.10;
                         const refRef = db.ref('users/' + referBy);
                         
@@ -179,10 +179,15 @@
                                     from: phone,
                                     date: new Date().toLocaleString()
                                 });
+
+                                // ریفرل لسٹ میں اسٹیٹس اپ ڈیٹ
+                                db.ref('users/' + referBy + '/referrals/' + phone).update({
+                                    status: "Activated"
+                                });
                             }
                         });
                     }
-                    alert("Success! Plan Activated.");
+                    alert("Success! " + name + " Activated.");
                     window.location.href = "mining.html";
                 });
             } else {
