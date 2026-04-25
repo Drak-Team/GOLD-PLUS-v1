@@ -30,6 +30,8 @@
 
     function loadPlans() {
         const list = document.getElementById('plansList');
+        list.innerHTML = "";
+
         db.ref('users/' + phone).on('value', (snap) => {
             const userData = snap.val() || {};
             const userBal = parseFloat(userData.balance || 0);
@@ -74,52 +76,59 @@
         });
     }
 
-    function investNow(price, name, daily) {
+    async function investNow(price, name, daily) {
         if (!confirm(`Confirm investment in ${name} for Rs. ${price}?`)) return;
 
         const userRef = db.ref('users/' + phone);
         
-        userRef.once('value').then((snap) => {
-            const userData = snap.val();
-            if (userData && parseFloat(userData.balance || 0) >= price) {
-                
-                // 1. پلان اپ ڈیٹ کریں
-                userRef.update({
-                    balance: parseFloat(userData.balance) - price,
-                    plan: name,
-                    dailyProfit: daily,
-                    miningStatus: "Active",
-                    planDate: new Date().getTime()
-                });
+        userRef.transaction((currentData) => {
+            if (currentData && parseFloat(currentData.balance || 0) >= price) {
+                // پیسے کاٹیں اور پلان ایکٹیو کریں
+                currentData.balance = parseFloat(currentData.balance) - price;
+                currentData.plan = name;
+                currentData.dailyProfit = daily;
+                currentData.miningStatus = "Active";
+                currentData.planDate = new Date().getTime();
 
-                // 2. ریفرل کمیشن (10%)
-                const refBy = userData.referredBy;
-                if (refBy && refBy !== "none") {
-                    const commission = price * 0.10;
-                    const refRef = db.ref('users/' + refBy);
+                // ریفرل کمیشن (10%) کی لاجک یہاں سے شروع ہوتی ہے
+                const referBy = currentData.referredBy; 
+                if (referBy && referBy !== "none") {
+                    const comm = price * 0.10;
                     
-                    refRef.transaction((currentData) => {
-                        if (currentData) {
-                            currentData.balance = (parseFloat(currentData.balance) || 0) + commission;
-                            currentData.teamCommission = (parseFloat(currentData.teamCommission) || 0) + commission;
-                            currentData.lvl1Commission = (parseFloat(currentData.lvl1Commission) || 0) + commission;
+                    // ریفر کرنے والے کے بیلنس میں پیسے جمع کرنا
+                    db.ref('users/' + referBy).transaction((refData) => {
+                        if (refData) {
+                            refData.balance = (parseFloat(refData.balance) || 0) + comm;
+                            refData.teamCommission = (parseFloat(refData.teamCommission) || 0) + comm;
+                            refData.lvl1Commission = (parseFloat(refData.lvl1Commission) || 0) + comm;
+                            
+                            // ریفرر کی ریفرل لسٹ میں اس ممبر کو "Activated" دکھانا
+                            if(refData.referrals && refData.referrals[phone]) {
+                                refData.referrals[phone].status = "Activated";
+                            }
                         }
-                        return currentData;
+                        return refData;
                     });
 
-                    // ریفرر کی ہسٹری
-                    db.ref('earning_history/' + refBy).push({
-                        amount: commission,
+                    // ریفر کرنے والے کی ارننگ ہسٹری میں ریکارڈ ڈالنا
+                    db.ref('earning_history/' + referBy).push({
+                        amount: comm,
                         type: "Team Bonus",
                         from: phone,
-                        date: new Date().toLocaleString()
+                        date: new Date().toLocaleString(),
+                        timestamp: firebase.database.ServerValue.TIMESTAMP
                     });
                 }
-
+                
+                return currentData;
+            }
+            return; 
+        }, (error, committed) => {
+            if (committed) {
                 alert("Success! Plan Activated.");
                 window.location.href = "mining.html";
             } else {
-                alert("Insufficient balance!");
+                alert("Insufficient balance or error occurred.");
             }
         });
     }
