@@ -1,3 +1,6 @@
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
 <script>
     const firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -31,12 +34,14 @@
             const userData = snap.val() || {};
             const userBal = parseFloat(userData.balance || 0);
             const activePlan = userData.plan || "";
+
             let html = "";
             plans.forEach(plan => {
                 let btnText = "Deposit Now";
                 let btnClass = "buy-btn deposit";
                 let btnAction = `window.location.href='deposit.html?amount=${plan.id}'`;
                 let isDisabled = false;
+
                 if (activePlan !== "" && activePlan !== "No Active Plan") {
                     if (activePlan === plan.name) {
                         btnText = "Activated";
@@ -51,6 +56,7 @@
                     btnClass = "buy-btn";
                     btnAction = `investNow(${plan.rs}, '${plan.name}', ${plan.daily})`;
                 }
+
                 html += `
                     <div class="plan-card">
                         <i class="fas fa-robot robot-bg"></i>
@@ -68,61 +74,54 @@
         });
     }
 
-    async function investNow(price, name, daily) {
+    function investNow(price, name, daily) {
         if (!confirm(`Confirm investment in ${name} for Rs. ${price}?`)) return;
 
         const userRef = db.ref('users/' + phone);
-        const snap = await userRef.get();
-        const userData = snap.val();
-
-        if (userData && parseFloat(userData.balance || 0) >= price) {
-            // 1. پلان ایکٹیو کریں اور بیلنس کاٹیں
-            await userRef.update({
-                balance: parseFloat(userData.balance) - price,
-                plan: name,
-                dailyProfit: daily,
-                miningStatus: "Active",
-                planDate: firebase.database.ServerValue.TIMESTAMP
-            });
-
-            // 2. ریفرل کمیشن لاجک
-            const referrerPhone = userData.referredBy; // سائن اپ میں ہم نے یہی نام رکھا ہے
-            if (referrerPhone && referrerPhone !== "none") {
-                const commission = price * 0.10; // 10% کمیشن
-                const referrerRef = db.ref('users/' + referrerPhone);
+        
+        userRef.once('value').then((snap) => {
+            const userData = snap.val();
+            if (userData && parseFloat(userData.balance || 0) >= price) {
                 
-                referrerRef.transaction((refData) => {
-                    if (refData) {
-                        refData.balance = (parseFloat(refData.balance) || 0) + commission;
-                        refData.teamCommission = (parseFloat(refData.teamCommission) || 0) + commission;
-                        refData.lvl1Commission = (parseFloat(refData.lvl1Commission) || 0) + commission;
-                    }
-                    return refData;
+                // 1. پلان اپ ڈیٹ کریں
+                userRef.update({
+                    balance: parseFloat(userData.balance) - price,
+                    plan: name,
+                    dailyProfit: daily,
+                    miningStatus: "Active",
+                    planDate: new Date().getTime()
                 });
 
-                // ریفرر کی ہسٹری میں ریکارڈ ڈالیں
-                db.ref('earning_history/' + referrerPhone).push({
-                    amount: commission,
-                    type: "Team Bonus (Lvl 1)",
-                    from: phone,
-                    date: new Date().toLocaleString(),
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
+                // 2. ریفرل کمیشن (10%)
+                const refBy = userData.referredBy;
+                if (refBy && refBy !== "none") {
+                    const commission = price * 0.10;
+                    const refRef = db.ref('users/' + refBy);
+                    
+                    refRef.transaction((currentData) => {
+                        if (currentData) {
+                            currentData.balance = (parseFloat(currentData.balance) || 0) + commission;
+                            currentData.teamCommission = (parseFloat(currentData.teamCommission) || 0) + commission;
+                            currentData.lvl1Commission = (parseFloat(currentData.lvl1Commission) || 0) + commission;
+                        }
+                        return currentData;
+                    });
 
-                // نئے ممبر کی اپنی ہسٹری میں ریکارڈ کہ اس نے پلان لیا
-                db.ref('earning_history/' + phone).push({
-                    amount: price,
-                    type: "Plan Purchased: " + name,
-                    date: new Date().toLocaleString(),
-                    timestamp: firebase.database.ServerValue.TIMESTAMP
-                });
+                    // ریفرر کی ہسٹری
+                    db.ref('earning_history/' + refBy).push({
+                        amount: commission,
+                        type: "Team Bonus",
+                        from: phone,
+                        date: new Date().toLocaleString()
+                    });
+                }
+
+                alert("Success! Plan Activated.");
+                window.location.href = "mining.html";
+            } else {
+                alert("Insufficient balance!");
             }
-
-            alert("Success! Plan Activated & Commission Sent.");
-            window.location.href = "mining.html";
-        } else {
-            alert("Insufficient balance!");
-        }
+        });
     }
 
     loadPlans();
