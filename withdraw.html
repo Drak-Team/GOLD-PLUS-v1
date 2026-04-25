@@ -18,7 +18,6 @@
         .request-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 16px; border-radius: 15px; font-weight: bold; cursor: pointer; }
         .history-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--gold); }
         
-        /* Fee Breakdown Style */
         .fee-details { background: rgba(241, 196, 15, 0.1); border-radius: 12px; padding: 12px; margin-top: 10px; display: none; }
         .fee-row { display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 4px; }
         
@@ -50,7 +49,7 @@
 
     <div class="input-group">
         <label id="limitLabel">Withdrawal Amount ($)</label>
-        <input type="number" id="withdrawAmount" placeholder="Loading limit...">
+        <input type="number" id="withdrawAmount" step="0.01" placeholder="Checking limit...">
         
         <div id="feeBox" class="fee-details">
             <div class="fee-row"><span>Withdrawal Fee (10%):</span> <span id="withdrawFee">$0.00</span></div>
@@ -91,92 +90,97 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
-    let currentBalance = 0;
+    const PKR_RATE = 300; // 1$ = 300 PKR
+    let currentBalanceUSD = 0;
     let minLimit = 1.0;
-    let isFirstWithdraw = true;
 
     if (!phone) { window.location.href = "login.html"; }
 
-    // چیک کریں کہ پہلے کوئی ودڈرا ہوا ہے یا نہیں
+    // --- بیلنس سنکرونائزیشن ---
+    db.ref('users/' + phone).on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            // ڈیش بورڈ کے مطابق بیلنس اٹھانا
+            currentBalanceUSD = parseFloat(data.balance) || 0;
+            
+            document.getElementById('currentBalance').innerText = "$" + currentBalanceUSD.toFixed(2);
+            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalanceUSD * PKR_RATE).toLocaleString() + ")";
+        }
+    });
+
+    // --- لیمٹ چیکر ---
     db.ref('withdrawals').orderByChild('phone').equalTo(phone).once('value', (snapshot) => {
         if (snapshot.exists()) {
-            isFirstWithdraw = false;
             minLimit = 1.0;
             document.getElementById('withdrawAmount').placeholder = "Min $1.00";
         } else {
-            isFirstWithdraw = true;
             minLimit = 0.50;
             document.getElementById('withdrawAmount').placeholder = "Min $0.50 (First Time)";
         }
     });
 
-    db.ref('users/' + phone).on('value', (snapshot) => {
-        if (snapshot.exists()) {
-            currentBalance = parseFloat(snapshot.val().balance) || 0;
-            document.getElementById('currentBalance').innerText = "$" + currentBalance.toFixed(2);
-            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalance * 300).toLocaleString() + ")";
-        }
-    });
-
-    // ٹیکس کیلکولیشن لاجک
+    // --- ٹیکس اور کیلکولیشن لاجک ---
     document.getElementById('withdrawAmount').oninput = (e) => {
-        const val = parseFloat(e.target.value);
+        const inputVal = parseFloat(e.target.value);
         const feeBox = document.getElementById('feeBox');
         
-        if (val > 0) {
+        if (inputVal > 0) {
             feeBox.style.display = "block";
-            const wFee = val * 0.10; // 10%
-            const mFee = val * 0.05; // 5%
-            const netAmount = val - (wFee + mFee);
+            const wFee = inputVal * 0.10; // 10%
+            const mFee = inputVal * 0.05; // 5%
+            const totalTax = wFee + mFee;
+            const netUSD = inputVal - totalTax;
+            const netPKR = netUSD * PKR_RATE;
             
             document.getElementById('withdrawFee').innerText = "$" + wFee.toFixed(2);
             document.getElementById('maintFee').innerText = "$" + mFee.toFixed(2);
-            document.getElementById('finalAmount').innerText = "Rs. " + Math.floor(netAmount * 300).toLocaleString();
+            document.getElementById('finalAmount').innerText = "Rs. " + Math.floor(netPKR).toLocaleString();
         } else {
             feeBox.style.display = "none";
         }
     };
 
+    // --- ودڈرال ریکویسٹ ---
     document.getElementById('requestBtn').onclick = function() {
         const amount = parseFloat(document.getElementById('withdrawAmount').value);
         const method = document.getElementById('method').value;
         const accNum = document.getElementById('accountNum').value;
         const accName = document.getElementById('accountName').value;
 
-        if (amount < minLimit) { alert("Minimum withdrawal is $" + minLimit); return; }
-        if (amount > currentBalance) { alert("Insufficient Balance!"); return; }
-        if (!accNum || !accName) { alert("Please fill all fields!"); return; }
+        if (isNaN(amount) || amount < minLimit) { alert("Minimum withdrawal is $" + minLimit); return; }
+        if (amount > currentBalanceUSD) { alert("Insufficient Balance! Your balance is in Dollars."); return; }
+        if (!accNum || !accName) { alert("Please fill all details!"); return; }
 
         this.disabled = true;
         this.innerText = "Processing...";
 
-        const withdrawID = Date.now();
         db.ref('users/' + phone + '/balance').transaction((curr) => {
             if (curr >= amount) return (curr - amount);
         }, (error, committed) => {
             if (committed) {
+                const withdrawID = Date.now();
                 db.ref('withdrawals/' + withdrawID).set({
                     phone: phone, 
-                    amount: amount, 
-                    netAmount: (amount * 0.85).toFixed(2), // 15% ٹیکس کے بعد
+                    amount: amount, // اصل ڈالر جو کاٹے گئے
+                    netAmountPKR: Math.floor((amount * 0.85) * PKR_RATE), // 15% ٹیکس کے بعد روپے
                     method: method,
                     accountNumber: accNum, 
                     accountName: accName,
                     status: "Pending", 
                     date: new Date().toLocaleString()
                 }).then(() => {
-                    alert("Withdrawal Requested Successfully!");
+                    alert("Withdrawal Requested! Amount deducted in Dollars.");
                     location.reload();
                 });
             } else {
-                alert("Transaction failed. Try again.");
+                alert("Failed! Check your connection.");
                 this.disabled = false;
                 this.innerText = "CONFIRM WITHDRAWAL";
             }
         });
     };
 
-    // ہسٹری لوڈ کرنا
+    // --- ہسٹری ---
     db.ref('withdrawals').orderByChild('phone').equalTo(phone).on('value', (snapshot) => {
         let html = '';
         snapshot.forEach((child) => {
@@ -190,7 +194,7 @@
                         <small style="color:#888">${data.date}</small>
                     </div>`;
         });
-        document.getElementById('historyList').innerHTML = html || '<p style="text-align:center; color:#555;">No history found.</p>';
+        document.getElementById('historyList').innerHTML = html || '<p style="text-align:center; color:#555;">No records found.</p>';
     });
 </script>
 </body>
