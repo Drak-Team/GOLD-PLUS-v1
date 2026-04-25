@@ -91,45 +91,48 @@
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
     const PKR_RATE = 300; // 1$ = 300 PKR
-    let currentBalanceUSD = 0;
-    let minLimit = 1.0;
+    let currentBalancePKR = 0;
+    let minLimitUSD = 1.0;
 
     if (!phone) { window.location.href = "login.html"; }
 
-    // --- بیلنس سنکرونائزیشن ---
+    // --- بیلنس سنکرونائزیشن (PKR سے USD کنورژن کے ساتھ) ---
     db.ref('users/' + phone).on('value', (snapshot) => {
         if (snapshot.exists()) {
             const data = snapshot.val();
-            // ڈیش بورڈ کے مطابق بیلنس اٹھانا
-            currentBalanceUSD = parseFloat(data.balance) || 0;
+            // ڈیٹا بیس میں موجود 150 کو PKR مانا جائے گا
+            currentBalancePKR = parseFloat(data.balance) || 0;
             
-            document.getElementById('currentBalance').innerText = "$" + currentBalanceUSD.toFixed(2);
-            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalanceUSD * PKR_RATE).toLocaleString() + ")";
+            // ڈالر میں دکھانے کے لیے تقسیم کریں
+            let balanceInUSD = currentBalancePKR / PKR_RATE;
+            
+            document.getElementById('currentBalance').innerText = "$" + balanceInUSD.toFixed(2);
+            document.getElementById('pkrValue').innerText = "(Rs. " + Math.floor(currentBalancePKR).toLocaleString() + ")";
         }
     });
 
     // --- لیمٹ چیکر ---
     db.ref('withdrawals').orderByChild('phone').equalTo(phone).once('value', (snapshot) => {
         if (snapshot.exists()) {
-            minLimit = 1.0;
+            minLimitUSD = 1.0;
             document.getElementById('withdrawAmount').placeholder = "Min $1.00";
         } else {
-            minLimit = 0.50;
+            minLimitUSD = 0.50;
             document.getElementById('withdrawAmount').placeholder = "Min $0.50 (First Time)";
         }
     });
 
     // --- ٹیکس اور کیلکولیشن لاجک ---
     document.getElementById('withdrawAmount').oninput = (e) => {
-        const inputVal = parseFloat(e.target.value);
+        const inputUSD = parseFloat(e.target.value);
         const feeBox = document.getElementById('feeBox');
         
-        if (inputVal > 0) {
+        if (inputUSD > 0) {
             feeBox.style.display = "block";
-            const wFee = inputVal * 0.10; // 10%
-            const mFee = inputVal * 0.05; // 5%
+            const wFee = inputUSD * 0.10; // 10%
+            const mFee = inputUSD * 0.05; // 5%
             const totalTax = wFee + mFee;
-            const netUSD = inputVal - totalTax;
+            const netUSD = inputUSD - totalTax;
             const netPKR = netUSD * PKR_RATE;
             
             document.getElementById('withdrawFee').innerText = "$" + wFee.toFixed(2);
@@ -142,38 +145,43 @@
 
     // --- ودڈرال ریکویسٹ ---
     document.getElementById('requestBtn').onclick = function() {
-        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const amountUSD = parseFloat(document.getElementById('withdrawAmount').value);
         const method = document.getElementById('method').value;
         const accNum = document.getElementById('accountNum').value;
         const accName = document.getElementById('accountName').value;
 
-        if (isNaN(amount) || amount < minLimit) { alert("Minimum withdrawal is $" + minLimit); return; }
-        if (amount > currentBalanceUSD) { alert("Insufficient Balance! Your balance is in Dollars."); return; }
+        // ان پٹ کو روپے میں بدل کر چیک کریں
+        const amountPKR = amountUSD * PKR_RATE;
+
+        if (isNaN(amountUSD) || amountUSD < minLimitUSD) { alert("Minimum withdrawal is $" + minLimitUSD); return; }
+        if (amountPKR > currentBalancePKR) { alert("Insufficient Balance!"); return; }
         if (!accNum || !accName) { alert("Please fill all details!"); return; }
 
         this.disabled = true;
         this.innerText = "Processing...";
 
+        // ڈیٹا بیس سے روپے کاٹنا (تاکہ ڈیش بورڈ صحیح رہے)
         db.ref('users/' + phone + '/balance').transaction((curr) => {
-            if (curr >= amount) return (curr - amount);
+            if (curr >= amountPKR) return (curr - amountPKR);
         }, (error, committed) => {
             if (committed) {
                 const withdrawID = Date.now();
                 db.ref('withdrawals/' + withdrawID).set({
                     phone: phone, 
-                    amount: amount, // اصل ڈالر جو کاٹے گئے
-                    netAmountPKR: Math.floor((amount * 0.85) * PKR_RATE), // 15% ٹیکس کے بعد روپے
+                    amountUSD: amountUSD,
+                    amountPKR: amountPKR,
+                    netAmountPKR: Math.floor(amountPKR * 0.85), // 15% ٹیکس کے بعد
                     method: method,
                     accountNumber: accNum, 
                     accountName: accName,
                     status: "Pending", 
                     date: new Date().toLocaleString()
                 }).then(() => {
-                    alert("Withdrawal Requested! Amount deducted in Dollars.");
+                    alert("Withdrawal Requested Successfully!");
                     location.reload();
                 });
             } else {
-                alert("Failed! Check your connection.");
+                alert("Failed! Try again.");
                 this.disabled = false;
                 this.innerText = "CONFIRM WITHDRAWAL";
             }
@@ -188,7 +196,7 @@
             const statusColor = data.status === "Pending" ? "#f1c40f" : (data.status === "Approved" ? "#2ecc71" : "#ff3232");
             html += `<div class="history-card">
                         <div style="display:flex; justify-content:space-between">
-                            <span>$${data.amount}</span>
+                            <span>$${parseFloat(data.amountUSD || data.amount).toFixed(2)}</span>
                             <b style="color:${statusColor}">${data.status}</b>
                         </div>
                         <small style="color:#888">${data.date}</small>
