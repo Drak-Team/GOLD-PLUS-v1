@@ -15,6 +15,8 @@
         .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
         .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
         #startBtn { position: absolute; z-index: 10; padding: 10px 20px; font-size: 14px; }
+        .promo-section { background: linear-gradient(45deg, #1a0b2e, #0f051d); border: 2px dashed var(--primary-gold); padding: 20px; border-radius: 20px; margin: 12px; text-align: center; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--primary-gold); background: #000; color: white; box-sizing: border-box; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.3); z-index: 1000; }
         .nav-btn { color: #777; text-decoration: none; text-align: center; font-size: 10px; flex: 1; font-weight: bold; }
         .nav-btn i { font-size: 22px; display: block; margin-bottom: 4px; }
@@ -50,6 +52,13 @@
     </div>
 </div>
 
+<div class="promo-section" id="promoContainer">
+    <h3 style="color:var(--primary-gold); margin:0;">Channel Promotion</h3>
+    <p style="font-size:11px;">Promotion Fee: <b style="color:var(--primary-gold);">Rs. 100</b> (No Refund)</p>
+    <input type="text" id="promoLink" placeholder="Paste your link here...">
+    <button class="btn" id="promoSubmitBtn" onclick="confirmPromo()">Submit Link</button>
+</div>
+
 <nav class="nav-bar">
     <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
     <a href="plans.html" class="nav-btn"><i class="fas fa-gem"></i>PLANS</a>
@@ -60,7 +69,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, update, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, update, push, serverTimestamp, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -80,18 +89,23 @@
         if(!phone) return window.location.href='index.html';
         const snap = await get(ref(db, 'users/' + phone));
         const user = snap.val();
+        
         if(!user || !user.plan) {
             document.getElementById('videoTaskSection').innerHTML = "<h3 style='text-align:center;'>پہلے کوئی پلان خریدیں</h3>";
+            document.getElementById('promoContainer').style.display = 'none';
             return;
         }
+
         const last = user.lastClaim || 0;
-        if(Date.now() - last < 86400000) return showCountdown(last);
+        if(Date.now() - last < 86400000) {
+            showCountdown(last);
+        }
     }
 
     window.startCurrentVideo = () => {
         document.getElementById('startBtn').style.display = 'none';
         const playerDiv = document.getElementById('player');
-        playerDiv.innerHTML = `<iframe id="ytVideo" style="display:block;" src="https://www.youtube.com/embed/${videos[currentVid]}?autoplay=1&controls=0&mute=1"></iframe>`;
+        playerDiv.innerHTML = `<iframe style="display:block;" src="https://www.youtube.com/embed/${videos[currentVid]}?autoplay=1&controls=0&mute=1"></iframe>`;
         
         let time = 30;
         const btn = document.getElementById('nextAdBtn');
@@ -129,7 +143,7 @@
 
     window.claimEarnings = async () => {
         const btn = document.getElementById('claimBtn');
-        btn.disabled = true; btn.innerText = "Saving Data...";
+        btn.disabled = true; btn.innerText = "Processing...";
         
         const userRef = ref(db, 'users/' + phone);
         const snap = await get(userRef);
@@ -139,27 +153,52 @@
         const newBal = (parseFloat(user.balance || 0) + profit);
         const newTotalEarned = (parseFloat(user.totalEarned || 0) + profit);
 
-        // 1. یوزر ڈیٹا اپ ڈیٹ کریں
         await update(userRef, { 
             balance: newBal, 
             totalEarned: newTotalEarned, 
             lastClaim: Date.now() 
         });
 
-        // 2. ارننگ ہسٹری میں ریکارڈ ڈالیں
         await push(ref(db, 'earning_history/' + phone), {
             amount: profit,
-            type: "Mining Reward",
+            type: "Daily Mining",
             date: new Date().toLocaleString(),
             timestamp: serverTimestamp()
         });
 
-        alert("Rs. " + profit + " آپ کے والٹ اور ہسٹری میں جمع کر دیے گئے ہیں۔");
+        alert("Rs. " + profit + " کامیابی سے کلیم کر لیے گئے ہیں۔");
         location.reload();
+    };
+
+    window.confirmPromo = async () => {
+        const link = document.getElementById('promoLink').value;
+        if(!link) return alert("لنک درج کریں!");
+
+        if(confirm("کیا آپ Rs. 100 ادا کر کے پرموشن لگوانا چاہتے ہیں؟")) {
+            const balanceRef = ref(db, `users/${phone}/balance`);
+            const result = await runTransaction(balanceRef, (current) => {
+                if (current === null || current < 100) return undefined;
+                return current - 100;
+            });
+
+            if (result.committed) {
+                await push(ref(db, 'admin_promotions'), {
+                    user: phone,
+                    link: link,
+                    status: "Pending",
+                    timestamp: serverTimestamp()
+                });
+                alert("پرموشن ریکویسٹ بھیج دی گئی ہے!");
+                document.getElementById('promoLink').value = "";
+            } else {
+                alert("آپ کا بیلنس کم ہے!");
+            }
+        }
     };
 
     function showCountdown(last) {
         document.getElementById('videoTaskSection').style.display = 'none';
+        document.getElementById('promoContainer').style.display = 'none';
         document.getElementById('timerScreen').style.display = 'block';
         const display = document.getElementById('timerDisplay');
         setInterval(() => {
