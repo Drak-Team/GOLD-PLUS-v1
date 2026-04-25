@@ -21,8 +21,7 @@
         .level-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .level-row span { color: var(--primary-gold); font-weight: bold; }
 
-        /* NEW: Invite History List */
-        .history-box { background: var(--card-bg); border-radius: 20px; padding: 15px; text-align: left; margin-bottom: 25px; border: 1px solid var(--glass-border); }
+        .history-box { background: var(--card-bg); border-radius: 20px; padding: 15px; text-align: left; margin-bottom: 25px; border: 1px solid var(--glass-border); min-height: 100px; }
         .history-title { font-size: 12px; color: var(--primary-gold); margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
         .invite-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .invite-row:last-child { border: none; }
@@ -35,7 +34,7 @@
         .spin-box { background: #f1c40f; color: #000; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
 
         .referral-box { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 25px; }
-        .link-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: var(--primary-gold); font-size: 13px; word-break: break-all; margin-bottom: 15px; text-align: left; min-height: 20px; }
+        .link-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: var(--primary-gold); font-size: 11px; word-break: break-all; margin-bottom: 15px; text-align: left; min-height: 20px; }
         .share-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 18px; font-weight: bold; cursor: pointer; }
         
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); }
@@ -48,7 +47,7 @@
 
 <div class="header">
     <i class="fas fa-arrow-left" onclick="window.location.href='dashboard.html'"></i>
-    <h2>Invite Friends</h2>
+    <h2 style="font-size: 18px; margin: 0;">Invite Friends</h2>
 </div>
 
 <div class="container">
@@ -59,14 +58,14 @@
         </div>
         <div class="comm-card">
             <small>Activated Team</small>
-            <h3 id="activeCount" style="color: #00ff64;">0</h3>
+            <h3 id="activeCount">0</h3>
         </div>
     </div>
 
     <div class="level-box">
         <div style="font-size: 11px; color: #aaa; margin-bottom: 10px;">TEAM COMMISSION (10% Direct)</div>
-        <div class="level-row">Total Bonus Received <span id="teamComm">$0.00</span></div>
-        <div class="level-row">Level 1 Commission <span id="lvl1Earn">$0.00</span></div>
+        <div class="level-row">Total Bonus <span id="teamComm">Rs. 0</span></div>
+        <div class="level-row">Level 1 Bonus <span id="lvl1Earn">Rs. 0</span></div>
     </div>
 
     <div class="history-box">
@@ -101,73 +100,13 @@
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-      authDomain: "gold-plus-v1.firebaseapp.com",
       databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+      projectId: "gold-plus-v1"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const username = localStorage.getItem('userPhone');
-
-    window.onload = function() {
-        if (!username) {
-            document.getElementById('refLink').innerText = "Please login first!";
-            return;
-        }
-
-        const finalLink = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?ref=" + username;
-        document.getElementById('refLink').innerText = finalLink;
-
-        // یوزر کا ڈیٹا لوڈ کرنا
-        onValue(ref(db, 'users/' + username), async (snap) => {
-            const data = snap.val();
-            if (data) {
-                document.getElementById('teamComm').innerText = "$" + (data.teamCommission || 0).toFixed(2);
-                document.getElementById('lvl1Earn').innerText = "$" + (data.lvl1Commission || 0).toFixed(2);
-                
-                const referrals = data.referrals || {};
-                const refKeys = Object.keys(referrals);
-                document.getElementById('totalInvited').innerText = refKeys.length;
-
-                let activeCount = 0;
-                let listHTML = "";
-
-                if(refKeys.length === 0) {
-                    listHTML = "<p style='text-align:center; font-size:11px; color:#555;'>No members yet.</p>";
-                } else {
-                    // تمام ریفرلز کا اسٹیٹس چیک کرنا
-                    for (let refPhone of refKeys) {
-                        const userSnap = await get(ref(db, 'users/' + refPhone));
-                        const userData = userSnap.val();
-                        
-                        const isActivated = userData && userData.plan && userData.plan !== "";
-                        if(isActivated) activeCount++;
-
-                        const joinTime = referrals[refPhone].joinTime || "N/A";
-                        const statusClass = isActivated ? "active-tag" : "pending-tag";
-                        const statusText = isActivated ? "Activated" : "Pending";
-
-                        listHTML += `
-                            <div class="invite-row">
-                                <div class="user-info">
-                                    <h5>User: ${refPhone}</h5>
-                                    <small><i class="far fa-clock"></i> Joined: ${joinTime}</small>
-                                </div>
-                                <div class="status-tag ${statusClass}">${statusText}</div>
-                            </div>
-                        `;
-                    }
-                }
-                
-                document.getElementById('activeCount').innerText = activeCount;
-                document.getElementById('inviteList').innerHTML = listHTML;
-            }
-        });
-    };
 
     window.copyLink = function() {
         const linkToCopy = document.getElementById('refLink').innerText;
@@ -177,6 +116,67 @@
             });
         }
     };
+
+    if (!username) {
+        window.location.href = "login.html";
+    } else {
+        const finalLink = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?ref=" + username;
+        document.getElementById('refLink').innerText = finalLink;
+
+        // یوزر کا ڈیٹا ٹریک کرنا
+        const userRef = ref(db, 'users/' + username);
+        onValue(userRef, (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                document.getElementById('teamComm').innerText = "Rs. " + (data.teamCommission || 0);
+                document.getElementById('lvl1Earn').innerText = "Rs. " + (data.lvl1Commission || 0);
+                
+                const referrals = data.referrals || {};
+                const refKeys = Object.keys(referrals);
+                document.getElementById('totalInvited').innerText = refKeys.length;
+
+                if (refKeys.length === 0) {
+                    document.getElementById('inviteList').innerHTML = "<p style='text-align:center; font-size:11px; color:#555;'>No members yet.</p>";
+                    document.getElementById('activeCount').innerText = "0";
+                } else {
+                    renderInviteList(refKeys, referrals);
+                }
+            }
+        });
+    }
+
+    async function renderInviteList(refKeys, referralData) {
+        let activeCount = 0;
+        let listHTML = "";
+
+        // تمام ریفرلز کا ڈیٹا ایک ساتھ لانے کے لیے
+        const allUsersSnap = await get(ref(db, 'users'));
+        const allUsers = allUsersSnap.val() || {};
+
+        refKeys.forEach(refPhone => {
+            const userData = allUsers[refPhone];
+            const isActivated = userData && userData.plan && userData.plan !== "";
+            
+            if (isActivated) activeCount++;
+
+            const joinTime = referralData[refPhone].joinTime || "N/A";
+            const statusClass = isActivated ? "active-tag" : "pending-tag";
+            const statusText = isActivated ? "Activated" : "Pending";
+
+            listHTML += `
+                <div class="invite-row">
+                    <div class="user-info">
+                        <h5>User: ${refPhone}</h5>
+                        <small><i class="far fa-clock"></i> Joined: ${joinTime}</small>
+                    </div>
+                    <div class="status-tag ${statusClass}">${statusText}</div>
+                </div>
+            `;
+        });
+
+        document.getElementById('activeCount').innerText = activeCount;
+        document.getElementById('inviteList').innerHTML = listHTML;
+    }
 </script>
 </body>
 </html>
