@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earn History - Gold Plus</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 30px; }
+        
+        .header { padding: 30px 20px; background: var(--gold-grad); color: #000; display: flex; align-items: center; gap: 15px; border-radius: 0 0 30px 30px; box-shadow: 0 5px 20px rgba(241, 196, 15, 0.3); }
+        .header a { color: #000; font-size: 22px; text-decoration: none; }
+        .header h2 { margin: 0; font-size: 18px; font-weight: 900; text-transform: uppercase; }
+
+        .top-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 20px; }
+        .stat-card { background: var(--card-bg); padding: 15px; border-radius: 20px; border: 1px solid rgba(241,196,15,0.1); text-align: center; }
+        .stat-card small { font-size: 10px; color: #aaa; text-transform: uppercase; display: block; margin-bottom: 5px; }
+        .stat-card b { font-size: 16px; color: var(--primary-gold); display: block; }
+        .stat-card span { font-size: 11px; color: #fff; opacity: 0.8; }
+
+        .list-container { padding: 0 20px; }
+        .list-title { font-size: 14px; font-weight: bold; margin-bottom: 15px; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .list-title i { color: var(--primary-gold); }
+
+        .history-item { background: var(--card-bg); padding: 15px; border-radius: 18px; margin-bottom: 12px; border: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; }
+        .item-left h5 { margin: 0; font-size: 13px; color: #fff; display: flex; align-items: center; gap: 6px; }
+        .item-left small { font-size: 10px; color: #777; display: block; margin-top: 4px; }
+        
+        .item-right { text-align: right; }
+        .amt-usd { font-size: 15px; font-weight: 800; color: #25d366; display: block; }
+        .amt-pkr { font-size: 11px; color: #aaa; }
+
+        .status-tag { font-size: 8px; padding: 2px 6px; border-radius: 5px; text-transform: uppercase; margin-left: 5px; }
+        .status-approved { background: rgba(37, 211, 102, 0.2); color: #25d366; border: 1px solid #25d366; }
+        .status-pending { background: rgba(241, 196, 15, 0.2); color: #f1c40f; border: 1px solid #f1c40f; }
+        
+        .no-data { text-align: center; padding: 40px; color: #666; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <a href="dashboard.html"><i class="fas fa-chevron-left"></i></a>
+    <h2>Earnings & Deposits</h2>
+</div>
+
+<div class="top-stats">
+    <div class="stat-card">
+        <small>Active Package</small>
+        <b id="activePkg">...</b>
+    </div>
+    <div class="stat-card">
+        <small>Total Invested</small>
+        <b id="investedUSD">$0.00</b>
+        <span id="investedPKR">Rs. 0</span>
+    </div>
+</div>
+
+<div class="list-container">
+    <div class="list-title"><i class="fas fa-bolt"></i> Transaction Logs</div>
+    <div id="logsWrapper">
+        <p class="no-data">Loading history...</p>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
+        authDomain: "gold-plus-v1.firebaseapp.com",
+        databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
+        projectId: "gold-plus-v1"
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const phone = localStorage.getItem('userPhone');
+    const PKR_RATE = 300; // 1$ = 300 PKR
+
+    if (!phone) window.location.href = "login.html";
+
+    db.ref('users/' + phone).on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+            
+            // 1. Top Summary
+            document.getElementById('activePkg').innerText = data.plan || "No Plan";
+            const totalDepPKR = parseFloat(data.totalDeposit || 0);
+            document.getElementById('investedUSD').innerText = "$" + (totalDepPKR / PKR_RATE).toFixed(2);
+            document.getElementById('investedPKR').innerText = "Rs. " + totalDepPKR.toLocaleString();
+
+            let logsHTML = "";
+
+            // 2. Deposit History (Assuming 'deposits' node exists)
+            if (data.deposits) {
+                Object.values(data.deposits).reverse().forEach(dep => {
+                    logsHTML += createHistoryItem("Deposit Request", dep.amount, dep.status || "approved", dep.date || "Recent");
+                });
+            }
+
+            // 3. Earning History (Assuming 'dailyProfit' or similar exists)
+            if (data.lastClaimDate) {
+                logsHTML += createHistoryItem("Mining Reward", data.dailyProfit || 0, "approved", "Today");
+            }
+
+            if (logsHTML === "") {
+                logsHTML = `<div class="no-data">No transactions found yet.</div>`;
+            }
+
+            document.getElementById('logsWrapper').innerHTML = logsHTML;
+        }
+    });
+
+    function createHistoryItem(type, amountPKR, status, date) {
+        const usdVal = (parseFloat(amountPKR) / PKR_RATE).toFixed(2);
+        const statusClass = status === 'pending' ? 'status-pending' : 'status-approved';
+        
+        return `
+            <div class="history-item">
+                <div class="item-left">
+                    <h5>${type} <span class="status-tag ${statusClass}">${status}</span></h5>
+                    <small><i class="far fa-clock"></i> ${date}</small>
+                </div>
+                <div class="item-right">
+                    <span class="amt-usd">+$${usdVal}</span>
+                    <span class="amt-pkr">Rs. ${parseFloat(amountPKR).toLocaleString()}</span>
+                </div>
+            </div>
+        `;
+    }
+</script>
+
+</body>
+</html>
