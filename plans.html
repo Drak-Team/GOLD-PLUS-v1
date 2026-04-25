@@ -1,3 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Investment Plans</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #f1c40f; --bg: #0f051d; --neon-green: #00ff64; --crypto-blue: #00d4ff; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 120px; min-height: 100vh; }
+        
+        .header { padding: 30px 20px; text-align: center; background: rgba(0,0,0,0.6); border-bottom: 2px solid var(--gold); border-radius: 0 0 50px 50px; box-shadow: 0 10px 40px rgba(241, 196, 15, 0.4); }
+        .header h2 { margin: 0; color: var(--gold); font-size: 26px; text-transform: uppercase; font-weight: 900; }
+        
+        .container { padding: 15px; }
+        .crypto-promo { background: linear-gradient(90deg, #1e004d, #004e92); margin: 20px 0; padding: 15px; border-radius: 25px; display: flex; align-items: center; gap: 15px; border: 1px solid var(--crypto-blue); }
+        
+        .section-title { color: var(--gold); font-size: 15px; font-weight: bold; margin: 25px 0 15px 5px; text-transform: uppercase; border-left: 4px solid var(--crypto-blue); padding-left: 10px; }
+        
+        .plan-card { background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02)); border: 1px solid rgba(241, 196, 15, 0.2); border-radius: 35px; padding: 22px; margin-bottom: 25px; position: relative; overflow: hidden; backdrop-filter: blur(20px); }
+        .robot-bg { position: absolute; right: -20px; top: -15px; font-size: 110px; color: rgba(241, 196, 15, 0.05); pointer-events: none; }
+        .usdt-bonus-tag { position: absolute; top: 0; right: 0; background: linear-gradient(90deg, #00d4ff, #004e92); color: #fff; font-size: 10px; font-weight: bold; padding: 8px 18px; border-bottom-left-radius: 20px; }
+        
+        .plan-name { font-size: 21px; font-weight: bold; color: #fff; }
+        .price-tag { display: block; color: var(--gold); font-size: 23px; font-weight: 800; margin: 8px 0; }
+        
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 15px 0; }
+        .stat-box { background: rgba(0,0,0,0.5); padding: 12px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.05); }
+        .stat-box label { display: block; font-size: 8px; color: #888; text-transform: uppercase; }
+        .stat-box span { font-size: 14px; font-weight: 700; color: var(--neon-green); }
+        
+        .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .buy-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .buy-btn.deposit { background: linear-gradient(90deg, #3498db, #2980b9); color: white; }
+        .buy-btn.active-plan { background: #00ff64; color: #000; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
+        .nav-btn.active { color: #f1c40f; }
+        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+
+<div class="header"><h2>GOLD PLUS MINING</h2></div>
+
+<div class="container">
+    <div class="crypto-promo">
+        <i class="fab fa-bitcoin" style="font-size: 30px; color: var(--crypto-blue);"></i>
+        <div><b>USDT CRYPTO BONUS!</b><p style="font-size: 10px; margin:0;">انویسٹ کریں اور مائننگ شروع کریں۔</p></div>
+    </div>
+    <div class="section-title">Investment Plans</div>
+    <div id="plansList"></div>
+</div>
+
+<nav class="nav-bar">
+    <a href="dashboard.html" class="nav-btn"><i class="fas fa-house"></i>HOME</a>
+    <a href="plans.html" class="nav-btn active"><i class="fas fa-gem"></i>PLANS</a>
+    <a href="mining.html" class="nav-btn"><i class="fas fa-coins"></i>EARN</a>
+    <a href="refer.html" class="nav-btn"><i class="fas fa-users"></i>REFER</a>
+    <a href="profile.html" class="nav-btn"><i class="fas fa-user-gear"></i>PROFILE</a>
+</nav>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
@@ -76,62 +139,59 @@
         });
     }
 
-    async function investNow(price, name, daily) {
-        if (!confirm(`Confirm investment in ${name} for Rs. ${price}?`)) return;
+    function investNow(price, name, daily) {
+        if (!confirm("Confirm investment in " + name + " for Rs. " + price + "?")) return;
 
         const userRef = db.ref('users/' + phone);
         
-        userRef.transaction((currentData) => {
-            if (currentData && parseFloat(currentData.balance || 0) >= price) {
-                // پیسے کاٹیں اور پلان ایکٹیو کریں
-                currentData.balance = parseFloat(currentData.balance) - price;
-                currentData.plan = name;
-                currentData.dailyProfit = daily;
-                currentData.miningStatus = "Active";
-                currentData.planDate = new Date().getTime();
-
-                // ریفرل کمیشن (10%) کی لاجک یہاں سے شروع ہوتی ہے
-                const referBy = currentData.referredBy; 
-                if (referBy && referBy !== "none") {
-                    const comm = price * 0.10;
-                    
-                    // ریفر کرنے والے کے بیلنس میں پیسے جمع کرنا
-                    db.ref('users/' + referBy).transaction((refData) => {
-                        if (refData) {
-                            refData.balance = (parseFloat(refData.balance) || 0) + comm;
-                            refData.teamCommission = (parseFloat(refData.teamCommission) || 0) + comm;
-                            refData.lvl1Commission = (parseFloat(refData.lvl1Commission) || 0) + comm;
-                            
-                            // ریفرر کی ریفرل لسٹ میں اس ممبر کو "Activated" دکھانا
-                            if(refData.referrals && refData.referrals[phone]) {
-                                refData.referrals[phone].status = "Activated";
-                            }
-                        }
-                        return refData;
-                    });
-
-                    // ریفر کرنے والے کی ارننگ ہسٹری میں ریکارڈ ڈالنا
-                    db.ref('earning_history/' + referBy).push({
-                        amount: comm,
-                        type: "Team Bonus",
-                        from: phone,
-                        date: new Date().toLocaleString(),
-                        timestamp: firebase.database.ServerValue.TIMESTAMP
-                    });
-                }
+        userRef.once('value').then((snapshot) => {
+            const userData = snapshot.val();
+            if (userData && parseFloat(userData.balance || 0) >= price) {
                 
-                return currentData;
-            }
-            return; 
-        }, (error, committed) => {
-            if (committed) {
-                alert("Success! Plan Activated.");
-                window.location.href = "mining.html";
+                // 1. پلان اپ ڈیٹ کریں
+                const updates = {};
+                updates['balance'] = parseFloat(userData.balance) - price;
+                updates['plan'] = name;
+                updates['dailyProfit'] = daily;
+                updates['miningStatus'] = "Active";
+                updates['planDate'] = new Date().getTime();
+
+                userRef.update(updates).then(() => {
+                    // 2. ریفرل کمیشن (10%)
+                    const referBy = userData.referredBy;
+                    if (referBy && referBy !== "none") {
+                        const commission = price * 0.10;
+                        const refRef = db.ref('users/' + referBy);
+                        
+                        refRef.once('value').then((rSnap) => {
+                            const rData = rSnap.val();
+                            if (rData) {
+                                refRef.update({
+                                    balance: (parseFloat(rData.balance) || 0) + commission,
+                                    teamCommission: (parseFloat(rData.teamCommission) || 0) + commission,
+                                    lvl1Commission: (parseFloat(rData.lvl1Commission) || 0) + commission
+                                });
+                                
+                                // ہسٹری میں ریکارڈ
+                                db.ref('earning_history/' + referBy).push({
+                                    amount: commission,
+                                    type: "Team Bonus",
+                                    from: phone,
+                                    date: new Date().toLocaleString()
+                                });
+                            }
+                        });
+                    }
+                    alert("Success! Plan Activated.");
+                    window.location.href = "mining.html";
+                });
             } else {
-                alert("Insufficient balance or error occurred.");
+                alert("Insufficient balance!");
             }
         });
     }
 
     loadPlans();
 </script>
+</body>
+</html>
