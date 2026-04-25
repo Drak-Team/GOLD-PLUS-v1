@@ -135,43 +135,54 @@
 
         db.ref('users/' + phone).once('value').then(function(snapshot) {
             var userData = snapshot.val();
-            if (userData && parseFloat(userData.balance || 0) >= price) {
-                
-                // یوزر ڈیٹا اپ ڈیٹ
-                db.ref('users/' + phone).update({
-                    balance: parseFloat(userData.balance) - price,
-                    plan: name,
-                    dailyProfit: daily,
-                    miningStatus: "Active",
-                    planDate: new Date().getTime()
-                }).then(function() {
+            if (userData) {
+                var currentBal = parseFloat(userData.balance || 0);
+                if (currentBal >= price) {
                     
-                    // ریفرل کمیشن 10%
-                    var referBy = userData.referredBy;
-                    if (referBy && referBy !== "none" && referBy !== "") {
-                        var commission = price * 0.10;
-                        db.ref('users/' + referBy).once('value').then(function(rSnap) {
-                            var rData = rSnap.val();
-                            if (rData) {
-                                db.ref('users/' + referBy).update({
-                                    balance: (parseFloat(rData.balance) || 0) + commission,
-                                    teamCommission: (parseFloat(rData.teamCommission) || 0) + commission
-                                });
-                                
-                                db.ref('earning_history/' + referBy).push({
-                                    amount: commission,
-                                    type: "Team Bonus",
-                                    from: phone,
-                                    date: new Date().toLocaleString()
-                                });
-                            }
-                        });
-                    }
-                    alert("Success! Plan Activated.");
-                    window.location.href = "mining.html";
-                });
-            } else {
-                alert("Insufficient balance!");
+                    // یوزر کا اپنا ڈیٹا اپ ڈیٹ کریں
+                    db.ref('users/' + phone).update({
+                        balance: currentBal - price,
+                        plan: name,
+                        dailyProfit: daily,
+                        miningStatus: "Active",
+                        planDate: new Date().getTime()
+                    }).then(function() {
+                        
+                        // 10% ریفرل کمیشن لاجک
+                        var referBy = userData.referredBy;
+                        if (referBy && referBy !== "none" && referBy !== "") {
+                            var commissionAmount = price * 0.10;
+                            
+                            db.ref('users/' + referBy).once('value').then(function(rSnap) {
+                                var rData = rSnap.val();
+                                if (rData) {
+                                    // کمیشن کو نمبرز میں تبدیل کر کے جمع کریں
+                                    var newRefBal = parseFloat(rData.balance || 0) + commissionAmount;
+                                    var newTeamComm = parseFloat(rData.teamCommission || 0) + commissionAmount;
+
+                                    db.ref('users/' + referBy).update({
+                                        balance: newRefBal,
+                                        teamCommission: newTeamComm
+                                    }).then(function() {
+                                        // ہسٹری میں ریکارڈ ڈالیں
+                                        db.ref('earning_history/' + referBy).push({
+                                            amount: commissionAmount,
+                                            type: "Team Bonus",
+                                            from: phone,
+                                            date: new Date().toLocaleString()
+                                        });
+                                        console.log("Commission Success for: " + referBy);
+                                    });
+                                }
+                            });
+                        }
+                        
+                        alert("Success! Plan Activated.");
+                        window.location.href = "mining.html";
+                    });
+                } else {
+                    alert("Insufficient balance!");
+                }
             }
         });
     }
