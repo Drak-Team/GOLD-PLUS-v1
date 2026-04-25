@@ -6,44 +6,56 @@
     <title>Gold Plus - Lucky Spin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; }
+        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --accent-red: #ff4757; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; text-align: center; overflow-x: hidden; }
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.3); }
+        
+        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(241,196,15,0.2); }
         .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
 
-        .spin-container { margin-top: 50px; position: relative; display: inline-block; }
+        .spin-container { margin-top: 40px; position: relative; display: inline-block; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 50%; box-shadow: 0 0 100px rgba(0,0,0,0.5); }
         
-        /* Wheel with Text Labels */
+        /* Outclass Wheel Design */
         .wheel { 
-            width: 320px; height: 320px; border: 10px solid #333; border-radius: 50%; 
-            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1); 
-            box-shadow: 0 0 40px rgba(241, 196, 15, 0.3);
+            width: 320px; height: 320px; border: 12px solid #222; border-radius: 50%; 
+            transition: transform 6s cubic-bezier(0.2, 0, 0.1, 1); 
+            box-shadow: 0 0 50px rgba(241, 196, 15, 0.2), inset 0 0 20px rgba(0,0,0,0.5);
             background: conic-gradient(
-                #f1c40f 0deg 45deg, #e67e22 45deg 90deg, 
-                #f1c40f 90deg 135deg, #e67e22 135deg 180deg,
-                #f1c40f 180deg 225deg, #e67e22 225deg 270deg,
-                #f1c40f 270deg 315deg, #e67e22 315deg 360deg
+                #f1c40f 0deg 45deg, #222 45deg 90deg, 
+                #f1c40f 90deg 135deg, #222 135deg 180deg,
+                #f1c40f 180deg 225deg, #222 225deg 270deg,
+                #f1c40f 270deg 315deg, #222 315deg 360deg
             );
             position: relative; overflow: hidden;
         }
 
-        /* Prizes Text on Wheel */
         .segment-label {
             position: absolute; width: 100%; height: 100%;
-            text-align: center; font-weight: bold; font-size: 14px; color: #000;
-            padding-top: 20px; transform-origin: 50% 50%;
+            text-align: center; font-weight: 900; font-size: 16px; 
+            padding-top: 25px; transform-origin: 50% 50%;
         }
+        .segment-label:nth-child(even) { color: var(--primary-gold); }
+        .segment-label:nth-child(odd) { color: #000; }
 
+        /* The Pointer */
         .pointer { 
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%); 
+            position: absolute; top: -10px; left: 50%; transform: translateX(-50%); 
             width: 0; height: 0; border-left: 20px solid transparent;
-            border-right: 20px solid transparent; border-top: 40px solid #ff4757; 
-            z-index: 100; filter: drop-shadow(0 5px 5px rgba(0,0,0,0.5));
+            border-right: 20px solid transparent; border-top: 45px solid var(--accent-red); 
+            z-index: 100; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.8));
         }
 
-        .spin-btn { background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; border: none; padding: 15px 60px; border-radius: 30px; font-weight: bold; font-size: 18px; margin-top: 40px; cursor: pointer; box-shadow: 0 5px 25px rgba(241, 196, 15, 0.5); }
-        .spin-btn:disabled { background: #444; color: #888; }
-        .info-box { background: rgba(255,255,255,0.05); margin: 30px 20px; padding: 20px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+        .spin-btn { 
+            background: linear-gradient(135deg, #f1c40f, #e67e22); color: #000; 
+            border: none; padding: 18px 70px; border-radius: 35px; 
+            font-weight: 900; font-size: 20px; margin-top: 30px; 
+            cursor: pointer; box-shadow: 0 10px 30px rgba(230, 126, 34, 0.4);
+            transition: 0.3s;
+        }
+        .spin-btn:active { transform: scale(0.95); }
+        .spin-btn:disabled { background: #333; color: #666; box-shadow: none; }
+
+        .info-box { background: rgba(255,255,255,0.05); margin: 30px 20px; padding: 20px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.1); }
+        .info-box b { font-size: 20px; }
     </style>
 </head>
 <body>
@@ -55,13 +67,13 @@
     <div id="wheel" class="wheel">
         <div class="segment-label" style="transform: rotate(22.5deg)">$0.10</div>
         <div class="segment-label" style="transform: rotate(67.5deg)">$100</div>
-        <div class="segment-label" style="transform: rotate(112.5deg)">$0.50</div>
-        <div class="segment-label" style="transform: rotate(157.5deg)">$10</div>
-        <div class="segment-label" style="transform: rotate(202.5deg)">$0.20</div>
-        <div class="segment-label" style="transform: rotate(247.5deg)">$50</div>
-        <div class="segment-label" style="transform: rotate(292.5deg)">$0.15</div>
-        <div class="segment-label" style="transform: rotate(337.5deg)">$1</div>
-        <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width: 40px; height: 40px; background: #333; border: 4px solid gold; border-radius: 50%; z-index: 10;"></div>
+        <div class="segment-label" style="transform: rotate(112.5deg)">$0.01</div>
+        <div class="segment-label" style="transform: rotate(157.5deg)">$50</div>
+        <div class="segment-label" style="transform: rotate(202.5deg)">$0.05</div>
+        <div class="segment-label" style="transform: rotate(247.5deg)">$20</div>
+        <div class="segment-label" style="transform: rotate(292.5deg)">$0.02</div>
+        <div class="segment-label" style="transform: rotate(337.5deg)">$10</div>
+        <div style="position: absolute; top:50%; left:50%; transform:translate(-50%,-50%); width: 50px; height: 50px; background: #111; border: 4px solid gold; border-radius: 50%; z-index: 10; box-shadow: 0 0 20px rgba(241,196,15,0.5);"></div>
     </div>
 </div>
 
@@ -70,60 +82,69 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, runTransaction, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
       databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+      projectId: "gold-plus-v1"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     const userPhone = localStorage.getItem('userPhone');
 
-    // Prizes matching the visual segments
-    const prizes = [0.10, 100, 0.50, 10, 0.20, 50, 0.15, 1];
     let isSpinning = false;
+    let currentRotation = 0;
 
     window.onload = async function() {
+        if(!userPhone) return window.location.href="login.html";
         const snap = await get(ref(db, 'users/' + userPhone));
         if(snap.exists()) document.getElementById('availableSpins').innerText = snap.val().spins || 0;
     };
 
     window.startSpin = async function() {
         if(isSpinning) return;
+        
         const userRef = ref(db, 'users/' + userPhone);
         const snap = await get(userRef);
         let currentSpins = snap.val()?.spins || 0;
 
-        if(currentSpins < 1) return alert("No spins left! Refer friends.");
+        if(currentSpins < 1) return alert("No spins left! Refer friends to get more.");
 
         isSpinning = true;
         document.getElementById('spinBtn').disabled = true;
 
-        await runTransaction(userRef, (u) => { if(u) u.spins -= 1; return u; });
+        // Decrease one spin
+        await update(userRef, { spins: currentSpins - 1 });
+        document.getElementById('availableSpins').innerText = currentSpins - 1;
 
         const wheel = document.getElementById('wheel');
         
-        // --- NEAR MISS LOGIC ---
-        // $100 is at segment 1 (45-90 deg). 
-        // We stop at 44 degrees or 91 degrees so it looks VERY close.
-        const extraRounds = 3600; // 10 rounds
-        const nearMissTarget = 44 + extraRounds; 
+        // --- THE "NEAR MISS" LOGIC ---
+        // $100 is in the segment at 45-90 degrees.
+        // To make it look like it almost stopped on $100 but "slipped" to the next one:
+        // We aim for around 95-100 degrees (which is the $0.01 segment).
         
-        wheel.style.transform = `rotate(${nearMissTarget}deg)`;
+        const extraRounds = 3600; // 10 full circles
+        const magicStop = 95 + Math.floor(Math.random() * 10); // Stops just after $100
+        currentRotation += extraRounds + magicStop;
+        
+        wheel.style.transform = `rotate(-${currentRotation}deg)`;
 
         setTimeout(async () => {
-            const winAmount = 0.10; // User always gets small prize on near miss
-            await runTransaction(ref(db, `users/${userPhone}/balance`), (b) => (b || 0) + winAmount);
-            alert("So Close! You almost won $100. \nWon: $0.10 \nInvite more friends for another try!");
-            location.reload();
-        }, 5200);
+            // Random small reward to make it feel real
+            const rewards = [0.01, 0.02, 0.05];
+            const winAmount = rewards[Math.floor(Math.random() * rewards.length)];
+            
+            const currentBal = parseFloat(snap.val().balance || 0);
+            await update(userRef, { balance: (currentBal + winAmount).toFixed(2) });
+
+            alert("Uff! So Close to $100!\n\nYou won: $" + winAmount + "\nTry again to hit the Jackpot!");
+            isSpinning = false;
+            document.getElementById('spinBtn').disabled = false;
+        }, 6500);
     };
 </script>
 </body>
