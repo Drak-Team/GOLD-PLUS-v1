@@ -3,54 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Mining</title>
+    <title>Gold Plus - Mining & Tasks</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; overflow-x: hidden; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
         .header { padding: 25px 20px; background: rgba(0,0,0,0.5); text-align: center; border-bottom: 2px solid var(--primary-gold); }
-        .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; backdrop-filter: blur(10px); }
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; }
-        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
+        .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; }
+        
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; margin-bottom: 15px; }
+        iframe { width: 100%; height: 100%; border: none; pointer-events: none; } /* Prevent skipping */
+        
+        .task-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-left: 4px solid var(--primary-gold); }
+        .task-item span { font-size: 14px; }
+        
+        .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
+        .btn:disabled { background: #333; color: #666; }
+
+        .promo-section { background: linear-gradient(45deg, #1a0b2e, #0f051d); border: 2px dashed var(--primary-gold); padding: 20px; border-radius: 20px; margin: 12px; text-align: center; }
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--primary-gold); background: transparent; color: white; box-sizing: border-box; }
+
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: var(--primary-gold); }
-        .nav-btn i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h2 style="color:var(--primary-gold); margin:0;">GOLD PLUS</h2>
-    <p style="font-size:11px; color:#aaa; margin:5px 0 0 0;">انویسٹ کریں اور روزانہ کمائیں</p>
+<div class="header"><h2 style="color:var(--primary-gold); margin:0;">DAILY TASKS</h2></div>
+
+<div class="card">
+    <div id="videoTaskSection">
+        <div class="video-box" id="player"></div>
+        <p id="adStatus" style="text-align:center; color:var(--primary-gold); font-weight:bold;">Video Task: 1 / 3</p>
+        <button class="btn" id="nextAdBtn" onclick="nextVideo()" disabled>Wait 30s</button>
+    </div>
+
+    <div id="socialTaskSection" style="display:none;">
+        <h3 style="text-align:center; color:var(--primary-gold);">Social Media Tasks</h3>
+        <div class="task-item">
+            <span>Join WhatsApp Channel</span>
+            <button class="btn" style="width:auto; padding:8px 15px;" onclick="doSocialTask('https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l', 'wa')">Open</button>
+        </div>
+        <div class="task-item">
+            <span>Subscribe YouTube</span>
+            <button class="btn" style="width:auto; padding:8px 15px;" onclick="doSocialTask('https://youtube.com/@YourChannel', 'yt')">Open</button>
+        </div>
+        <button class="btn" id="claimBtn" onclick="claimEarnings()" style="margin-top:20px; background:#00ff64;" disabled>Claim Daily Profit</button>
+    </div>
+
+    <div id="timerScreen" style="display:none; text-align:center; padding:40px 0;">
+        <i class="fas fa-check-circle" style="font-size:60px; color:#00ff64;"></i>
+        <h2>آج کے ٹاسک مکمل!</h2>
+        <p id="timerDisplay">Next tasks in: 00:00:00</p>
+    </div>
 </div>
 
-<div class="card" id="taskArea">
-    <div id="activeWork" style="display:none;">
-        <div class="video-box" id="player"></div>
-        <div id="adCounter" style="text-align: center; margin: 15px 0; font-weight: bold; color: var(--primary-gold);">Task Progress: 1 / 5</div>
-        <button class="btn" id="nextBtn" onclick="nextStep()" disabled>Wait 30s</button>
-    </div>
-
-    <div id="lockScreen" style="display:none; text-align: center; padding: 20px 0;">
-        <i class="fas fa-lock" style="font-size:50px; color:#e74c3c; margin-bottom:15px;"></i>
-        <h3>پیکج ایکٹیو نہیں ہے</h3>
-        <button class="btn" onclick="window.location.href='plans.html'">پلان ایکٹیو کریں</button>
-    </div>
-
-    <div id="timerScreen" style="display:none; text-align: center;">
-        <i class="fas fa-history" style="font-size:40px; color:var(--primary-gold); margin-bottom:10px;"></i>
-        <h2 id="timerDisplay" style="font-size:35px; margin:5px;">00:00:00</h2>
-        <p style="font-size:12px; color:#888;">آپ آج کا ٹاسک مکمل کر چکے ہیں</p>
-    </div>
-
-    <div id="claimArea" style="display:none; text-align: center;">
-        <i class="fas fa-gift" style="font-size:50px; color:#00ff64; margin-bottom:15px;"></i>
-        <h3>ٹاسک مکمل!</h3>
-        <button class="btn" style="background:#00ff64;" id="claimBtn" onclick="finishDaily()">ارننگ کلیم کریں</button>
-    </div>
+<div class="promo-section">
+    <h3 style="color:var(--primary-gold); margin:0;">پرموشن سروس</h3>
+    <p style="font-size:11px;">اپنے چینل یا گروپ کی پرموشن کروائیں صرف 100 روپے میں</p>
+    <input type="text" id="promoLink" placeholder="لنک یہاں پیسٹ کریں...">
+    <button class="btn" onclick="confirmPromo()">لنک لگائیں (Rs. 100)</button>
 </div>
 
 <nav class="nav-bar">
@@ -63,127 +76,113 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, update, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
-        authDomain: "gold-plus-v1.firebaseapp.com",
         databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
         projectId: "gold-plus-v1"
     };
 
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
-    const userPhone = localStorage.getItem('userPhone');
+    const phone = localStorage.getItem('userPhone');
 
-    let currentAd = 0;
-    const vids = ["K_n_C_G_Y8s", "3_Vsh5E70e4", "EIs6X39H6j8", "6_S7pC2Q_gY", "S_X7O5xN1_w"]; 
-    let dailyEarnings = 0;
+    let currentVid = 0;
+    const videos = ["K_n_C_G_Y8s", "3_Vsh5E70e4", "EIs6X39H6j8"];
+    let socialCompleted = { wa: false, yt: false };
 
     async function init() {
-        if(!userPhone) {
-            window.location.href = 'index.html';
-            return;
-        }
+        const snap = await get(ref(db, 'users/' + phone));
+        const user = snap.val();
+        
+        if(!user.plan) { alert("پہلے پلان ایکٹیو کریں!"); window.location.href='plans.html'; return; }
 
-        const snapshot = await get(ref(db, 'users/' + userPhone));
-        const d = snapshot.val();
-
-        if(!d || !d.plan) {
-            document.getElementById('lockScreen').style.display = 'block';
-            return;
-        }
-
-        dailyEarnings = parseFloat(d.dailyProfit || 0);
-        const last = d.lastClaim || 0;
-        const now = Date.now();
-
-        if(now - last < 86400000) {
-            runTimer(last);
+        const last = user.lastClaim || 0;
+        if(Date.now() - last < 86400000) {
+            showTimer(last);
         } else {
-            document.getElementById('activeWork').style.display = 'block';
-            loadAd();
+            loadVideo();
         }
     }
 
-    function loadAd() {
-        if(currentAd >= 5) {
-            document.getElementById('activeWork').style.display = 'none';
-            document.getElementById('claimArea').style.display = 'block';
-            return;
-        }
+    function loadVideo() {
+        const vidId = videos[currentVid];
+        document.getElementById('player').innerHTML = `<iframe id="ytFrame" src="https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&disablekb=1"></iframe>`;
         
-        const videoId = vids[currentAd];
-        // ویڈیو لنک کو ٹھیک کر دیا گیا ہے
-        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&rel=0" allow="autoplay; encrypted-media"></iframe>`;
-        document.getElementById('adCounter').innerText = `Task Progress: ${currentAd + 1} / 5`;
-        
-        let time = 30;
-        const btn = document.getElementById('nextBtn');
+        let timeLeft = 30;
+        const btn = document.getElementById('nextAdBtn');
         btn.disabled = true;
-        btn.innerText = `Wait (${time}s)`;
         
-        const clock = setInterval(() => {
-            time--;
-            btn.innerText = `Wait (${time}s)`;
-            if(time <= 0) { 
-                clearInterval(clock); 
-                btn.disabled = false; 
-                btn.innerText = (currentAd === 4) ? "Finish Task" : "Next Ad"; 
+        const timer = setInterval(() => {
+            timeLeft--;
+            btn.innerText = `Wait ${timeLeft}s`;
+            if(timeLeft <= 0) {
+                clearInterval(timer);
+                btn.disabled = false;
+                btn.innerText = currentVid < 2 ? "Next Video" : "Go to Social Tasks";
             }
         }, 1000);
     }
 
-    window.nextStep = () => { 
-        currentAd++; 
-        loadAd(); 
-    };
-
-    window.finishDaily = async () => {
-        const claimBtn = document.getElementById('claimBtn');
-        claimBtn.disabled = true;
-        claimBtn.innerText = "Processing...";
-
-        try {
-            const snapshot = await get(ref(db, 'users/' + userPhone));
-            const d = snapshot.val();
-            
-            // ارننگ کیلکولیشن اور اپ ڈیٹ
-            const currentBalance = parseFloat(d.balance || 0);
-            const newBalance = (currentBalance + dailyEarnings).toFixed(2);
-
-            await update(ref(db, 'users/' + userPhone), { 
-                balance: newBalance, 
-                lastClaim: Date.now() 
-            });
-
-            alert(`مبارک ہو! Rs. ${dailyEarnings} آپ کے اکاؤنٹ میں جمع ہو گئے ہیں۔`);
-            window.location.href = 'dashboard.html';
-        } catch (e) { 
-            alert("Error: " + e.message); 
-            claimBtn.disabled = false;
-            claimBtn.innerText = "ارننگ کلیم کریں";
+    window.nextVideo = () => {
+        currentVid++;
+        if(currentVid < 3) {
+            document.getElementById('adStatus').innerText = `Video Task: ${currentVid + 1} / 3`;
+            loadVideo();
+        } else {
+            document.getElementById('videoTaskSection').style.display = 'none';
+            document.getElementById('socialTaskSection').style.display = 'block';
         }
     };
 
-    function runTimer(last) {
-        document.getElementById('timerScreen').style.display = 'block';
-        const timerDisplay = document.getElementById('timerDisplay');
-        
-        const timerInterval = setInterval(() => {
-            const now = Date.now();
-            const left = (last + 86400000) - now;
-            
-            if(left <= 0) {
-                clearInterval(timerInterval);
-                location.reload();
-            }
+    window.doSocialTask = (link, type) => {
+        window.open(link, '_blank');
+        socialCompleted[type] = true;
+        if(socialCompleted.wa && socialCompleted.yt) {
+            document.getElementById('claimBtn').disabled = false;
+        }
+    };
 
-            const h = Math.floor(left / 3600000).toString().padStart(2, '0');
-            const m = Math.floor((left % 3600000) / 60000).toString().padStart(2, '0');
-            const s = Math.floor((left % 60000) / 1000).toString().padStart(2, '0');
-            timerDisplay.innerText = `${h}:${m}:${s}`;
-        }, 1000);
+    window.claimEarnings = async () => {
+        const snap = await get(ref(db, 'users/' + phone));
+        const user = snap.val();
+        const profit = parseFloat(user.dailyProfit || 0);
+        const newBalance = (parseFloat(user.balance || 0) + profit);
+
+        await update(ref(db, 'users/' + phone), {
+            balance: newBalance,
+            lastClaim: Date.now()
+        });
+        alert(`Rs. ${profit} کلیم کر لیے گئے ہیں!`);
+        location.reload();
+    };
+
+    window.confirmPromo = async () => {
+        const link = document.getElementById('promoLink').value;
+        if(!link) return alert("لنک درج کریں!");
+
+        if(confirm("اس سروس کی قیمت 100 روپے ہے جو آپ کے بیلنس سے کٹ جائیں گے۔ کیا آپ کنفرم کرنا چاہتے ہیں؟ (No Refund)")) {
+            const snap = await get(ref(db, 'users/' + phone));
+            const balance = parseFloat(snap.val().balance || 0);
+
+            if(balance < 100) return alert("آپ کا بیلنس کم ہے!");
+
+            await update(ref(db, 'users/' + phone), { balance: balance - 100 });
+            await push(ref(db, 'admin_promotions'), {
+                user: phone,
+                link: link,
+                date: new Date().toLocaleString()
+            });
+            alert("آپ کی درخواست ایڈمن کو بھیج دی گئی ہے!");
+            document.getElementById('promoLink').value = "";
+        }
+    };
+
+    function showTimer(last) {
+        document.getElementById('videoTaskSection').style.display = 'none';
+        document.getElementById('timerScreen').style.display = 'block';
+        // Timer countdown logic here...
     }
 
     init();
