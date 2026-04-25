@@ -3,67 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Mining & Tasks</title>
+    <title>Gold Plus - Secure Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --primary-gold: #f1c40f; --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 100px; }
         .header { padding: 25px 20px; background: rgba(0,0,0,0.5); text-align: center; border-bottom: 2px solid var(--primary-gold); }
         .card { background: rgba(255,255,255,0.07); border: 1px solid rgba(241, 196, 15, 0.2); margin: 12px; padding: 20px; border-radius: 20px; }
-        
-        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; position: relative; margin-bottom: 15px; }
-        iframe { width: 100%; height: 100%; border: none; pointer-events: none; } /* Prevent skipping */
-        
-        .task-item { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-left: 4px solid var(--primary-gold); }
-        .task-item span { font-size: 14px; }
-        
+        .video-box { width: 100%; aspect-ratio: 16/9; background: #000; border-radius: 15px; border: 1.5px solid var(--primary-gold); overflow: hidden; margin-bottom: 15px; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; pointer-events: none; }
         .btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 16px; border-radius: 12px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
-        .btn:disabled { background: #333; color: #666; }
-
+        .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
         .promo-section { background: linear-gradient(45deg, #1a0b2e, #0f051d); border: 2px dashed var(--primary-gold); padding: 20px; border-radius: 20px; margin: 12px; text-align: center; }
-        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--primary-gold); background: transparent; color: white; box-sizing: border-box; }
-
+        input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--primary-gold); background: #000; color: white; box-sizing: border-box; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: var(--primary-gold); }
+        #timerDisplay { font-size: 24px; color: var(--primary-gold); font-weight: bold; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="header"><h2 style="color:var(--primary-gold); margin:0;">DAILY TASKS</h2></div>
+<div class="header"><h2 style="color:var(--primary-gold); margin:0;">EARN REWARDS</h2></div>
 
 <div class="card">
     <div id="videoTaskSection">
         <div class="video-box" id="player"></div>
         <p id="adStatus" style="text-align:center; color:var(--primary-gold); font-weight:bold;">Video Task: 1 / 3</p>
-        <button class="btn" id="nextAdBtn" onclick="nextVideo()" disabled>Wait 30s</button>
+        <button class="btn" id="nextAdBtn" onclick="nextVideo()" disabled>Starting Task...</button>
     </div>
 
     <div id="socialTaskSection" style="display:none;">
-        <h3 style="text-align:center; color:var(--primary-gold);">Social Media Tasks</h3>
-        <div class="task-item">
-            <span>Join WhatsApp Channel</span>
-            <button class="btn" style="width:auto; padding:8px 15px;" onclick="doSocialTask('https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l', 'wa')">Open</button>
-        </div>
-        <div class="task-item">
-            <span>Subscribe YouTube</span>
-            <button class="btn" style="width:auto; padding:8px 15px;" onclick="doSocialTask('https://youtube.com/@YourChannel', 'yt')">Open</button>
-        </div>
-        <button class="btn" id="claimBtn" onclick="claimEarnings()" style="margin-top:20px; background:#00ff64;" disabled>Claim Daily Profit</button>
+        <h3 style="text-align:center; color:var(--primary-gold);">Final Steps</h3>
+        <button class="btn" style="margin-bottom:10px; background:#25D366; color:white;" onclick="doSocialTask('https://whatsapp.com/channel/0029VbCAU3sAYlUQQImhoL0l', 'wa')"><i class="fab fa-whatsapp"></i> Join WhatsApp Channel</button>
+        <button class="btn" style="margin-bottom:10px; background:#FF0000; color:white;" onclick="doSocialTask('https://youtube.com/@GoldPlusOfficial', 'yt')"><i class="fab fa-youtube"></i> Subscribe YouTube</button>
+        <button class="btn" id="claimBtn" onclick="claimEarnings()" style="margin-top:10px; background:#00ff64;" disabled>Claim Today's Profit</button>
     </div>
 
-    <div id="timerScreen" style="display:none; text-align:center; padding:40px 0;">
-        <i class="fas fa-check-circle" style="font-size:60px; color:#00ff64;"></i>
-        <h2>آج کے ٹاسک مکمل!</h2>
-        <p id="timerDisplay">Next tasks in: 00:00:00</p>
+    <div id="timerScreen" style="display:none; text-align:center; padding:30px 0;">
+        <i class="fas fa-clock" style="font-size:50px; color:var(--primary-gold);"></i>
+        <h3>ٹاسک مکمل ہو چکے ہیں</h3>
+        <p>اگلا ٹاسک دستیاب ہوگا:</p>
+        <div id="timerDisplay">00:00:00</div>
     </div>
 </div>
 
 <div class="promo-section">
-    <h3 style="color:var(--primary-gold); margin:0;">پرموشن سروس</h3>
-    <p style="font-size:11px;">اپنے چینل یا گروپ کی پرموشن کروائیں صرف 100 روپے میں</p>
-    <input type="text" id="promoLink" placeholder="لنک یہاں پیسٹ کریں...">
-    <button class="btn" onclick="confirmPromo()">لنک لگائیں (Rs. 100)</button>
+    <h3 style="color:var(--primary-gold); margin:0;">Channel Promotion</h3>
+    <p style="font-size:11px;">Promotion Fee: <b style="color:var(--primary-gold);">Rs. 100</b> (No Refund)</p>
+    <input type="text" id="promoLink" placeholder="Paste your link here...">
+    <button class="btn" id="promoSubmitBtn" onclick="confirmPromo()">Submit Link</button>
 </div>
 
 <nav class="nav-bar">
@@ -76,7 +65,7 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, get, update, push } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+    import { getDatabase, ref, get, update, push, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
     const firebaseConfig = { 
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
@@ -89,38 +78,41 @@
     const phone = localStorage.getItem('userPhone');
 
     let currentVid = 0;
-    const videos = ["K_n_C_G_Y8s", "3_Vsh5E70e4", "EIs6X39H6j8"];
-    let socialCompleted = { wa: false, yt: false };
+    const videos = ["_8p6OsnrW4E", "h_7fG_VzI8w", "r9mYv4_5mSc"]; // Sample YT IDs
+    let socialDone = { wa: false, yt: false };
 
     async function init() {
+        if(!phone) return window.location.href='index.html';
         const snap = await get(ref(db, 'users/' + phone));
         const user = snap.val();
         
-        if(!user.plan) { alert("پہلے پلان ایکٹیو کریں!"); window.location.href='plans.html'; return; }
+        if(!user.plan) {
+            document.getElementById('videoTaskSection').innerHTML = "<h3>پہلے کوئی پلان خریدیں</h3>";
+            return;
+        }
 
         const last = user.lastClaim || 0;
-        if(Date.now() - last < 86400000) {
-            showTimer(last);
+        const diff = Date.now() - last;
+        if(diff < 86400000) {
+            showCountdown(last);
         } else {
             loadVideo();
         }
     }
 
     function loadVideo() {
-        const vidId = videos[currentVid];
-        document.getElementById('player').innerHTML = `<iframe id="ytFrame" src="https://www.youtube.com/embed/${vidId}?autoplay=1&controls=0&disablekb=1"></iframe>`;
-        
-        let timeLeft = 30;
+        document.getElementById('player').innerHTML = `<iframe src="https://www.youtube.com/embed/${videos[currentVid]}?autoplay=1&controls=0"></iframe>`;
+        let time = 30;
         const btn = document.getElementById('nextAdBtn');
         btn.disabled = true;
         
-        const timer = setInterval(() => {
-            timeLeft--;
-            btn.innerText = `Wait ${timeLeft}s`;
-            if(timeLeft <= 0) {
-                clearInterval(timer);
+        const clock = setInterval(() => {
+            time--;
+            btn.innerText = `Wait ${time}s`;
+            if(time <= 0) {
+                clearInterval(clock);
                 btn.disabled = false;
-                btn.innerText = currentVid < 2 ? "Next Video" : "Go to Social Tasks";
+                btn.innerText = (currentVid < 2) ? "Next Video" : "Finish Videos";
             }
         }, 1000);
     }
@@ -138,23 +130,21 @@
 
     window.doSocialTask = (link, type) => {
         window.open(link, '_blank');
-        socialCompleted[type] = true;
-        if(socialCompleted.wa && socialCompleted.yt) {
-            document.getElementById('claimBtn').disabled = false;
-        }
+        socialDone[type] = true;
+        if(socialDone.wa && socialDone.yt) document.getElementById('claimBtn').disabled = false;
     };
 
     window.claimEarnings = async () => {
+        const btn = document.getElementById('claimBtn');
+        btn.disabled = true; btn.innerText = "Processing...";
+        
         const snap = await get(ref(db, 'users/' + phone));
         const user = snap.val();
         const profit = parseFloat(user.dailyProfit || 0);
-        const newBalance = (parseFloat(user.balance || 0) + profit);
+        const newBal = (parseFloat(user.balance || 0) + profit);
 
-        await update(ref(db, 'users/' + phone), {
-            balance: newBalance,
-            lastClaim: Date.now()
-        });
-        alert(`Rs. ${profit} کلیم کر لیے گئے ہیں!`);
+        await update(ref(db, 'users/' + phone), { balance: newBal, lastClaim: Date.now() });
+        alert("Rs. " + profit + " آپ کے والٹ میں ڈال دیے گئے ہیں۔");
         location.reload();
     };
 
@@ -162,27 +152,45 @@
         const link = document.getElementById('promoLink').value;
         if(!link) return alert("لنک درج کریں!");
 
-        if(confirm("اس سروس کی قیمت 100 روپے ہے جو آپ کے بیلنس سے کٹ جائیں گے۔ کیا آپ کنفرم کرنا چاہتے ہیں؟ (No Refund)")) {
-            const snap = await get(ref(db, 'users/' + phone));
-            const balance = parseFloat(snap.val().balance || 0);
+        if(confirm("کیا آپ Rs. 100 ادا کر کے پرموشن لگوانا چاہتے ہیں؟ یہ رقم واپس نہیں ہوگی۔")) {
+            const btn = document.getElementById('promoSubmitBtn');
+            btn.disabled = true;
 
-            if(balance < 100) return alert("آپ کا بیلنس کم ہے!");
-
-            await update(ref(db, 'users/' + phone), { balance: balance - 100 });
-            await push(ref(db, 'admin_promotions'), {
-                user: phone,
-                link: link,
-                date: new Date().toLocaleString()
+            const balanceRef = ref(db, `users/${phone}/balance`);
+            const result = await runTransaction(balanceRef, (current) => {
+                if (current === null || current < 100) return undefined; // Transaction cancel if low balance
+                return current - 100;
             });
-            alert("آپ کی درخواست ایڈمن کو بھیج دی گئی ہے!");
-            document.getElementById('promoLink').value = "";
+
+            if (result.committed) {
+                await push(ref(db, 'admin_promotions'), {
+                    user: phone,
+                    link: link,
+                    status: "Pending",
+                    timestamp: Date.now()
+                });
+                alert("پرموشن ریکویسٹ بھیج دی گئی ہے اور 100 روپے کٹ گئے ہیں۔");
+                document.getElementById('promoLink').value = "";
+            } else {
+                alert("آپ کا بیلنس 100 روپے سے کم ہے!");
+            }
+            btn.disabled = false;
         }
     };
 
-    function showTimer(last) {
+    function showCountdown(last) {
         document.getElementById('videoTaskSection').style.display = 'none';
         document.getElementById('timerScreen').style.display = 'block';
-        // Timer countdown logic here...
+        const display = document.getElementById('timerDisplay');
+        
+        setInterval(() => {
+            const remaining = (last + 86400000) - Date.now();
+            if(remaining <= 0) return location.reload();
+            const h = Math.floor(remaining / 3600000);
+            const m = Math.floor((remaining % 3600000) / 60000);
+            const s = Math.floor((remaining % 60000) / 1000);
+            display.innerText = `${h}h ${m}m ${s}s`;
+        }, 1000);
     }
 
     init();
