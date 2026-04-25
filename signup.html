@@ -1,105 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Plus - Signup</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root { --gold: #f1c40f; --bg: #0f051d; }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .signup-container { width: 90%; max-width: 400px; background: rgba(255,255,255,0.05); padding: 30px; border-radius: 20px; border: 1px solid rgba(241, 196, 15, 0.2); text-align: center; }
+        .input-group { margin-bottom: 15px; position: relative; }
+        input { width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; box-sizing: border-box; }
+        .signup-btn { background: #f1c40f; color: black; border: none; width: 100%; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+<div class="signup-container">
+    <h2 id="inviterText" style="color: #f1c40f;">Create Account</h2>
+    <div class="input-group"><input type="text" id="username" placeholder="Username"></div>
+    <div class="input-group"><input type="email" id="email" placeholder="Email Address"></div>
+    <div class="input-group"><input type="password" id="pass" placeholder="Password"></div>
+    <div class="input-group"><input type="password" id="confirm_pass" placeholder="Confirm Password"></div>
+    <div class="input-group"><input type="text" id="ref" placeholder="Referral Code"></div>
+    <button class="signup-btn" id="signupBtn">SIGN UP NOW</button>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    // دوسرا کام: یہاں 'type="module"' نہیں ہونا چاہیے، بس سادہ <script> ٹیگ ہو
-    const firebaseConfig = {
+    // Firebase Config
+    var firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
       databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
-      projectId: "gold-plus-v1",
-      storageBucket: "gold-plus-v1.firebasestorage.app",
-      messagingSenderId: "474592887487",
-      appId: "1:474592887487:web:e9261d51df5af58a367c0a"
+      projectId: "gold-plus-v1"
     };
 
-    // Firebase Initialize
+    // Initialize Firebase
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
     var db = firebase.database();
     var auth = firebase.auth();
 
-    // ریفرل چیک
+    // ریفرل لنک چیک کریں
     window.onload = function() {
-        var urlParams = new URLSearchParams(window.location.search);
-        var refCode = urlParams.get('ref');
+        var params = new URLSearchParams(window.location.search);
+        var refCode = params.get('ref');
         if (refCode) {
             document.getElementById('ref').value = refCode;
             document.getElementById('ref').readOnly = true;
             
             db.ref('users/' + refCode).once('value').then(function(snap) {
-                if(snap.exists()){
+                if(snap.exists()) {
                     document.getElementById('inviterText').innerText = "Invited by " + snap.val().username;
                 }
             });
         }
     };
 
-    // سائن اپ بٹن
+    // سائن اپ کا بٹن
     document.getElementById('signupBtn').onclick = function() {
-        var username = document.getElementById('username').value.trim().toLowerCase();
+        var user = document.getElementById('username').value.trim().toLowerCase();
         var email = document.getElementById('email').value.trim();
         var pass = document.getElementById('pass').value;
-        var confirmPass = document.getElementById('confirm_pass').value;
+        var cPass = document.getElementById('confirm_pass').value;
         var refer = document.getElementById('ref').value || "none";
 
-        if(!username || !email || !pass) {
-            alert("Please fill all fields!");
-            return;
-        }
-        if(pass !== confirmPass) {
-            alert("Passwords do not match!");
-            return;
-        }
+        if(!user || !email || !pass) { alert("Fill all fields!"); return; }
+        if(pass !== cPass) { alert("Password mismatch!"); return; }
 
         var btn = document.getElementById('signupBtn');
-        btn.innerText = "Creating Account...";
+        btn.innerText = "Please wait...";
         btn.disabled = true;
 
-        // یوزر چیک کریں
-        db.ref('users/' + username).once('value').then(function(snapshot) {
-            if (snapshot.exists()) {
-                alert("Username already taken!");
+        // یوزر چیک اور سائن اپ
+        db.ref('users/' + user).once('value').then(function(s) {
+            if(s.exists()) {
+                alert("Username taken!");
                 btn.innerText = "SIGN UP NOW";
                 btn.disabled = false;
-                return;
-            }
-
-            // اکاؤنٹ بنانا
-            auth.createUserWithEmailAndPassword(email, pass).then(function(userCredential) {
-                var user = userCredential.user;
-
-                var userData = {
-                    uid: user.uid,
-                    username: username,
-                    email: email,
-                    referredBy: refer,
-                    balance: 0,
-                    totalEarned: 0,
-                    totalDeposit: 0,
-                    status: "active",
-                    joinDate: new Date().toLocaleDateString()
-                };
-
-                db.ref('users/' + username).set(userData).then(function() {
-                    if (refer !== "none") {
-                        db.ref('users/' + refer + '/referrals/' + username).set({
-                            joinTime: new Date().toLocaleString(),
-                            status: "Pending"
-                        });
-                    }
-                    localStorage.setItem('userPhone', username);
-                    alert("Account Created Successfully!");
-                    window.location.href = 'dashboard.html';
+            } else {
+                auth.createUserWithEmailAndPassword(email, pass).then(function(res) {
+                    var userData = {
+                        uid: res.user.uid,
+                        username: user,
+                        email: email,
+                        referredBy: refer,
+                        balance: 0,
+                        joinDate: new Date().toLocaleDateString()
+                    };
+                    
+                    db.ref('users/' + user).set(userData).then(function() {
+                        if(refer !== "none") {
+                            db.ref('users/' + refer + '/referrals/' + user).set({
+                                joinTime: new Date().toLocaleString(),
+                                status: "Pending"
+                            });
+                        }
+                        localStorage.setItem('userPhone', user);
+                        window.location.href = "dashboard.html";
+                    });
+                }).catch(function(e) {
+                    alert(e.message);
+                    btn.innerText = "SIGN UP NOW";
+                    btn.disabled = false;
                 });
-
-            }).catch(function(error) {
-                alert(error.message);
-                btn.innerText = "SIGN UP NOW";
-                btn.disabled = false;
-            });
+            }
         });
     };
 </script>
+</body>
+</html>
