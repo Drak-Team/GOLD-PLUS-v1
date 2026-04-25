@@ -16,9 +16,40 @@
         .btn:disabled { background: #333; color: #666; cursor: not-allowed; }
         .promo-section { background: linear-gradient(45deg, #1a0b2e, #0f051d); border: 2px dashed var(--primary-gold); padding: 20px; border-radius: 20px; margin: 12px; text-align: center; }
         input[type="text"] { width: 100%; padding: 12px; margin: 10px 0; border-radius: 10px; border: 1px solid var(--primary-gold); background: #000; color: white; box-sizing: border-box; }
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); }
-        .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
-        .nav-btn.active { color: var(--primary-gold); }
+
+        /* Updated Navigation Buttons Theme */
+        .nav-bar { 
+            position: fixed; 
+            bottom: 0; 
+            width: 100%; 
+            background: #0a0414; 
+            display: flex; 
+            justify-content: space-around; 
+            padding: 12px 0; 
+            border-top: 1px solid rgba(241, 196, 15, 0.3); 
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .nav-btn { 
+            color: #777; 
+            text-decoration: none; 
+            text-align: center; 
+            font-size: 10px; 
+            flex: 1; 
+            transition: 0.3s;
+            font-weight: bold;
+        }
+        .nav-btn i { 
+            font-size: 22px; 
+            display: block; 
+            margin-bottom: 4px; 
+        }
+        .nav-btn.active { 
+            color: var(--primary-gold); 
+            text-shadow: 0 0 8px rgba(241, 196, 15, 0.4);
+        }
+        .nav-btn:hover { color: var(--primary-gold); }
+
         #timerDisplay { font-size: 24px; color: var(--primary-gold); font-weight: bold; margin-top: 10px; }
     </style>
 </head>
@@ -78,7 +109,7 @@
     const phone = localStorage.getItem('userPhone');
 
     let currentVid = 0;
-    const videos = ["_8p6OsnrW4E", "h_7fG_VzI8w", "r9mYv4_5mSc"]; // Sample YT IDs
+    const videos = ["_8p6OsnrW4E", "h_7fG_VzI8w", "r9mYv4_5mSc"];
     let socialDone = { wa: false, yt: false };
 
     async function init() {
@@ -158,7 +189,7 @@
 
             const balanceRef = ref(db, `users/${phone}/balance`);
             const result = await runTransaction(balanceRef, (current) => {
-                if (current === null || current < 100) return undefined; // Transaction cancel if low balance
+                if (current === null || current < 100) return undefined;
                 return current - 100;
             });
 
