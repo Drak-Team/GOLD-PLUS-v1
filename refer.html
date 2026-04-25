@@ -25,7 +25,7 @@
         .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); }
         .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
         .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 20px; display: block; }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -74,60 +74,70 @@
     const db = firebase.database();
     const username = localStorage.getItem('userPhone');
 
-    if (!username) window.location.href = "login.html";
+    if (!username) {
+        window.location.href = "login.html";
+    } else {
+        // نیٹلی فائی کے لیے لنک بنانے کا پکا طریقہ
+        const currentUrl = window.location.origin; 
+        const finalLink = currentUrl + "/signup.html?ref=" + username;
+        document.getElementById('refLink').innerText = finalLink;
 
-    // لنک بنانا
-    const currentUrl = window.location.href.split('refer.html')[0];
-    const finalLink = currentUrl + "signup.html?ref=" + username;
-    document.getElementById('refLink').innerText = finalLink;
+        // ٹیم کا ڈیٹا لوڈ کرنا
+        db.ref('users/' + username).on('value', (snap) => {
+            const data = snap.val();
+            if (data) {
+                const referrals = data.referrals || {};
+                const refKeys = Object.keys(referrals);
+                document.getElementById('totalInvited').innerText = refKeys.length;
 
-    // ڈیٹا لوڈ کرنا
-    db.ref('users/' + username).on('value', (snap) => {
-        const data = snap.val();
-        if (data) {
-            const referrals = data.referrals || {};
-            const refKeys = Object.keys(referrals);
-            document.getElementById('totalInvited').innerText = refKeys.length;
+                let activated = 0;
+                const inviteListDiv = document.getElementById('inviteList');
+                inviteListDiv.innerHTML = ""; // پرانی لسٹ صاف کریں
 
-            let listHTML = "";
-            let activated = 0;
-
-            if (refKeys.length === 0) {
-                listHTML = "<p style='font-size:11px; color:#555; text-align:center;'>No members yet.</p>";
-            } else {
-                refKeys.forEach(refPhone => {
-                    // ہم ہر ریفرل کا اسٹیٹس چیک کریں گے
-                    db.ref('users/' + refPhone).once('value').then(uSnap => {
-                        const uData = uSnap.val();
-                        const isPaid = (uData && uData.plan && uData.plan !== "No Active Plan");
-                        if(isPaid) activated++;
-                        
-                        document.getElementById('activeCount').innerText = activated;
-                        
-                        const statusClass = isPaid ? "active-tag" : "pending-tag";
-                        const statusText = isPaid ? "Activated" : "Pending";
-                        
-                        const row = `
-                            <div class="invite-row">
-                                <div><h5 style="margin:0; font-size:13px;">${refPhone}</h5></div>
-                                <div class="status-tag ${statusClass}">${statusText}</div>
-                            </div>`;
-                        document.getElementById('inviteList').innerHTML += row;
+                if (refKeys.length === 0) {
+                    inviteListDiv.innerHTML = "<p style='font-size:11px; color:#555; text-align:center;'>No members yet.</p>";
+                } else {
+                    refKeys.forEach(refPhone => {
+                        db.ref('users/' + refPhone).once('value', uSnap => {
+                            const uData = uSnap.val();
+                            const isPaid = (uData && uData.plan && uData.plan !== "No Active Plan" && uData.plan !== "");
+                            
+                            if(isPaid) {
+                                activated++;
+                                document.getElementById('activeCount').innerText = activated;
+                            }
+                            
+                            const statusClass = isPaid ? "active-tag" : "pending-tag";
+                            const statusText = isPaid ? "Activated" : "Pending";
+                            
+                            const row = `
+                                <div class="invite-row">
+                                    <div><h5 style="margin:0; font-size:13px;">${refPhone}</h5></div>
+                                    <div class="status-tag ${statusClass}">${statusText}</div>
+                                </div>`;
+                            inviteListDiv.innerHTML += row;
+                        });
                     });
-                });
+                }
             }
-        }
-    });
+        });
+    }
 
     function copyLink() {
         const link = document.getElementById('refLink').innerText;
-        const el = document.createElement('textarea');
-        el.value = link;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        alert("Link Copied!");
+        if (navigator.clipboard) {
+            navigator.clipboard.writeText(link).then(() => {
+                alert("Link Copied!");
+            });
+        } else {
+            const el = document.createElement('textarea');
+            el.value = link;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert("Link Copied!");
+        }
     }
 </script>
 </body>
