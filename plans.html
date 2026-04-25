@@ -24,6 +24,7 @@
         .stat-box span { font-size: 14px; font-weight: 700; color: var(--neon-green); }
         .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; }
         .buy-btn.deposit { background: linear-gradient(90deg, #3498db, #2980b9); color: white; }
+        .buy-btn.active-plan { background: #00ff64; color: #000; cursor: default; }
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
         .nav-btn.active { color: #f1c40f; }
@@ -64,6 +65,7 @@
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
+    const PKR_RATE = 300; 
 
     const plans = [
         {id: 2, name: "Nano AI Bot", rs: "600", daily: "60", bonus: "5%"},
@@ -82,6 +84,7 @@
     function renderInitialPlans() {
         let html = "";
         plans.forEach(plan => {
+            const dailyUSD = (parseFloat(plan.daily.replace(/,/g, '')) / PKR_RATE).toFixed(2);
             html += `
                 <div class="plan-card">
                     <i class="fas fa-robot robot-bg"></i>
@@ -89,7 +92,10 @@
                     <div class="plan-name">${plan.name}</div>
                     <span class="price-tag">$${plan.id}.00 <small style="font-size:12px; color:#888;">/ Rs. ${plan.rs}</small></span>
                     <div class="stats-grid">
-                        <div class="stat-box"><label>Daily Earning</label><span>Rs. ${plan.daily}</span></div>
+                        <div class="stat-box">
+                            <label>Daily Earning</label>
+                            <span>Rs. ${plan.daily} <small style="font-size:10px; color:#fff; opacity:0.7;">($${dailyUSD})</small></span>
+                        </div>
                         <div class="stat-box"><label>Life</label><span style="color:#fff;">30 Days</span></div>
                     </div>
                     <button id="btn-${plan.id}" class="buy-btn deposit" onclick="window.location.href='deposit.html?amount=${plan.id}'">
@@ -111,12 +117,21 @@
         plans.forEach(plan => {
             const btn = document.getElementById(`btn-${plan.id}`);
             if (btn) {
-                if (activePlanName === plan.name) {
-                    btn.innerText = "Current Plan";
-                    btn.className = "buy-btn";
-                    btn.style.background = "#00ff64";
-                    btn.disabled = true;
-                    btn.onclick = null;
+                // اگر کوئی بھی پلان پہلے سے ایکٹیو ہے
+                if (activePlanName !== "") {
+                    if (activePlanName === plan.name) {
+                        btn.innerText = "Activated (30 Days)";
+                        btn.className = "buy-btn active-plan";
+                        btn.disabled = true;
+                        btn.onclick = null;
+                    } else {
+                        // دوسرے بٹنز کو بھی غیر فعال کر دیں تاکہ ایک وقت میں ایک ہی پلان چلے
+                        btn.innerText = "Plan Locked";
+                        btn.className = "buy-btn deposit";
+                        btn.style.opacity = "0.5";
+                        btn.disabled = true;
+                        btn.onclick = null;
+                    }
                 } else if (balance >= plan.id) {
                     btn.innerText = "Invest Now";
                     btn.className = "buy-btn";
@@ -139,12 +154,12 @@
             await db.ref('users/' + phone).update({
                 balance: (currentBal - cost).toFixed(2),
                 plan: pName,
-                dailyProfit: dailyIncome, // یہاں روزانہ کی ارننگ محفوظ ہوگی
+                dailyProfit: dailyIncome.replace(/,/g, ''),
                 miningStatus: "Active",
-                lastClaim: 0, // تاکہ یوزر فوری پہلا ٹاسک کر سکے
-                planDate: new Date().getTime() // تاریخ کے بجائے ٹائم اسٹیمپ
+                lastClaim: 0,
+                planDate: new Date().getTime()
             });
-            alert(pName + " Activated! Go to EARN page to start mining.");
+            alert(pName + " Activated for 30 Days!");
             window.location.href = "mining.html";
         } catch (e) { alert("Error: " + e.message); }
     }
