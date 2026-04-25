@@ -1,99 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - Refer & Earn</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { --primary-gold: #f1c40f; --bg-dark: #0f051d; --card-bg: rgba(255, 255, 255, 0.05); --glass-border: rgba(255, 255, 255, 0.1); }
-        body { margin: 0; font-family: 'Segoe UI', sans-serif; background: radial-gradient(circle at top, #1a0b2e, #0f051d); color: white; padding-bottom: 100px; }
-        .header { padding: 20px; display: flex; align-items: center; gap: 15px; background: rgba(0,0,0,0.2); }
-        .header i { color: var(--primary-gold); font-size: 22px; cursor: pointer; }
-        .container { padding: 20px; text-align: center; }
-        
-        .comm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .comm-card { background: var(--card-bg); padding: 15px; border-radius: 20px; border-left: 4px solid var(--primary-gold); border-top: 1px solid var(--glass-border); }
-        .comm-card small { font-size: 10px; color: #aaa; text-transform: uppercase; }
-        .comm-card h3 { margin: 5px 0 0; color: #00ff64; font-size: 18px; }
-
-        .level-box { background: rgba(241, 196, 15, 0.03); padding: 15px; border-radius: 15px; border: 1px dashed var(--glass-border); margin-bottom: 25px; text-align: left; }
-        .level-row { display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 13px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-        .level-row span { color: var(--primary-gold); font-weight: bold; }
-
-        .history-box { background: var(--card-bg); border-radius: 20px; padding: 15px; text-align: left; margin-bottom: 25px; border: 1px solid var(--glass-border); min-height: 100px; }
-        .history-title { font-size: 12px; color: var(--primary-gold); margin-bottom: 10px; font-weight: bold; text-transform: uppercase; }
-        .invite-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .invite-row:last-child { border: none; }
-        .user-info h5 { margin: 0; font-size: 13px; color: #fff; }
-        .user-info small { color: #777; font-size: 10px; }
-        .status-tag { font-size: 10px; padding: 3px 8px; border-radius: 5px; font-weight: bold; }
-        .active-tag { background: rgba(0, 255, 100, 0.1); color: #00ff64; border: 1px solid #00ff64; }
-        .pending-tag { background: rgba(255, 255, 255, 0.05); color: #aaa; border: 1px solid #333; }
-
-        .spin-box { background: #f1c40f; color: #000; padding: 15px; border-radius: 15px; margin-bottom: 20px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-
-        .referral-box { background: var(--card-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; margin-bottom: 25px; }
-        .link-input { background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); padding: 12px; border-radius: 12px; color: var(--primary-gold); font-size: 11px; word-break: break-all; margin-bottom: 15px; text-align: left; min-height: 20px; }
-        .share-btn { background: linear-gradient(90deg, #f1c40f, #e67e22); color: #000; border: none; width: 100%; padding: 15px; border-radius: 18px; font-weight: bold; cursor: pointer; }
-        
-        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #110720; display: flex; justify-content: space-around; padding: 15px 0; border-top: 1px solid var(--glass-border); }
-        .nav-item { text-align: center; color: #555; text-decoration: none; font-size: 10px; }
-        .nav-item.active { color: var(--primary-gold); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-    </style>
-</head>
-<body>
-
-<div class="header">
-    <i class="fas fa-arrow-left" onclick="window.location.href='dashboard.html'"></i>
-    <h2 style="font-size: 18px; margin: 0;">Invite Friends</h2>
-</div>
-
-<div class="container">
-    <div class="comm-grid">
-        <div class="comm-card">
-            <small>Total Invited</small>
-            <h3 id="totalInvited">0</h3>
-        </div>
-        <div class="comm-card">
-            <small>Activated Team</small>
-            <h3 id="activeCount">0</h3>
-        </div>
-    </div>
-
-    <div class="level-box">
-        <div style="font-size: 11px; color: #aaa; margin-bottom: 10px;">TEAM COMMISSION (10% Direct)</div>
-        <div class="level-row">Total Bonus <span id="teamComm">Rs. 0</span></div>
-        <div class="level-row">Level 1 Bonus <span id="lvl1Earn">Rs. 0</span></div>
-    </div>
-
-    <div class="history-box">
-        <div class="history-title">Recent Joinees & Status</div>
-        <div id="inviteList">
-            <p style="text-align:center; font-size:11px; color:#555;">Loading members...</p>
-        </div>
-    </div>
-
-    <div class="spin-box" onclick="window.location.href='spin.html'">
-        <span><i class="fas fa-dharmachakra"></i> LUCKY SPIN WHEEL</span>
-        <i class="fas fa-chevron-right"></i>
-    </div>
-
-    <div class="referral-box">
-        <label style="font-size: 11px; color: #aaa; display: block; margin-bottom: 10px; text-align: left;">YOUR UNIQUE REFERRAL LINK</label>
-        <div class="link-input" id="refLink">Loading your link...</div>
-        <button class="share-btn" onclick="copyLink()"><i class="fas fa-copy"></i> Copy Link</button>
-    </div>
-</div>
-
-<nav class="bottom-nav">
-    <a href="dashboard.html" class="nav-item"><i class="fas fa-house"></i>HOME</a>
-    <a href="mining.html" class="nav-item"><i class="fas fa-coins"></i>EARN</a>
-    <a href="refer.html" class="nav-item active"><i class="fas fa-users"></i>INVITE</a>
-    <a href="profile.html" class="nav-item"><i class="fas fa-user"></i>PROFILE</a>
-</nav>
-
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
     import { getDatabase, ref, onValue, get } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -108,10 +12,20 @@
     const db = getDatabase(app);
     const username = localStorage.getItem('userPhone');
 
+    // لنک کاپی کرنے کا فنکشن
     window.copyLink = function() {
         const linkToCopy = document.getElementById('refLink').innerText;
         if(linkToCopy.includes("http")) {
             navigator.clipboard.writeText(linkToCopy).then(() => {
+                alert("Referral Link Copied!");
+            }).catch(err => {
+                // اگر آٹو کاپی کام نہ کرے تو مینوئل طریقہ
+                const textArea = document.createElement("textarea");
+                textArea.value = linkToCopy;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
                 alert("Referral Link Copied!");
             });
         }
@@ -120,10 +34,11 @@
     if (!username) {
         window.location.href = "login.html";
     } else {
-        const finalLink = "https://drak-team.github.io/GOLD-PLUS-v1/signup.html?ref=" + username;
+        // لنک بنانے کا درست طریقہ
+        const currentPath = window.location.href.split('refer.html')[0];
+        const finalLink = currentPath + "signup.html?ref=" + username;
         document.getElementById('refLink').innerText = finalLink;
 
-        // یوزر کا ڈیٹا ٹریک کرنا
         const userRef = ref(db, 'users/' + username);
         onValue(userRef, (snapshot) => {
             const data = snapshot.val();
@@ -149,34 +64,35 @@
         let activeCount = 0;
         let listHTML = "";
 
-        // تمام ریفرلز کا ڈیٹا ایک ساتھ لانے کے لیے
-        const allUsersSnap = await get(ref(db, 'users'));
-        const allUsers = allUsersSnap.val() || {};
+        try {
+            const allUsersSnap = await get(ref(db, 'users'));
+            const allUsers = allUsersSnap.val() || {};
 
-        refKeys.forEach(refPhone => {
-            const userData = allUsers[refPhone];
-            const isActivated = userData && userData.plan && userData.plan !== "";
-            
-            if (isActivated) activeCount++;
+            refKeys.forEach(refPhone => {
+                const userData = allUsers[refPhone];
+                const isActivated = userData && userData.plan && userData.plan !== "" && userData.plan !== "No Active Plan";
+                
+                if (isActivated) activeCount++;
 
-            const joinTime = referralData[refPhone].joinTime || "N/A";
-            const statusClass = isActivated ? "active-tag" : "pending-tag";
-            const statusText = isActivated ? "Activated" : "Pending";
+                const joinTime = referralData[refPhone].joinTime || "N/A";
+                const statusClass = isActivated ? "active-tag" : "pending-tag";
+                const statusText = isActivated ? "Activated" : "Pending";
 
-            listHTML += `
-                <div class="invite-row">
-                    <div class="user-info">
-                        <h5>User: ${refPhone}</h5>
-                        <small><i class="far fa-clock"></i> Joined: ${joinTime}</small>
+                listHTML += `
+                    <div class="invite-row">
+                        <div class="user-info">
+                            <h5>User: ${refPhone}</h5>
+                            <small><i class="far fa-clock"></i> Joined: ${joinTime}</small>
+                        </div>
+                        <div class="status-tag ${statusClass}">${statusText}</div>
                     </div>
-                    <div class="status-tag ${statusClass}">${statusText}</div>
-                </div>
-            `;
-        });
+                `;
+            });
 
-        document.getElementById('activeCount').innerText = activeCount;
-        document.getElementById('inviteList').innerHTML = listHTML;
+            document.getElementById('activeCount').innerText = activeCount;
+            document.getElementById('inviteList').innerHTML = listHTML;
+        } catch (e) {
+            console.error("Error loading list", e);
+        }
     }
 </script>
-</body>
-</html>
