@@ -32,7 +32,7 @@
         .buy-btn { background: var(--gold-grad); color: #000; border: none; width: 100%; padding: 18px; border-radius: 20px; font-weight: 900; font-size: 16px; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
         .buy-btn:disabled { opacity: 0.6; cursor: not-allowed; }
         .buy-btn.deposit { background: linear-gradient(90deg, #3498db, #2980b9); color: white; }
-        .buy-btn.active-plan { background: #00ff64; color: #000; }
+        .buy-btn.active-plan { background: #00ff64 !important; color: #000 !important; }
 
         .nav-bar { position: fixed; bottom: 0; width: 100%; background: #0a0414; display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(241, 196, 15, 0.2); z-index: 1000; }
         .nav-btn { color: #666; text-decoration: none; text-align: center; font-size: 10px; flex: 1; }
@@ -65,19 +65,19 @@
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-    const firebaseConfig = {
+    var firebaseConfig = {
         apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
         databaseURL: "https://gold-plus-v1-default-rtdb.firebaseio.com",
         projectId: "gold-plus-v1"
     };
 
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    const phone = localStorage.getItem('userPhone');
+    var db = firebase.database();
+    var phone = localStorage.getItem('userPhone');
 
     if (!phone) window.location.href = "login.html";
 
-    const plans = [
+    var plans = [
         {id: 2, name: "Nano AI Bot", rs: 600, daily: 60, bonus: "5%"},
         {id: 5, name: "Micro Miner", rs: 1500, daily: 150, bonus: "5%"},
         {id: 10, name: "Volt Robot", rs: 3000, daily: 300, bonus: "7%"},
@@ -92,102 +92,82 @@
     ];
 
     function loadPlans() {
-        const list = document.getElementById('plansList');
-        
-        db.ref('users/' + phone).on('value', (snap) => {
-            const userData = snap.val() || {};
-            const userBal = parseFloat(userData.balance || 0);
-            const activePlan = userData.plan || "";
+        db.ref('users/' + phone).on('value', function(snap) {
+            var userData = snap.val() || {};
+            var userBal = parseFloat(userData.balance || 0);
+            var activePlan = userData.plan || "";
+            var html = "";
 
-            let html = "";
-            plans.forEach(plan => {
-                let btnText = "Deposit Now";
-                let btnClass = "buy-btn deposit";
-                let btnAction = `window.location.href='deposit.html?amount=${plan.rs}'`;
-                let isDisabled = false;
+            plans.forEach(function(plan) {
+                var btnText = "Deposit Now";
+                var btnClass = "buy-btn deposit";
+                var btnAction = "window.location.href='deposit.html?amount=" + plan.rs + "'";
+                var isDisabled = false;
 
-                // اگر یوزر کا یہ پلان پہلے سے ایکٹیو ہے
                 if (activePlan === plan.name) {
                     btnText = "Activated";
                     btnClass = "buy-btn active-plan";
                     isDisabled = true;
-                } 
-                // اگر یوزر کے پاس بیلنس ہے تو وہ کوئی بھی پلان خرید سکتا ہے
-                else if (userBal >= plan.rs) {
+                } else if (userBal >= plan.rs) {
                     btnText = "Invest Now";
                     btnClass = "buy-btn";
-                    btnAction = `investNow(${plan.rs}, '${plan.name}', ${plan.daily})`;
-                    isDisabled = false;
+                    btnAction = "investNow(" + plan.rs + ", '" + plan.name + "', " + plan.daily + ")";
                 }
 
-                html += `
-                    <div class="plan-card">
-                        <i class="fas fa-robot robot-bg"></i>
-                        <div class="usdt-bonus-tag">BONUS: ${plan.bonus}</div>
-                        <div class="plan-name">${plan.name}</div>
-                        <span class="price-tag">$${plan.id}.00 <small style="font-size:12px; color:#888;">/ Rs. ${plan.rs}</small></span>
-                        <div class="stats-grid">
-                            <div class="stat-box"><label>Daily</label><span>Rs. ${plan.daily}</span></div>
-                            <div class="stat-box"><label>Life</label><span>30 Days</span></div>
-                        </div>
-                        <button class="${btnClass}" onclick="${btnAction}" ${isDisabled ? 'disabled' : ''}>${btnText}</button>
-                    </div>`;
+                html += '<div class="plan-card">' +
+                    '<i class="fas fa-robot robot-bg"></i>' +
+                    '<div class="usdt-bonus-tag">BONUS: ' + plan.bonus + '</div>' +
+                    '<div class="plan-name">' + plan.name + '</div>' +
+                    '<span class="price-tag">$' + plan.id + '.00 <small style="font-size:12px; color:#888;">/ Rs. ' + plan.rs + '</small></span>' +
+                    '<div class="stats-grid">' +
+                        '<div class="stat-box"><label>Daily</label><span>Rs. ' + plan.daily + '</span></div>' +
+                        '<div class="stat-box"><label>Life</label><span>30 Days</span></div>' +
+                    '</div>' +
+                    '<button class="' + btnClass + '" onclick="' + btnAction + '" ' + (isDisabled ? "disabled" : "") + '>' + btnText + '</button>' +
+                '</div>';
             });
-            list.innerHTML = html;
+            document.getElementById('plansList').innerHTML = html;
         });
     }
 
     function investNow(price, name, daily) {
         if (!confirm("Confirm investment in " + name + " for Rs. " + price + "?")) return;
 
-        const userRef = db.ref('users/' + phone);
-        
-        userRef.once('value').then((snapshot) => {
-            const userData = snapshot.val();
+        db.ref('users/' + phone).once('value').then(function(snapshot) {
+            var userData = snapshot.val();
             if (userData && parseFloat(userData.balance || 0) >= price) {
                 
-                const currentBalance = parseFloat(userData.balance) - price;
-                
-                // 1. پلان اپ ڈیٹ کریں
-                userRef.update({
-                    balance: currentBalance,
+                // یوزر ڈیٹا اپ ڈیٹ
+                db.ref('users/' + phone).update({
+                    balance: parseFloat(userData.balance) - price,
                     plan: name,
                     dailyProfit: daily,
                     miningStatus: "Active",
                     planDate: new Date().getTime()
-                }).then(() => {
+                }).then(function() {
                     
-                    // 2. ریفرل کمیشن (10%)
-                    const referBy = userData.referredBy;
+                    // ریفرل کمیشن 10%
+                    var referBy = userData.referredBy;
                     if (referBy && referBy !== "none" && referBy !== "") {
-                        const commission = price * 0.10;
-                        const refRef = db.ref('users/' + referBy);
-                        
-                        refRef.once('value').then((rSnap) => {
-                            const rData = rSnap.val();
+                        var commission = price * 0.10;
+                        db.ref('users/' + referBy).once('value').then(function(rSnap) {
+                            var rData = rSnap.val();
                             if (rData) {
-                                refRef.update({
+                                db.ref('users/' + referBy).update({
                                     balance: (parseFloat(rData.balance) || 0) + commission,
-                                    teamCommission: (parseFloat(rData.teamCommission) || 0) + commission,
-                                    lvl1Commission: (parseFloat(rData.lvl1Commission) || 0) + commission
+                                    teamCommission: (parseFloat(rData.teamCommission) || 0) + commission
                                 });
                                 
-                                // ہسٹری میں ریکارڈ
                                 db.ref('earning_history/' + referBy).push({
                                     amount: commission,
                                     type: "Team Bonus",
                                     from: phone,
                                     date: new Date().toLocaleString()
                                 });
-
-                                // ریفرل لسٹ میں اسٹیٹس اپ ڈیٹ
-                                db.ref('users/' + referBy + '/referrals/' + phone).update({
-                                    status: "Activated"
-                                });
                             }
                         });
                     }
-                    alert("Success! " + name + " Activated.");
+                    alert("Success! Plan Activated.");
                     window.location.href = "mining.html";
                 });
             } else {
