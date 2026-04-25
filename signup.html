@@ -1,8 +1,8 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-    import { getDatabase, ref, set, get, update, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
+<script>
     const firebaseConfig = {
       apiKey: "AIzaSyByanDKaCErU1mV7ebXd3KsuLWF55LbgnQ",
       authDomain: "gold-plus-v1.firebaseapp.com",
@@ -13,26 +13,28 @@
       appId: "1:474592887487:web:e9261d51df5af58a367c0a"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    const auth = getAuth(app);
+    // Firebase Initialize
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
 
-    // ریفرل چیک
-    window.onload = async function() {
+    // ریفرل چیک (لنک سے نمبر اٹھانا)
+    window.onload = function() {
         const params = new URLSearchParams(window.location.search);
         const refCode = params.get('ref');
         if (refCode) {
             document.getElementById('ref').value = refCode;
             document.getElementById('ref').readOnly = true;
             
-            const snap = await get(ref(db, 'users/' + refCode));
-            if(snap.exists()){
-                document.getElementById('inviterText').innerText = "Invited by " + snap.val().username;
-            }
+            db.ref('users/' + refCode).once('value').then((snap) => {
+                if(snap.exists()){
+                    document.getElementById('inviterText').innerText = "Invited by " + snap.val().username;
+                }
+            });
         }
     };
 
-    document.getElementById('signupBtn').addEventListener('click', async () => {
+    document.getElementById('signupBtn').addEventListener('click', function() {
         const username = document.getElementById('username').value.trim().toLowerCase();
         const email = document.getElementById('email').value.trim();
         const pass = document.getElementById('pass').value;
@@ -52,8 +54,8 @@
         btn.innerText = "Creating Account...";
         btn.disabled = true;
 
-        try {
-            const userCheck = await get(ref(db, 'users/' + username));
+        // یوزر نیم چیک کریں
+        db.ref('users/' + username).once('value').then((userCheck) => {
             if (userCheck.exists()) {
                 alert("Username already taken!");
                 btn.innerText = "SIGN UP NOW";
@@ -61,39 +63,42 @@
                 return;
             }
 
-            const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
-            const user = userCredential.user;
+            // نیا یوزر بنائیں
+            auth.createUserWithEmailAndPassword(email, pass).then((userCredential) => {
+                const user = userCredential.user;
 
-            // نیا اکاؤنٹ بنانا
-            await set(ref(db, 'users/' + username), {
-                uid: user.uid,
-                username: username,
-                email: email,
-                referredBy: refer, // تبدیل شدہ: referBy سے referredBy
-                balance: 0,
-                totalEarned: 0,
-                totalDeposit: 0,
-                status: "active",
-                joinDate: new Date().toLocaleDateString()
-            });
+                // ڈیٹا بیس میں یوزر کا ڈیٹا سیو کریں
+                const userData = {
+                    uid: user.uid,
+                    username: username,
+                    email: email,
+                    referredBy: refer, // یہاں ہم نے وہی نام رکھا جو پلان والے پیج پر استعمال کیا ہے
+                    balance: 0,
+                    totalEarned: 0,
+                    totalDeposit: 0,
+                    status: "active",
+                    joinDate: new Date().toLocaleDateString()
+                };
 
-            // ریفر کرنے والے کی لسٹ میں نئے بندے کو ڈالنا
-            if (refer !== "none") {
-                const refererListRef = ref(db, `users/${refer}/referrals/${username}`);
-                await set(refererListRef, {
-                    joinTime: new Date().toLocaleString(),
-                    status: "Pending"
+                db.ref('users/' + username).set(userData).then(() => {
+                    // ریفر کرنے والے کی لسٹ میں نئے بندے کو ڈالنا
+                    if (refer !== "none") {
+                        db.ref('users/' + refer + '/referrals/' + username).set({
+                            joinTime: new Date().toLocaleString(),
+                            status: "Pending"
+                        });
+                    }
+
+                    localStorage.setItem('userPhone', username);
+                    alert("Account Created Successfully!");
+                    window.location.href = 'dashboard.html';
                 });
-            }
 
-            localStorage.setItem('userPhone', username);
-            alert("Account Created Successfully!");
-            window.location.href = 'dashboard.html';
-
-        } catch (error) {
-            alert(error.message);
-            btn.innerText = "SIGN UP NOW";
-            btn.disabled = false;
-        }
+            }).catch((error) => {
+                alert(error.message);
+                btn.innerText = "SIGN UP NOW";
+                btn.disabled = false;
+            });
+        });
     });
 </script>
