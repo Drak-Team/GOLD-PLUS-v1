@@ -78,11 +78,11 @@
             <img src="https://img.icons8.com/color/48/money-transfer.png">
             <span>Easypaisa</span>
         </div>
-        <div class="tab" onclick="switchMethod('BNB (BEP20)', '0x000...Copy_From_Admin', 'Ahmad Nafees Anjum', this)">
+        <div class="tab" onclick="switchMethod('BNB (BEP20)', '0x542835c0cd1326cf831893a276e0da3580bfc79b', 'Ahmad Nafees Anjum', this)">
             <img src="https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png">
             <span>BNB (BEP20)</span>
         </div>
-        <div class="tab" onclick="switchMethod('TRX (TRC20)', 'T000...Copy_From_Admin', 'Ahmad Nafees Anjum', this)">
+        <div class="tab" onclick="switchMethod('TRX (TRC20)', 'TBYgsjdpgw48BEeh1AjaXvfPdd7qvzEh25', 'Ahmad Nafees Anjum', this)">
             <img src="https://assets.coingecko.com/coins/images/1094/small/tron-logo.png">
             <span>TRX (TRC20)</span>
         </div>
@@ -168,7 +168,6 @@
     };
 
     if (phone) {
-        // فکس: اب ہسٹری براہ راست مین ڈپازٹ ڈیٹا بیس سے سنک ہوگی تاکہ اسٹیٹس اپ ڈیٹ ہو سکے
         db.ref('deposits').orderByChild('phone').equalTo(phone).on('value', (snap) => {
             const histDiv = document.getElementById('depositHistory');
             let html = "";
@@ -210,11 +209,9 @@
                 phone, amount: amt, tid, method: currentMethod,
                 screenshot: reader.result, status: "Pending", date: new Date().toLocaleString()
             };
-            // مین ڈپازٹ ٹیبل میں ڈیٹا ڈالنا تاکہ ایڈمن اسے دیکھ سکے
             await db.ref('deposits/' + depID).set(depData);
             alert("Deposit Submitted!");
             btn.innerText = "Submit Request"; btn.disabled = false;
-            // ری سیٹ فارم
             document.getElementById('depositAmount').value = "";
             document.getElementById('tid').value = "";
             document.getElementById('fileName').innerText = "Upload Proof";
