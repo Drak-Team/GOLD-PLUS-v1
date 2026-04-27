@@ -8,70 +8,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold: #f1c40f; --light-gold: #f9e29c; --dark: #050505; }
-        
-        body { 
-            margin: 0; padding: 0;
-            font-family: 'Poppins', sans-serif; 
-            display: flex; justify-content: center; align-items: center; 
-            height: 100vh; overflow: hidden;
-            background: radial-gradient(circle at top, #1a0b2e, #050505);
-        }
-
-        .login-box { 
-            background: rgba(255, 255, 255, 0.04); 
-            padding: 45px 35px; border-radius: 35px; 
-            width: 320px; text-align: center; 
-            border: 1px solid rgba(241, 196, 15, 0.2);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
-            position: relative; z-index: 10;
-        }
-
-        .logo-container {
-            width: 80px; height: 80px;
-            background: radial-gradient(circle, #222 0%, #000 100%);
-            border: 2px solid var(--gold);
-            border-radius: 50%; margin: 0 auto 20px;
-            display: flex; align-items: center; justify-content: center;
-            box-shadow: 0 0 20px rgba(241, 196, 15, 0.4);
-            animation: pulse 2.5s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
+        body { margin: 0; padding: 0; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; background: radial-gradient(circle at top, #1a0b2e, #050505); }
+        .login-box { background: rgba(255, 255, 255, 0.04); padding: 45px 35px; border-radius: 35px; width: 320px; text-align: center; border: 1px solid rgba(241, 196, 15, 0.2); backdrop-filter: blur(20px); box-shadow: 0 25px 60px rgba(0,0,0,0.8); position: relative; z-index: 10; }
+        .logo-container { width: 80px; height: 80px; background: radial-gradient(circle, #222 0%, #000 100%); border: 2px solid var(--gold); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(241, 196, 15, 0.4); animation: pulse 2.5s infinite ease-in-out; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
         .logo-container i { font-size: 40px; color: var(--gold); }
-
         h2 { color: #fff; font-weight: 300; letter-spacing: 1px; margin-bottom: 30px; font-size: 22px; }
         h2 b { color: var(--gold); }
-
         .input-group { margin-bottom: 15px; position: relative; }
         .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 14px; }
-        
-        input { 
-            width: 100%; padding: 14px 14px 14px 45px; 
-            border: 1px solid rgba(255,255,255,0.1); 
-            border-radius: 12px; background: rgba(0,0,0,0.5); 
-            color: #fff; box-sizing: border-box; outline: none;
-            transition: 0.3s; font-size: 14px;
-        }
+        input { width: 100%; padding: 14px 14px 14px 45px; border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; background: rgba(0,0,0,0.5); color: #fff; box-sizing: border-box; outline: none; transition: 0.3s; font-size: 14px; }
         input:focus { border-color: var(--gold); box-shadow: 0 0 10px rgba(241, 196, 15, 0.2); }
-
-        button { 
-            width: 100%; padding: 15px; 
-            background: linear-gradient(90deg, #f1c40f, #e67e22); 
-            border: none; color: #000; font-weight: bold; 
-            border-radius: 12px; cursor: pointer; margin-top: 15px;
-            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
-        }
+        button { width: 100%; padding: 15px; background: linear-gradient(90deg, #f1c40f, #e67e22); border: none; color: #000; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 15px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
         button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(241, 196, 15, 0.4); }
-
         .footer-text { margin-top: 25px; font-size: 13px; color: #aaa; }
         .footer-text a { color: var(--gold); text-decoration: none; font-weight: bold; }
-
         .particle { position: absolute; background: var(--gold); border-radius: 50%; opacity: 0.2; animation: float 10s infinite linear; }
         @keyframes float { 0% { transform: translateY(100vh); opacity: 0; } 50% { opacity: 0.5; } 100% { transform: translateY(-10vh); opacity: 0; } }
     </style>
@@ -82,12 +33,8 @@
     <div class="particle" style="width: 3px; height: 3px; left: 80%; animation-duration: 12s;"></div>
 
     <div class="login-box">
-        <div class="logo-container">
-            <i class="fas fa-gem"></i>
-        </div>
-        
+        <div class="logo-container"><i class="fas fa-gem"></i></div>
         <h2>Welcome to <b>GOLD PLUS</b></h2>
-        
         <div class="input-group">
             <i class="fas fa-user"></i>
             <input type="text" id="username" placeholder="Username (Unique ID)">
@@ -96,12 +43,8 @@
             <i class="fas fa-lock"></i>
             <input type="password" id="pass" placeholder="Password">
         </div>
-        
         <button id="loginBtn">ACCESS ACCOUNT</button>
-        
-        <div class="footer-text">
-            Don't have an account? <a href="signup.html">CREATE ONE</a>
-        </div>
+        <div class="footer-text">Don't have an account? <a href="signup.html">CREATE ONE</a></div>
     </div>
 
     <script type="module">
@@ -122,9 +65,9 @@
         const db = getDatabase(app);
 
         document.getElementById('loginBtn').onclick = async () => {
-            // یہاں سے toLowerCase ہٹا دیا ہے تاکہ یوزر نیم بالکل ویسا ہی رہے جیسا ڈیٹا بیس میں ہے
+            // یوزر نیم کو ویسے ہی رکھا ہے تاکہ Capital letters کا مسئلہ نہ ہو
             const username = document.getElementById('username').value.trim();
-            const pass = document.getElementById('pass').value;
+            const pass = document.getElementById('pass').value.trim();
             const btn = document.getElementById('loginBtn');
 
             if(!username || !pass) return alert("Please enter both Username and Password!");
@@ -133,33 +76,31 @@
             btn.disabled = true;
 
             try {
-                // ڈیٹا بیس کے 'users' فولڈر سے ممبر کی معلومات اٹھانا
+                // سیدھا ڈیٹا بیس کے 'users' فولڈر میں یوزر کو تلاش کرنا
                 const userRef = ref(db, 'users/' + username);
                 const snapshot = await get(userRef);
 
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
                     
-                    // پاسورڈ کو زبردستی String میں بدلا تاکہ میچنگ میں غلطی نہ ہو
+                    // پاسورڈ میچنگ (نمبر اور ٹیکسٹ دونوں کے لیے محفوظ طریقہ)
                     if (userData.password && userData.password.toString() === pass.toString()) {
                         localStorage.clear();
                         localStorage.setItem('userPhone', username);
                         localStorage.setItem('isLoggedIn', 'true');
-                        // لاگ ان کے بعد ڈیش بورڈ پر روانگی
                         window.location.href = "dashboard.html";
                     } else {
-                        alert("Wrong Password! Please check and try again.");
+                        alert("Invalid Password!");
                         btn.innerText = "ACCESS ACCOUNT";
                         btn.disabled = false;
                     }
                 } else {
-                    // اگر یوزر نیم غلط ہو
-                    alert("User ID not found! Please check your ID.");
+                    alert("ID not found: " + username);
                     btn.innerText = "ACCESS ACCOUNT";
                     btn.disabled = false;
                 }
             } catch (e) { 
-                alert("Network Error: " + e.message); 
+                alert("Database Error: " + e.message); 
                 btn.innerText = "ACCESS ACCOUNT";
                 btn.disabled = false;
             }
