@@ -8,29 +8,19 @@
     <style>
         :root { --gold: #f1c40f; --bg: #0f051d; --card: #1a0b2e; --glass: rgba(255,255,255,0.05); }
         body { background: var(--bg); color: white; font-family: 'Poppins', sans-serif; margin: 0; padding: 20px; padding-bottom: 50px; }
-        
         #authOverlay { position: fixed; top:0; left:0; width:100%; height:100%; background:var(--bg); z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; }
         .login-box { background:var(--card); padding:35px; border-radius:25px; border:2px solid var(--gold); text-align:center; }
-        
         input { padding:12px; border-radius:10px; border:1px solid #444; background:#000; color:#fff; width: 100%; box-sizing: border-box; }
-        
         header { border-bottom: 2px solid var(--gold); padding-bottom: 20px; text-align: center; margin-bottom: 20px; }
-        
         .search-box { background: var(--card); padding: 20px; border-radius: 20px; border: 1px solid var(--gold); margin-bottom: 25px; }
         .user-detail-card { background: var(--glass); padding: 15px; border-radius: 12px; margin-top: 15px; display: none; }
         .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
-
         .admin-card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
-        .copy-btn { background: var(--gold); color: #000; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer; border: none; font-weight: bold; margin-left: 10px; }
-        
-        .btn-group { display: flex; gap: 10px; margin-top: 15px; }
         button { padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .approve-btn { background: var(--gold); color: #000; width: 100%; }
         .reject-btn { background: #ff3232; color: #fff; width: 100%; }
         .save-btn { background: #2ecc71; color: #fff; padding: 5px 15px; font-size: 11px; border-radius: 5px; }
-
         h3 { color: var(--gold); font-size: 14px; text-transform: uppercase; margin-top: 30px; border-left: 4px solid var(--gold); padding-left: 10px; }
-        
         .proof-img { width: 100%; max-width: 250px; border-radius: 10px; margin: 10px 0; border: 1px solid var(--gold); cursor: pointer; display: block; }
         .edit-input { background: #000; border: 1px solid var(--gold); color: #fff; padding: 5px; border-radius: 5px; width: 130px; font-size: 13px; }
     </style>
@@ -48,36 +38,30 @@
 <header><h1>GOLD PLUS <span style="color:var(--gold)">PRO</span></h1></header>
 
 <div class="search-box">
-    <h3><i class="fas fa-search"></i> Search Member ID</h3>
+    <h3><i class="fas fa-search"></i> Search by Member Gmail</h3>
     <div style="display:flex; gap:10px;">
-        <input type="text" id="userSearchID" placeholder="Enter Phone Number">
+        <input type="text" id="userSearchEmail" placeholder="Enter Gmail Address">
         <button class="approve-btn" style="width: auto;" onclick="searchUser()">Search</button>
     </div>
     <div id="userDetail" class="user-detail-card">
+        <div class="detail-row"><span>User ID:</span> <b id="foundUID" style="color:var(--gold)">-</b></div>
         <div class="detail-row"><span>Name:</span> <b id="resName">-</b></div>
-        
-        <div class="detail-row" style="margin: 10px 0; background: rgba(241, 196, 15, 0.05); padding: 8px; border-radius: 10px;">
+        <div class="detail-row">
             <span>Password:</span> 
             <div style="display:flex; gap:5px;">
                 <input type="text" id="resPass" class="edit-input">
                 <button class="save-btn" onclick="updatePassword()">SAVE</button>
             </div>
         </div>
-
-        <div class="detail-row"><span>Balance:</span> <b id="resBal" style="color:var(--gold)">Rs. 0</b></div>
+        <div class="detail-row"><span>Balance:</span> <b id="resBal">Rs. 0</b></div>
         <div class="detail-row"><span>Plan:</span> <b id="resPlan">None</b></div>
-        <div class="detail-row"><span>Last Claim:</span> <b id="resClaim">-</b></div>
     </div>
 </div>
 
 <h3><i class="fas fa-wallet"></i> Pending Deposits</h3>
 <div id="depositContainer"></div>
-
 <h3><i class="fas fa-money-bill-wave"></i> Pending Withdrawals</h3>
 <div id="withdrawContainer"></div>
-
-<h3><i class="fas fa-ad"></i> Promotion Requests</h3>
-<div id="promoContainer"></div>
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -97,111 +81,75 @@
         else alert("Wrong PIN!");
     };
 
-    // --- Search User (Updated to show Password) ---
+    // --- Search User by Gmail ---
     window.searchUser = async () => {
-        const id = document.getElementById('userSearchID').value;
-        const snap = await get(ref(db, 'users/' + id));
+        const email = document.getElementById('userSearchEmail').value.trim().toLowerCase();
+        const snap = await get(ref(db, 'users'));
         if(snap.exists()){
-            const u = snap.val();
-            document.getElementById('userDetail').style.display = 'block';
-            document.getElementById('resName').innerText = u.name || "N/A";
-            document.getElementById('resPass').value = u.password || ""; // یہاں پاسورڈ شو ہوگا
-            document.getElementById('resBal').innerText = "Rs. " + (u.balance || 0);
-            document.getElementById('resPlan').innerText = u.plan || "No Plan";
-            document.getElementById('resClaim').innerText = u.lastClaim ? new Date(u.lastClaim).toLocaleString() : "Never";
-        } else { alert("User not found!"); }
+            const users = snap.val();
+            let found = false;
+            for(let uid in users){
+                if(users[uid].email && users[uid].email.toLowerCase() === email){
+                    document.getElementById('userDetail').style.display = 'block';
+                    document.getElementById('foundUID').innerText = uid;
+                    document.getElementById('resName').innerText = users[uid].name || "N/A";
+                    document.getElementById('resPass').value = users[uid].password || "";
+                    document.getElementById('resBal').innerText = "Rs. " + (users[uid].balance || 0);
+                    document.getElementById('resPlan').innerText = users[uid].plan || "No Plan";
+                    found = true; break;
+                }
+            }
+            if(!found) alert("No user found with this Gmail!");
+        } else { alert("Database empty!"); }
     };
 
-    // --- Update Password Function ---
     window.updatePassword = () => {
-        const id = document.getElementById('userSearchID').value;
+        const uid = document.getElementById('foundUID').innerText;
         const newPass = document.getElementById('resPass').value;
-        if(id && newPass) {
-            update(ref(db, 'users/' + id), { password: newPass })
-            .then(() => alert("Password Updated for " + id))
-            .catch(e => alert("Error: " + e.message));
+        if(uid !== "-" && newPass) {
+            update(ref(db, 'users/' + uid), { password: newPass }).then(() => alert("Password Updated!"));
         }
     };
 
-    // --- Deposits Logic ---
     onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositContainer');
         container.innerHTML = '';
         snapshot.forEach((childSnap) => {
             const data = childSnap.val();
-            const rid = childSnap.key;
             if(data.status === "Pending") {
-                container.innerHTML += `
-                    <div class="admin-card">
-                        <b>Amount: $${data.amount} (System will add Rs. ${parseFloat(data.amount)*300})</b><br>
-                        <small>User: ${data.phone}</small><br>
-                        <small>TID: ${data.tid || 'N/A'}</small><br>
-                        <p>Proof Screenshot:</p>
-                        <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
-                        <div class="btn-group">
-                            <button class="approve-btn" onclick="handleDeposit('${data.phone}', '${rid}', '${data.amount}')">Approve & Add Balance</button>
-                            <button class="reject-btn" onclick="updateStatus('deposits', '${rid}', 'Rejected')">Reject</button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div class="admin-card">
+                    <b>Amount: $${data.amount}</b><br><small>User: ${data.phone}</small>
+                    <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
+                    <button class="approve-btn" onclick="handleDeposit('${data.phone}', '${childSnap.key}', '${data.amount}')">Approve</button>
+                </div>`;
             }
         });
     });
 
     window.handleDeposit = (userID, rid, amount) => {
         const pkrAmount = parseFloat(amount) * 300; 
-        const userRef = ref(db, `users/${userID}`);
         runTransaction(ref(db, `users/${userID}/balance`), (current) => {
             return (parseFloat(current) || 0) + pkrAmount;
         }).then(() => {
             update(ref(db, `deposits/${rid}`), { status: 'Approved' });
-            alert("Success! Added Rs. " + pkrAmount);
+            alert("Added Rs. " + pkrAmount);
         });
     };
 
-    // --- Withdrawals Logic ---
     onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawContainer');
         container.innerHTML = '';
         snapshot.forEach((childSnap) => {
             const data = childSnap.val();
-            const rid = childSnap.key;
             if(data.status === "Pending") {
-                container.innerHTML += `
-                    <div class="admin-card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>${data.method}</b>
-                            <b style="color:#ff3232;">Rs. ${data.amountPKR || (data.amountUSD * 300)}</b>
-                        </div>
-                        <div style="margin:10px 0; background:#000; padding:10px; border-radius:10px; display:flex; justify-content:space-between; align-items:center;">
-                            <span>${data.accountNumber}</span>
-                            <button class="copy-btn" onclick="copyText('${data.accountNumber}')">COPY</button>
-                        </div>
-                        <p style="font-size:11px; margin:0;">Name: ${data.accountName} (${data.phone})</p>
-                        <div class="btn-group">
-                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${rid}', 'Approved')">Mark as Paid</button>
-                            <button class="reject-btn" onclick="updateStatus('withdrawals', '${rid}', 'Rejected')">Reject</button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div class="admin-card">
+                    <b>Rs. ${data.amountPKR}</b><br><small>${data.method} - ${data.accountNumber}</small>
+                    <button class="approve-btn" onclick="updateStatus('withdrawals', '${childSnap.key}', 'Approved')">Mark as Paid</button>
+                </div>`;
             }
         });
     });
 
-    // --- Promotion Logic ---
-    onValue(ref(db, 'admin_promotions'), (snap) => {
-        const cont = document.getElementById('promoContainer');
-        cont.innerHTML = "";
-        snap.forEach(child => {
-            const p = child.val();
-            cont.innerHTML += `
-                <div class="admin-card">
-                    <p style="margin:0; font-size:12px;"><b>User:</b> ${p.user}</p>
-                    <p style="margin:10px 0; color:var(--gold); word-break:break-all;">${p.link}</p>
-                    <button class="approve-btn" onclick="copyText('${p.link}')">Copy Link</button>
-                </div>`;
-        });
-    });
-
-    window.copyText = (text) => { navigator.clipboard.writeText(text); alert("Copied!"); };
     window.updateStatus = (path, rid, status) => {
         update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Status updated"));
     };
