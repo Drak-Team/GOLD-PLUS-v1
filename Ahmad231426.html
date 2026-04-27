@@ -16,6 +16,7 @@
         .user-detail-card { background: var(--glass); padding: 15px; border-radius: 12px; margin-top: 15px; display: none; }
         .detail-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
         .admin-card { background: var(--card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 18px; margin-bottom: 15px; }
+        .copy-btn { background: var(--gold); color: #000; padding: 5px 12px; border-radius: 8px; font-size: 11px; cursor: pointer; border: none; font-weight: bold; }
         button { padding: 12px 20px; border-radius: 10px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .approve-btn { background: var(--gold); color: #000; width: 100%; }
         .reject-btn { background: #ff3232; color: #fff; width: 100%; }
@@ -60,6 +61,7 @@
 
 <h3><i class="fas fa-wallet"></i> Pending Deposits</h3>
 <div id="depositContainer"></div>
+
 <h3><i class="fas fa-money-bill-wave"></i> Pending Withdrawals</h3>
 <div id="withdrawContainer"></div>
 
@@ -81,7 +83,6 @@
         else alert("Wrong PIN!");
     };
 
-    // --- Search User by Gmail ---
     window.searchUser = async () => {
         const email = document.getElementById('userSearchEmail').value.trim().toLowerCase();
         const snap = await get(ref(db, 'users'));
@@ -100,7 +101,7 @@
                 }
             }
             if(!found) alert("No user found with this Gmail!");
-        } else { alert("Database empty!"); }
+        }
     };
 
     window.updatePassword = () => {
@@ -136,19 +137,43 @@
         });
     };
 
+    // --- Updated Withdrawal Display ---
     onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawContainer');
         container.innerHTML = '';
         snapshot.forEach((childSnap) => {
             const data = childSnap.val();
             if(data.status === "Pending") {
-                container.innerHTML += `<div class="admin-card">
-                    <b>Rs. ${data.amountPKR}</b><br><small>${data.method} - ${data.accountNumber}</small>
-                    <button class="approve-btn" onclick="updateStatus('withdrawals', '${childSnap.key}', 'Approved')">Mark as Paid</button>
-                </div>`;
+                container.innerHTML += `
+                    <div class="admin-card">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <b style="color:var(--gold); font-size:16px;">Rs. ${data.amountPKR}</b>
+                            <span style="background:rgba(255,255,255,0.1); padding:4px 8px; border-radius:5px; font-size:11px;">${data.method}</span>
+                        </div>
+                        <div style="margin:12px 0; background:#000; padding:12px; border-radius:12px; border:1px solid rgba(241,196,15,0.2);">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                                <span style="font-size:12px; color:#aaa;">Account No:</span>
+                                <button class="copy-btn" onclick="copyNumber('${data.accountNumber}')">COPY</button>
+                            </div>
+                            <b style="font-size:15px; letter-spacing:1px;">${data.accountNumber}</b>
+                            <div style="margin-top:8px; font-size:13px; color:var(--gold);">
+                                <i class="fas fa-user"></i> Holder: ${data.accountName || 'No Name'}
+                            </div>
+                        </div>
+                        <small>Requested by: ${data.phone}</small>
+                        <div class="btn-group" style="margin-top:10px; display:flex; gap:10px;">
+                            <button class="approve-btn" onclick="updateStatus('withdrawals', '${childSnap.key}', 'Approved')">Mark as Paid</button>
+                            <button class="reject-btn" style="width:40%; padding:10px;" onclick="updateStatus('withdrawals', '${childSnap.key}', 'Rejected')">Reject</button>
+                        </div>
+                    </div>`;
             }
         });
     });
+
+    window.copyNumber = (num) => {
+        navigator.clipboard.writeText(num);
+        alert("Number Copied: " + num);
+    };
 
     window.updateStatus = (path, rid, status) => {
         update(ref(db, `${path}/${rid}`), { status: status }).then(() => alert("Status updated"));
