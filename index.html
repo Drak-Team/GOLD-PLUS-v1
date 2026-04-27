@@ -122,7 +122,8 @@
         const db = getDatabase(app);
 
         document.getElementById('loginBtn').onclick = async () => {
-            const username = document.getElementById('username').value.trim().toLowerCase();
+            // یہاں سے toLowerCase ہٹا دیا ہے تاکہ یوزر نیم بالکل ویسا ہی رہے جیسا ڈیٹا بیس میں ہے
+            const username = document.getElementById('username').value.trim();
             const pass = document.getElementById('pass').value;
             const btn = document.getElementById('loginBtn');
 
@@ -132,28 +133,33 @@
             btn.disabled = true;
 
             try {
+                // ڈیٹا بیس کے 'users' فولڈر سے ممبر کی معلومات اٹھانا
                 const userRef = ref(db, 'users/' + username);
                 const snapshot = await get(userRef);
 
                 if (snapshot.exists()) {
                     const userData = snapshot.val();
-                    if (userData.password === pass) {
+                    
+                    // پاسورڈ کو زبردستی String میں بدلا تاکہ میچنگ میں غلطی نہ ہو
+                    if (userData.password && userData.password.toString() === pass.toString()) {
                         localStorage.clear();
                         localStorage.setItem('userPhone', username);
                         localStorage.setItem('isLoggedIn', 'true');
+                        // لاگ ان کے بعد ڈیش بورڈ پر روانگی
                         window.location.href = "dashboard.html";
                     } else {
-                        alert("Wrong Password!");
+                        alert("Wrong Password! Please check and try again.");
                         btn.innerText = "ACCESS ACCOUNT";
                         btn.disabled = false;
                     }
                 } else {
-                    alert("Username not found!");
+                    // اگر یوزر نیم غلط ہو
+                    alert("User ID not found! Please check your ID.");
                     btn.innerText = "ACCESS ACCOUNT";
                     btn.disabled = false;
                 }
             } catch (e) { 
-                alert("Error: " + e.message); 
+                alert("Network Error: " + e.message); 
                 btn.innerText = "ACCESS ACCOUNT";
                 btn.disabled = false;
             }
