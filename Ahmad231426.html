@@ -54,7 +54,27 @@
                 <button class="save-btn" onclick="updatePassword()">SAVE</button>
             </div>
         </div>
-        <div class="detail-row"><span>Balance:</span> <b id="resBal">Rs. 0</b></div>
+        <div class="detail-row">
+            <span>Balance (PKR):</span> 
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="resBalInput" class="edit-input">
+                <button class="save-btn" onclick="directUpdate('balance', 'resBalInput')">SAVE</button>
+            </div>
+        </div>
+        <div class="detail-row">
+            <span>Total Deposit:</span> 
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="resTotalDep" class="edit-input">
+                <button class="save-btn" onclick="directUpdate('totalDeposit', 'resTotalDep')">SAVE</button>
+            </div>
+        </div>
+        <div class="detail-row">
+            <span>Total Earning:</span> 
+            <div style="display:flex; gap:5px;">
+                <input type="number" id="resTotalEarn" class="edit-input">
+                <button class="save-btn" onclick="directUpdate('totalEarning', 'resTotalEarn')">SAVE</button>
+            </div>
+        </div>
         <div class="detail-row"><span>Plan:</span> <b id="resPlan">None</b></div>
     </div>
 </div>
@@ -95,12 +115,23 @@
                     document.getElementById('foundUID').innerText = uid;
                     document.getElementById('resName').innerText = users[uid].name || "N/A";
                     document.getElementById('resPass').value = users[uid].password || "";
-                    document.getElementById('resBal').innerText = "Rs. " + (users[uid].balance || 0);
+                    document.getElementById('resBalInput').value = users[uid].balance || 0;
+                    document.getElementById('resTotalDep').value = users[uid].totalDeposit || 0;
+                    document.getElementById('resTotalEarn').value = users[uid].totalEarning || 0;
                     document.getElementById('resPlan').innerText = users[uid].plan || "No Plan";
                     found = true; break;
                 }
             }
             if(!found) alert("No user found with this Gmail!");
+        }
+    };
+
+    window.directUpdate = (field, inputId) => {
+        const uid = document.getElementById('foundUID').innerText;
+        const newVal = parseFloat(document.getElementById(inputId).value);
+        if(uid !== "-" && !isNaN(newVal)) {
+            let obj = {}; obj[field] = newVal;
+            update(ref(db, 'users/' + uid), obj).then(() => alert(field + " Updated!"));
         }
     };
 
@@ -112,6 +143,7 @@
         }
     };
 
+    // --- Deposits with Reject Option ---
     onValue(ref(db, 'deposits'), (snapshot) => {
         const container = document.getElementById('depositContainer');
         container.innerHTML = '';
@@ -121,7 +153,10 @@
                 container.innerHTML += `<div class="admin-card">
                     <b>Amount: $${data.amount}</b><br><small>User: ${data.phone}</small>
                     <img src="${data.screenshot}" class="proof-img" onclick="window.open(this.src)">
-                    <button class="approve-btn" onclick="handleDeposit('${data.phone}', '${childSnap.key}', '${data.amount}')">Approve</button>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="approve-btn" style="flex:2;" onclick="handleDeposit('${data.phone}', '${childSnap.key}', '${data.amount}')">Approve</button>
+                        <button class="reject-btn" style="flex:1;" onclick="updateStatus('deposits', '${childSnap.key}', 'Rejected')">Reject</button>
+                    </div>
                 </div>`;
             }
         });
@@ -129,15 +164,19 @@
 
     window.handleDeposit = (userID, rid, amount) => {
         const pkrAmount = parseFloat(amount) * 300; 
+        // Update Balance
         runTransaction(ref(db, `users/${userID}/balance`), (current) => {
             return (parseFloat(current) || 0) + pkrAmount;
         }).then(() => {
+            // Also Update Total Deposit automatically
+            runTransaction(ref(db, `users/${userID}/totalDeposit`), (currentDep) => {
+                return (parseFloat(currentDep) || 0) + pkrAmount;
+            });
             update(ref(db, `deposits/${rid}`), { status: 'Approved' });
             alert("Added Rs. " + pkrAmount);
         });
     };
 
-    // --- Updated Withdrawal Display ---
     onValue(ref(db, 'withdrawals'), (snapshot) => {
         const container = document.getElementById('withdrawContainer');
         container.innerHTML = '';
