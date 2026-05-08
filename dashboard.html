@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gold Plus - VIP Cloud Mining</title>
+    <title>Mine Vault - VIP Cloud Mining</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root { --gold-grad: linear-gradient(135deg, #f1c40f, #e67e22); --card-bg: rgba(255, 255, 255, 0.08); --primary-gold: #f1c40f; }
         body { margin: 0; font-family: 'Poppins', sans-serif; background: #0f051d; color: white; padding-bottom: 120px; }
         
+        /* Professional Header Update */
         .top-header { padding: 30px 20px; background: var(--gold-grad); border-bottom: 3px solid #b8860b; border-radius: 0 0 40px 40px; box-shadow: 0 10px 30px rgba(241, 196, 15, 0.4); color: #000; }
-        .user-welcome { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; }
+        .user-welcome { color: #000; font-size: 18px; font-weight: 900; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .mini-stats { display: flex; justify-content: space-between; align-items: flex-end; color: #000; font-weight: bold; }
         .mini-stats b { font-size: 22px; color: #000; display: block; margin-top: 5px; line-height: 1.2; }
         .pkr-text { font-size: 12px; opacity: 0.8; display: block; }
@@ -45,7 +46,7 @@
         .timer-text { font-size: 8px; color: #888; font-weight: bold; margin-top: 5px; }
         
         .get-all-box { padding: 0 20px 20px; }
-        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3); }
+        .get-all-btn { background: var(--gold-grad); border: none; width: 100%; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 18px; color: #000; box-shadow: 0 10px 20px rgba(241, 196, 15, 0.3); letter-spacing: 1px; }
 
         .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 0 20px; }
         .grid-card { background: var(--card-bg); border-radius: 25px; padding: 18px; border: 1px solid rgba(255,255,255,0.05); position: relative; text-decoration: none; transition: 0.3s; }
@@ -66,9 +67,9 @@
 <body>
 
 <div class="top-header">
-    <div class="user-welcome" id="userNameLabel"><i class="fas fa-crown"></i> GOLD PLUS VIP</div>
+    <div class="user-welcome" id="userNameLabel"><i class="fas fa-vault"></i> MINE VAULT VIP</div>
     <div class="mini-stats">
-        <div>Available Assets 
+        <div>Vault Assets 
             <b id="mainBalance">$0.00</b>
             <span class="pkr-text" id="pkrBalance">Rs. 0.00</span>
         </div>
@@ -78,7 +79,7 @@
 
 <div class="package-section">
     <div class="section-header">
-        <h4>Your Active Packages</h4>
+        <h4>Active Mining Vaults</h4>
         <a href="plans.html">View All</a>
     </div>
     <div class="packages-container" id="packageList">
@@ -96,7 +97,7 @@
         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" class="stat-img">
     </div>
     <div class="stat-box">
-        <small>Total Earned</small>
+        <small>Vault Earnings</small>
         <h3 id="totalEarned">$0.00</h3>
         <img src="https://cdn-icons-png.flaticon.com/512/2489/2489714.png" class="stat-img">
     </div>
@@ -110,20 +111,20 @@
 </div>
 
 <div class="get-all-box">
-    <button class="get-all-btn" id="claimBtn">CLAIM DAILY MINING</button>
+    <button class="get-all-btn" id="claimBtn">COLLECT VAULT MINING</button>
 </div>
 
 <div class="main-grid">
     <a href="refer.html" class="grid-card"><h5>My Team</h5><p id="teamCount">0 Members</p><button class="btn-link">Invite</button></a>
-    <a href="mining.html" class="grid-card"><h5>Daily Task</h5><p>Earn Profit</p><button class="btn-link">Go</button></a>
+    <a href="mining.html" class="grid-card"><h5>Daily Task</h5><p>Extract Profit</p><button class="btn-link">Go</button></a>
     <a href="withdraw.html" class="grid-card"><h5>Withdrawal</h5><p id="withdrawStat">$0.00</p><button class="btn-link">Payout</button></a>
     <a href="deposit.html" class="grid-card"><h5>Deposit</h5><p>Instant Add</p><button class="btn-link">Add Fund</button></a>
     
     <a href="earning-history.html" class="grid-card" style="border-color: rgba(241, 196, 15, 0.3);">
-        <h5>Earn History</h5><p>Daily Logs</p><button class="btn-link">Review</button>
+        <h5>Vault History</h5><p>Daily Logs</p><button class="btn-link">Review</button>
     </a>
     <a href="https://t.me/mranjum143" class="grid-card" style="border-color: rgba(241, 196, 15, 0.3);">
-        <h5>Contact Support</h5><p>Help Center</p><button class="btn-link">Help</button>
+        <h5>Support Center</h5><p>24/7 Help</p><button class="btn-link">Help</button>
     </a>
 </div>
 
@@ -155,7 +156,7 @@
     const db = firebase.database();
     const phone = localStorage.getItem('userPhone');
     
-    // فکس ریٹ 1$ = 300 PKR
+    // PKR to USD Conversion Rate
     const PKR_RATE = 300; 
 
     if (!phone) window.location.href = "login.html";
@@ -164,31 +165,24 @@
         if (snapshot.exists()) {
             const data = snapshot.val();
             
-            // 1. بیلنس فکسنگ (Database PKR میں ہے)
             const rawBalance = parseFloat(data.balance || 0);
             const usdBalance = rawBalance / PKR_RATE;
             
-            // ڈسپلے: اوپر ڈالر اور نیچے پاکستانی روپیز
             document.getElementById('mainBalance').innerText = "$" + usdBalance.toFixed(2);
             document.getElementById('pkrBalance').innerText = "Rs. " + rawBalance.toLocaleString();
-            
-            // ودڈرال والا بیلنس بھی ڈالر میں
             document.getElementById('withdrawStat').innerText = "$" + usdBalance.toFixed(2);
             
-            // 2. ٹوٹل ڈپازٹ اور ارننگ (PKR سے ڈالر میں تبدیلی)
             const totalDepPKR = parseFloat(data.totalDeposit || 0);
             const totalEarnPKR = parseFloat(data.totalEarned || 0);
             
             document.getElementById('totalDeposit').innerText = "$" + (totalDepPKR / PKR_RATE).toFixed(2);
             document.getElementById('totalEarned').innerText = "$" + (totalEarnPKR / PKR_RATE).toFixed(2);
             
-            // 3. پروفائل اور ٹیم انفارمیشن
             const currentPlan = data.plan || "No Active Plan";
             document.getElementById('activePlan').innerText = currentPlan;
-            document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-crown"></i> VIP: ' + phone;
+            document.getElementById('userNameLabel').innerHTML = '<i class="fas fa-vault"></i> VAULT ID: ' + phone;
             document.getElementById('teamCount').innerText = (data.referCount || 0) + " Members";
 
-            // 4. ایکٹو پیکج کارڈ کا ڈسپلے
             const pkgList = document.getElementById('packageList');
             let pkgHTML = "";
             if (data.plan) {
@@ -196,7 +190,7 @@
                 <div class="pkg-card">
                     <div class="pkg-top">
                         <div class="pkg-icon"><i class="fas fa-microchip"></i></div>
-                        <div class="pkg-info"><h5>${currentPlan}</h5><small>Active Miner</small></div>
+                        <div class="pkg-info"><h5>${currentPlan}</h5><small>Active Vault</small></div>
                     </div>
                     <div class="status-dot"><div class="dot"></div> Running</div>
                 </div>`;
